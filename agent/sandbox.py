@@ -28,6 +28,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 from . import config
+from ._proc import no_window
 
 _docker_ok: Optional[bool] = None
 
@@ -49,7 +50,7 @@ def _docker_available() -> bool:
         return False
     try:
         r = subprocess.run(
-            ["docker", "info"], capture_output=True, text=True, timeout=4
+            ["docker", "info"], capture_output=True, text=True, timeout=4, **no_window()
         )
         _docker_ok = r.returncode == 0
     except (OSError, subprocess.TimeoutExpired):
@@ -82,12 +83,13 @@ def _run_docker(code: str, timeout: int) -> SandboxResult:
     ]
     try:
         p = subprocess.run(
-            cmd, input=code, capture_output=True, text=True, timeout=timeout + 8
+            cmd, input=code, capture_output=True, text=True, timeout=timeout + 8,
+            **no_window(),
         )
         out = ((p.stdout or "") + (p.stderr or "")).strip()
         return SandboxResult(out or "(keine Ausgabe)", tier="docker")
     except subprocess.TimeoutExpired:
-        subprocess.run(["docker", "rm", "-f", name], capture_output=True)
+        subprocess.run(["docker", "rm", "-f", name], capture_output=True, **no_window())
         return SandboxResult(
             f"FEHLER: Zeitlimit ({timeout}s) ueberschritten.", tier="docker", timed_out=True
         )

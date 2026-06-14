@@ -24,6 +24,7 @@ import threading
 from typing import Optional
 
 from . import config, runtimes
+from ._proc import no_window
 from .tools.registry import TOOLS, Tool
 
 STATUS: dict[str, dict] = {}        # servername -> {connected, tools, error}
@@ -56,7 +57,7 @@ class MCPServer:
         self.proc = subprocess.Popen(
             [resolved, *self.args],
             stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
-            text=True, bufsize=1, env=full_env,
+            text=True, bufsize=1, env=full_env, **no_window(),
         )
         threading.Thread(target=self._read_loop, daemon=True).start()
         self._initialize()

@@ -231,7 +231,8 @@ def model_pull(body: ModelIn) -> dict:
 
     def worker() -> None:
         try:
-            subprocess.run(["ollama", "pull", body.name], check=True)
+            from ._proc import no_window
+            subprocess.run(["ollama", "pull", body.name], check=True, **no_window())
         except (subprocess.CalledProcessError, OSError):
             pass
 

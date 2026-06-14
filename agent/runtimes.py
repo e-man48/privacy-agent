@@ -23,6 +23,7 @@ from pathlib import Path
 from typing import Callable, Optional
 
 from . import config
+from ._proc import no_window
 
 NODE_VERSION = "v20.18.0"  # LTS
 
@@ -129,7 +130,7 @@ def install_uv(emit: Callable[[str], None]) -> None:
                "irm https://astral.sh/uv/install.ps1 | iex"]
     else:
         cmd = ["sh", "-c", "curl -LsSf https://astral.sh/uv/install.sh | sh"]
-    subprocess.run(cmd, check=True)
+    subprocess.run(cmd, check=True, **no_window())
     emit("uv eingerichtet.")
 
 

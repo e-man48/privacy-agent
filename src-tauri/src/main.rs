@@ -19,6 +19,19 @@ use std::process::{Command, Stdio};
 
 use tauri::{Emitter, Manager};
 
+#[cfg(windows)]
+use std::os::windows::process::CommandExt;
+/// Verhindert das Aufpoppen eines Konsolenfensters (Windows).
+#[cfg(windows)]
+const CREATE_NO_WINDOW: u32 = 0x0800_0000;
+
+/// Setzt das Fensterlos-Flag plattformabhaengig.
+fn hide_window(cmd: &mut Command) {
+    #[cfg(windows)]
+    cmd.creation_flags(CREATE_NO_WINDOW);
+    let _ = cmd; // auf Nicht-Windows ungenutzt
+}
+
 /// Voller Pfad zum Sidecar-Binary neben der laufenden App-Executable.
 fn sidecar_path() -> PathBuf {
     let mut dir = std::env::current_exe()
@@ -36,21 +49,20 @@ fn sidecar_path() -> PathBuf {
 
 /// Startet das Backend (Modus "serve") im Hintergrund.
 fn spawn_backend() {
-    let _ = Command::new(sidecar_path())
-        .arg("serve")
-        .stdout(Stdio::null())
-        .stderr(Stdio::null())
-        .spawn();
+    let mut cmd = Command::new(sidecar_path());
+    cmd.arg("serve").stdout(Stdio::null()).stderr(Stdio::null());
+    hide_window(&mut cmd);
+    let _ = cmd.spawn();
 }
 
 /// Fuehrt den Einrichtungs-Assistenten (Modus "setup") aus und streamt den
 /// Fortschritt zeilenweise als "setup-progress"-Events an die GUI.
 #[tauri::command]
 async fn run_setup(app: tauri::AppHandle) -> Result<(), String> {
-    let mut child = Command::new(sidecar_path())
-        .arg("setup")
-        .stdout(Stdio::piped())
-        .stderr(Stdio::piped())
+    let mut cmd = Command::new(sidecar_path());
+    cmd.arg("setup").stdout(Stdio::piped()).stderr(Stdio::piped());
+    hide_window(&mut cmd);
+    let mut child = cmd
         .spawn()
         .map_err(|e| format!("Konnte Einrichtung nicht starten: {e}"))?;
 

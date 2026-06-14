@@ -20,6 +20,7 @@ from datetime import datetime, timezone
 from typing import Any, Optional
 
 from . import config, memory, metrics
+from ._proc import no_window
 
 # Mindestzahl beobachteter Aufgaben, bevor ueberhaupt optimiert wird.
 MIN_SAMPLES = 5
@@ -178,7 +179,7 @@ def _apply_pull_model(p: Proposal) -> dict:
 
     def worker() -> None:
         try:
-            subprocess.run(["ollama", "pull", model], check=True)
+            subprocess.run(["ollama", "pull", model], check=True, **no_window())
             previous = config.set_override("LOCAL_MODEL", model)
             _log("pull_model", {"model": model}, previous=previous)
         except (subprocess.CalledProcessError, OSError) as exc:

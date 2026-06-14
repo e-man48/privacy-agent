@@ -70,6 +70,11 @@ def ollama_installed() -> bool:
     return shutil.which("ollama") is not None
 
 
+def _no_window() -> dict:
+    """Unterdrueckt das DOS-Fenster bei Unterprozessen (Windows)."""
+    return {"creationflags": 0x08000000} if os.name == "nt" else {}
+
+
 def _download(url: str, dest: str, timeout: int = 180) -> None:
     """HTTPS-Download mit verlaesslicher Zertifikatspruefung (requests/certifi).
 
@@ -110,7 +115,7 @@ def install_ollama() -> bool:
             emit("install_ollama", "Lade Ollama-Installer herunter ...", 0.4)
             _download(url, tmp)
             emit("install_ollama", "Starte Ollama-Installer (still) ...", 0.6)
-            subprocess.run([tmp, "/VERYSILENT", "/NORESTART"], check=True)
+            subprocess.run([tmp, "/VERYSILENT", "/NORESTART"], check=True, **_no_window())
         else:
             emit("error", f"Nicht unterstuetztes System: {system}")
             return False
@@ -134,6 +139,7 @@ def ensure_ollama_running() -> bool:
             ["ollama", "serve"],
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
+            **_no_window(),
         )
         time.sleep(3)
     return False
@@ -147,6 +153,7 @@ def pull_model(model: str) -> bool:
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         text=True,
+        **_no_window(),
     )
     for line in proc.stdout:  # type: ignore[union-attr]
         emit("pull_model", line.strip(), 0.85)
