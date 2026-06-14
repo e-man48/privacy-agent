@@ -143,6 +143,8 @@ button {
   background: var(--accent); color: #fff; font-size: .92rem;
 }
 button:hover { filter: brightness(1.08); }
+button:disabled { opacity: .45; cursor: not-allowed; }
+button:disabled:hover { filter: none; }
 .btn-secondary { background: var(--panel); border: 1px solid var(--border); color: var(--text); }
 .btn-danger { background: var(--danger); }
 .btn-ghost { background: transparent; padding: 6px 10px; font-size: 1.1rem; }

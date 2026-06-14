@@ -7,6 +7,7 @@ const Wizard = (() => {
   let idx = 0;
   let modelReady = false;
   let installPoll = null;
+  let installListenerBound = false;
 
   const cfg = {
     decision_style: "balanced",
@@ -147,22 +148,46 @@ const Wizard = (() => {
     }
   }
 
+  function installFailed(msg) {
+    const btn = el("install-start");
+    el("setup-bar").style.width = "0%";
+    el("setup-msg").textContent = "⚠️ " + (msg || "Installation fehlgeschlagen.");
+    btn.disabled = false;
+    btn.textContent = "Erneut versuchen";
+  }
+
   async function runInstall() {
-    el("install-start").disabled = true;
-    el("setup-msg").textContent = "Installation läuft …";
-    if (tauri) {
-      const { listen } = tauri.event;
-      await listen("setup-progress", (e) => {
-        const p = e.payload;
-        if (p.progress != null) el("setup-bar").style.width = `${Math.round(p.progress * 100)}%`;
-        el("setup-msg").textContent = p.message || "";
-      });
-      await tauri.core.invoke("run_setup");
-    } else {
+    const btn = el("install-start");
+    btn.disabled = true;
+    btn.blur(); // entfernt die blaue Fokus-Markierung
+    btn.textContent = "Installiere …";
+    el("setup-msg").textContent = "Installation läuft … (kann einige Minuten dauern)";
+
+    if (!tauri) {
       el("setup-msg").textContent =
         "Hinweis: Im Browser bitte einmalig 'python -m setup.first_run' ausführen. " +
         "Dieser Schritt entfällt in der fertigen App.";
-      el("install-start").disabled = false;
+      btn.disabled = false;
+      btn.textContent = "Jetzt installieren";
+      return;
+    }
+
+    // Fortschritts-Listener nur einmal binden.
+    if (!installListenerBound) {
+      installListenerBound = true;
+      await tauri.event.listen("setup-progress", (e) => {
+        const p = e.payload || {};
+        if (p.progress != null) el("setup-bar").style.width = `${Math.round(p.progress * 100)}%`;
+        if (p.message) el("setup-msg").textContent = p.message;
+        if (p.stage === "error") installFailed(p.message);
+      });
+    }
+
+    try {
+      await tauri.core.invoke("run_setup");
+      // Erfolg erkennt das Polling (model_ready) und blendet den Knopf aus.
+    } catch (err) {
+      installFailed(String(err));
     }
   }
 
