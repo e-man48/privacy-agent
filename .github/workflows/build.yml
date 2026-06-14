@@ -34,7 +34,7 @@ jobs:
       - name: Rust einrichten
         uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: "1.85.0"
+          toolchain: "1.88.0"
 
       - name: Rust-Cache
         uses: swatinem/rust-cache@v2
