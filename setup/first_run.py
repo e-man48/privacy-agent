@@ -19,6 +19,8 @@ import sys
 import time
 import urllib.request
 
+OLLAMA_HOST = "http://127.0.0.1:11434"
+
 
 def emit(stage: str, message: str, progress: float | None = None, **extra) -> None:
     """Eine Fortschrittsmeldung als JSON-Zeile (von der GUI gelesen)."""
@@ -177,19 +179,54 @@ def ensure_ollama_running() -> bool:
 
 
 # --- 3. Modell herunterladen --------------------------------------------
-def pull_model(model: str) -> bool:
-    emit("pull_model", f"Lade lokales KI-Modell '{model}' herunter ...", 0.7)
-    proc = subprocess.Popen(
-        [find_ollama() or "ollama", "pull", model],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        text=True,
-        **_no_window(),
-    )
-    for line in proc.stdout:  # type: ignore[union-attr]
-        emit("pull_model", line.strip(), 0.85)
-    proc.wait()
-    return proc.returncode == 0
+def pull_model(model: str, lo: float = 0.55, hi: float = 0.92) -> bool:
+    """Laedt ein Modell ueber Ollamas Streaming-API mit ECHTEM Fortschritt.
+
+    Die API liefert laufend completed/total -> fluessiger Prozentbalken
+    (statt der CLI, die nur pro fertiger Schicht meldet). Der Fortschritt wird
+    in den Bereich [lo, hi] des Gesamtbalkens gemappt.
+    """
+    import requests
+
+    emit("pull_model", f"Lade Modell '{model}' ...", lo)
+    try:
+        with requests.post(
+            f"{OLLAMA_HOST}/api/pull",
+            json={"model": model, "stream": True},
+            stream=True,
+            timeout=(10, 300),
+        ) as r:
+            r.raise_for_status()
+            for raw in r.iter_lines():
+                if not raw:
+                    continue
+                try:
+                    msg = json.loads(raw)
+                except json.JSONDecodeError:
+                    continue
+                if msg.get("error"):
+                    emit("error", f"Modell-Download fehlgeschlagen: {msg['error']}")
+                    return False
+                status = msg.get("status", "")
+                total = msg.get("total")
+                completed = msg.get("completed")
+                if total and completed is not None:
+                    frac = completed / total
+                    gb_done, gb_total = completed / 1e9, total / 1e9
+                    emit(
+                        "pull_model",
+                        f"Lade '{model}' – {frac * 100:.0f} % "
+                        f"({gb_done:.1f}/{gb_total:.1f} GB)",
+                        round(lo + (hi - lo) * frac, 3),
+                    )
+                elif status:
+                    # Status ohne Prozent (z.B. "verifying", "success"):
+                    # nur Text, Balken NICHT zuruecksetzen (progress=None).
+                    emit("pull_model", status)
+            return True
+    except requests.RequestException as exc:
+        emit("error", f"Modell-Download fehlgeschlagen: {exc}")
+        return False
 
 
 def main() -> int:
@@ -208,16 +245,16 @@ def main() -> int:
         emit("error", "Ollama-Dienst konnte nicht gestartet werden.")
         return 1
 
-    if not pull_model(model):
+    # Hauptmodell: Fortschritt 0.55 .. 0.90.
+    if not pull_model(model, lo=0.55, hi=0.90):
         emit("error", f"Modell '{model}' konnte nicht geladen werden.")
         return 1
 
     # Embedding-Modell fuer das semantische Gedaechtnis (klein, ~270 MB).
     # Nicht kritisch: schlaegt es fehl, faellt das Gedaechtnis auf die
-    # lexikalische Suche zurueck.
-    emit("pull_embed", "Lade Embedding-Modell fuer das Gedaechtnis ...", 0.95)
-    if not pull_model("nomic-embed-text"):
-        emit("pull_embed", "Embedding-Modell uebersprungen (Gedaechtnis bleibt lexikalisch).", 0.97)
+    # lexikalische Suche zurueck. Fortschritt 0.90 .. 0.99 (kein Ruecksprung).
+    if not pull_model("nomic-embed-text", lo=0.90, hi=0.99):
+        emit("pull_embed", "Embedding-Modell uebersprungen (Gedaechtnis bleibt lexikalisch).", 0.99)
 
     emit("done", "Einrichtung abgeschlossen. Die lokale KI ist bereit.", 1.0, model=model)
     return 0
