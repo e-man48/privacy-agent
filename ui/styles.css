@@ -185,6 +185,7 @@ button:disabled:hover { filter: none; }
 .proposal-actions { display: flex; gap: 8px; }
 .proposal-actions button { padding: 6px 12px; font-size: .82rem; }
 
+.brain-section > input { width: 100%; padding: 9px 11px; margin-bottom: 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
 .model-row { display: flex; gap: 8px; margin-bottom: 8px; }
 .model-row select, .model-row input { flex: 1; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
 .toggle { display: flex; gap: 8px; align-items: flex-start; font-size: .82rem; color: var(--muted); cursor: pointer; margin-top: 4px; }

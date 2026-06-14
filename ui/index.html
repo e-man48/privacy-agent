@@ -186,6 +186,24 @@
     </section>
 
     <section class="brain-section">
+      <h3>Messenger (Matrix)</h3>
+      <p id="mx2-status" class="muted"></p>
+      <input id="mx2-server" placeholder="Server-Adresse (z. B. http://nas…ts.net:8008)" />
+      <input id="mx2-user" placeholder="Agenten-Konto (@agent:server)" />
+      <input id="mx2-pass" type="password" placeholder="Passwort des Agenten-Kontos" />
+      <input id="mx2-allow" placeholder="Erlaubte Personen, mit Komma (@du:server)" />
+      <input id="mx2-admins" placeholder="Wer darf die Cloud freigeben? (leer = alle)" />
+      <div class="inline-row">
+        <button id="mx2-test" class="btn-secondary">Verbindung testen</button>
+        <span id="mx2-msg" class="muted"></span>
+      </div>
+      <div class="model-row">
+        <button id="mx2-save">Speichern &amp; verbinden</button>
+        <button id="mx2-off" class="btn-secondary">Aus</button>
+      </div>
+    </section>
+
+    <section class="brain-section">
       <h3>Externe Skills (MCP)</h3>
       <p class="muted">Beliebte Skills mit einem Klick hinzufügen:</p>
       <div id="mcp-templates" class="mcp-templates"></div>

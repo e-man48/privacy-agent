@@ -200,11 +200,91 @@ function openBrain() {
   el("brain").classList.remove("hidden");
   el("brain-backdrop").classList.remove("hidden");
   loadModels();
+  loadMatrix();
   loadCatalog();
   loadMCP();
   loadProposals();
   loadMemory();
 }
+
+// --- Messenger (Matrix) nachträglich konfigurieren ---------------------
+async function loadMatrix() {
+  try {
+    const st = await (await fetch(`${API}/setup/state`)).json();
+    const s = st.settings || {};
+    el("mx2-server").value = s.matrix_homeserver || "";
+    el("mx2-user").value = s.matrix_user || "";
+    el("mx2-allow").value = s.matrix_allowed_users || "";
+    el("mx2-admins").value = s.matrix_admin_users || "";
+    el("mx2-pass").placeholder = s.matrix_password_set
+      ? "Passwort gesetzt – leer lassen, um es zu behalten"
+      : "Passwort des Agenten-Kontos";
+    const c = st.connector || {};
+    el("mx2-status").textContent = c.connected
+      ? `🟢 verbunden${c.info ? " – " + c.info : ""}`
+      : c.info
+      ? `🔴 ${c.info}`
+      : s.connector === "matrix"
+      ? "🔴 nicht verbunden"
+      : "Aus.";
+  } catch {
+    el("mx2-status").textContent = "Backend nicht erreichbar.";
+  }
+}
+
+el("mx2-test").addEventListener("click", async () => {
+  el("mx2-msg").textContent = "Teste …";
+  try {
+    const r = await fetch(`${API}/setup/matrix-test`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        matrix_homeserver: el("mx2-server").value.trim(),
+        matrix_user: el("mx2-user").value.trim(),
+        matrix_password: el("mx2-pass").value,
+      }),
+    });
+    const d = await r.json();
+    el("mx2-msg").textContent = (d.ok ? "✅ " : "❌ ") + d.message;
+  } catch {
+    el("mx2-msg").textContent = "❌ Test nicht möglich.";
+  }
+});
+
+el("mx2-save").addEventListener("click", async () => {
+  const settings = {
+    connector: "matrix",
+    matrix_homeserver: el("mx2-server").value.trim(),
+    matrix_user: el("mx2-user").value.trim(),
+    matrix_allowed_users: el("mx2-allow").value.trim(),
+    matrix_admin_users: el("mx2-admins").value.trim(),
+  };
+  const pass = el("mx2-pass").value;
+  if (pass) settings.matrix_password = pass; // nur überschreiben, wenn eingegeben
+  el("mx2-msg").textContent = "Speichere & verbinde …";
+  try {
+    await fetch(`${API}/setup/save`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ settings }),
+    });
+    el("mx2-pass").value = "";
+    setTimeout(loadMatrix, 1500); // Status nach (Neu-)Verbindung aktualisieren
+    el("mx2-msg").textContent = "Gespeichert – verbinde …";
+  } catch {
+    el("mx2-msg").textContent = "Speichern fehlgeschlagen.";
+  }
+});
+
+el("mx2-off").addEventListener("click", async () => {
+  await fetch(`${API}/setup/save`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ settings: { connector: "none" } }),
+  });
+  el("mx2-msg").textContent = "Deaktiviert.";
+  loadMatrix();
+});
 
 // --- MCP-Vorlagen (Ein-Klick) ------------------------------------------
 async function loadCatalog() {
