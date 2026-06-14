@@ -122,21 +122,49 @@ function renderSuggestions(cands) {
   });
 }
 
+// --- "Denkt nach …"-Indikator ------------------------------------------
+function showThinking() {
+  hideThinking();
+  const div = document.createElement("div");
+  div.id = "thinking";
+  div.className = "msg msg-assistant thinking";
+  div.innerHTML = `<span class="think-label">denkt nach</span>
+    <span class="dots"><span></span><span></span><span></span></span>`;
+  el("messages").appendChild(div);
+  el("messages").scrollTop = el("messages").scrollHeight;
+}
+function hideThinking() {
+  const t = el("thinking");
+  if (t) t.remove();
+}
+function setComposerBusy(busy) {
+  el("input").disabled = busy;
+  const btn = el("composer").querySelector("button");
+  if (btn) btn.disabled = busy;
+}
+
 el("composer").addEventListener("submit", async (e) => {
   e.preventDefault();
   const text = el("input").value.trim();
   if (!text) return;
   el("input").value = "";
   addMessage(text, "user");
+  setComposerBusy(true);
+  showThinking();
   try {
     const r = await fetch(`${API}/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message: text }),
     });
+    hideThinking();
     handleResult(await r.json());
   } catch {
+    hideThinking();
     addMessage("⚠️ Backend nicht erreichbar.", "assistant");
+  } finally {
+    setComposerBusy(false);
+    el("input").focus();
   }
 });
 
@@ -148,12 +176,19 @@ function showConsent(res) {
 
   const decide = async (approved) => {
     el("consent").classList.add("hidden");
-    const r = await fetch(`${API}/consent`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ pending_id: res.pending_id, approved }),
-    });
-    handleResult(await r.json());
+    showThinking();
+    try {
+      const r = await fetch(`${API}/consent`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pending_id: res.pending_id, approved }),
+      });
+      hideThinking();
+      handleResult(await r.json());
+    } catch {
+      hideThinking();
+      addMessage("⚠️ Backend nicht erreichbar.", "assistant");
+    }
   };
 
   el("consent-yes").onclick = () => decide(true);
