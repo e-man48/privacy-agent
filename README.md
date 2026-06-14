@@ -150,6 +150,25 @@ git tag v0.1.0 && git push origin v0.1.0   # baut Win/Mac/Linux-Installer
 
 Die fertigen Installer liegen danach unter „Actions → der Lauf → Artifacts".
 
+#### Code-Signing aktivieren (optional)
+
+Standardmäßig sind die Installer **unsigniert** (Nutzer klicken einmal „Trotzdem
+ausführen"). Der Workflow ist aber so vorbereitet, dass Signing sich **allein
+über GitHub-Secrets** einschaltet – ohne Code-Änderung:
+
+- **macOS** (Apple Developer, ~99 $/Jahr): Secrets `APPLE_CERTIFICATE` (Base64
+  der `.p12`), `APPLE_CERTIFICATE_PASSWORD`, `APPLE_SIGNING_IDENTITY` und – für
+  Notarisierung – `APPLE_ID`, `APPLE_PASSWORD` (App-spezifisches Passwort),
+  `APPLE_TEAM_ID`. Tauri signiert + notarisiert dann automatisch.
+- **Windows**: Secrets `WINDOWS_CERTIFICATE` (Base64 der `.pfx`) und
+  `WINDOWS_CERTIFICATE_PASSWORD`; zusätzlich einmalig in
+  `src-tauri/tauri.conf.json` unter `bundle.windows` den `certificateThumbprint`
+  des Zertifikats eintragen.
+- **Linux**: kein Signing nötig.
+
+Sind keine Secrets gesetzt, baut der Workflow ganz normal **unsigniert** weiter.
+Secrets legst du an unter „Repo → Settings → Secrets and variables → Actions".
+
 ## Einrichtung ohne Vorkenntnisse (GUI-Assistent)
 
 Beim **ersten Start** führt ein bebilderter Assistent (`ui/wizard.js`) in

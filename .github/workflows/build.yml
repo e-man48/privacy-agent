@@ -7,6 +7,10 @@ on:
     tags: ["v*"]
   workflow_dispatch:
 
+# Schon jetzt auf Node.js 24 stellen (entfernt die Node-20-Deprecation-Warnung).
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 jobs:
   build:
     strategy:
@@ -69,7 +73,39 @@ jobs:
           cargo update -p alloc-stdlib --precise 0.2.2
           cargo update -p alloc-no-stdlib --precise 2.0.4
 
+      # --- Code-Signing (optional, aktiviert sich automatisch via Secrets) ---
+      # Windows: PFX-Zertifikat in den Zertifikatsspeicher importieren, FALLS als
+      # Secret hinterlegt. Ohne Secret bleibt der Build unsigniert (wie bisher).
+      # Zum Aktivieren zusaetzlich in src-tauri/tauri.conf.json unter
+      # bundle.windows den "certificateThumbprint" eintragen.
+      - name: Windows-Zertifikat importieren (nur wenn hinterlegt)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        env:
+          WINDOWS_CERTIFICATE: ${{ secrets.WINDOWS_CERTIFICATE }}
+          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
+        run: |
+          if ([string]::IsNullOrEmpty($env:WINDOWS_CERTIFICATE)) {
+            Write-Host "Kein Windows-Zertifikat hinterlegt -- Build bleibt unsigniert."
+          } else {
+            $pfx = Join-Path $env:RUNNER_TEMP "cert.pfx"
+            [IO.File]::WriteAllBytes($pfx, [Convert]::FromBase64String($env:WINDOWS_CERTIFICATE))
+            $pw = ConvertTo-SecureString $env:WINDOWS_CERTIFICATE_PASSWORD -AsPlainText -Force
+            Import-PfxCertificate -FilePath $pfx -CertStoreLocation Cert:\CurrentUser\My -Password $pw
+            Remove-Item $pfx
+            Write-Host "Windows-Zertifikat importiert."
+          }
+
       - name: Tauri-Installer bauen
+        # macOS-Signing/Notarisierung: Tauri nutzt diese Variablen automatisch,
+        # FALLS die Secrets gesetzt sind. Leer = unsignierter Build (wie bisher).
+        env:
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         run: npm run build
 
       - name: Installer als Artefakt hochladen
