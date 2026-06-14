@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+
+# Tauri / Rust
+src-tauri/target/
+node_modules/
+dist/
+
+# Build-Artefakte (PyInstaller)
+build/
+dist/
+*.spec
+
+# Sidecar-Binaries (pro Plattform neu bauen)
+src-tauri/binaries/*
+!src-tauri/binaries/README.md

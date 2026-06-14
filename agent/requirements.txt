@@ -1,0 +1,16 @@
+# Agenten-Kern
+requests>=2.31
+fastapi>=0.110
+uvicorn>=0.29
+pydantic>=2.6
+
+# Cloud-Notfall (nur genutzt, wenn ein API-Schluessel gesetzt ist)
+anthropic>=0.39
+
+# Messenger-Connector Matrix (nur genutzt, wenn CONNECTOR=matrix).
+# Fuer Ende-zu-Ende-Verschluesselung zusaetzlich 'python-olm' (braucht libolm):
+#   matrix-nio[e2e]
+matrix-nio>=0.24
+
+# Verpacken zum Sidecar-Binary (Build-Zeit)
+pyinstaller>=6.0

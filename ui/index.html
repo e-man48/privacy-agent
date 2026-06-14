@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy-Agent</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>🛡️ Privacy-Agent</h1>
+    <div class="header-right">
+      <button id="open-brain" class="btn-ghost" title="Gedächtnis & Optimierung">🧠</button>
+      <div id="status" class="status">
+        <span id="status-dot" class="dot dot-gray"></span>
+        <span id="status-text">Verbinde …</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Geführter Einrichtungs-Assistent (erster Start) -->
+  <section id="wizard" class="wizard hidden">
+    <div class="wizard-card">
+      <div id="wizard-progress" class="wizard-progress"></div>
+
+      <!-- Schritt 1: Willkommen -->
+      <div class="wstep" data-step="welcome">
+        <div class="wbig">👋</div>
+        <h2>Willkommen!</h2>
+        <p>Dieser Assistent richtet deinen persönlichen KI-Agenten ein.
+           Das dauert nur ein paar Minuten – und du musst nichts können.</p>
+        <p class="muted">Deine Daten bleiben dabei auf diesem Gerät. Versprochen.</p>
+      </div>
+
+      <!-- Schritt 2: Lokale KI installieren -->
+      <div class="wstep hidden" data-step="install">
+        <div class="wbig">🧠</div>
+        <h2>KI auf dein Gerät holen</h2>
+        <p>Jetzt wird die künstliche Intelligenz direkt auf deinem Gerät
+           installiert. So funktioniert alles privat, ohne Internet-Zwang.</p>
+        <div class="progress"><div id="setup-bar" class="progress-bar"></div></div>
+        <p id="setup-msg" class="muted">Noch nicht gestartet.</p>
+        <button id="install-start" class="btn-big">Jetzt installieren</button>
+        <p id="install-done" class="ok-line hidden">✅ Fertig – die KI ist bereit.</p>
+      </div>
+
+      <!-- Schritt 3: Verhalten / Entscheidungsstil -->
+      <div class="wstep hidden" data-step="style">
+        <div class="wbig">🧭</div>
+        <h2>Wie soll sich der Agent verhalten?</h2>
+        <p>Wenn der Agent unsicher ist – wie soll er entscheiden?</p>
+        <div class="choice-grid">
+          <button class="choice" data-style="cautious">
+            <b>Vorsichtig</b><span>Fragt lieber öfter nach</span></button>
+          <button class="choice selected" data-style="balanced">
+            <b>Ausgewogen</b><span>Gute Mischung (empfohlen)</span></button>
+          <button class="choice" data-style="autonomous">
+            <b>Selbstständig</b><span>Macht möglichst viel allein</span></button>
+        </div>
+      </div>
+
+      <!-- Schritt 4: Autopilot -->
+      <div class="wstep hidden" data-step="autopilot">
+        <div class="wbig">⬆️</div>
+        <h2>Automatisch dazulernen?</h2>
+        <p>Kommt die KI bei einer Aufgabe nicht weiter, darf sie automatisch
+           ein <b>stärkeres Modell auf deinem Gerät</b> verwenden. Das ist
+           kostenlos und bleibt privat.</p>
+        <label class="big-toggle">
+          <input id="wiz-autopilot" type="checkbox" checked />
+          <span>Ja, das darf der Agent selbstständig (empfohlen)</span>
+        </label>
+      </div>
+
+      <!-- Schritt 5: Cloud-Hilfe (optional) -->
+      <div class="wstep hidden" data-step="cloud">
+        <div class="wbig">☁️</div>
+        <h2>Hilfe aus dem Internet (optional)</h2>
+        <p>Wenn die lokale KI mal nicht weiterkommt, kann sie – <b>nur nach
+           deiner Erlaubnis</b> – eine besonders starke KI im Internet fragen.
+           Dafür braucht es einen Zugangsschlüssel.</p>
+        <p class="muted">Du kannst das jetzt überspringen und später jederzeit
+           nachholen.</p>
+        <input id="wiz-key" type="password" placeholder="Anthropic-Schlüssel (sk-ant-…)" />
+        <div class="inline-row">
+          <button id="wiz-key-test" class="btn-secondary">Schlüssel testen</button>
+          <span id="wiz-key-msg" class="muted"></span>
+        </div>
+      </div>
+
+      <!-- Schritt 6: Messenger (optional) -->
+      <div class="wstep hidden" data-step="messenger">
+        <div class="wbig">💬</div>
+        <h2>Von unterwegs schreiben? (optional)</h2>
+        <p>Du kannst dem Agenten später über den Messenger <b>Matrix</b>
+           schreiben. Das ist etwas für Fortgeschrittene.</p>
+        <label class="big-toggle">
+          <input id="wiz-matrix-on" type="checkbox" />
+          <span>Ja, ich möchte Matrix einrichten</span>
+        </label>
+        <div id="wiz-matrix-fields" class="matrix-fields hidden">
+          <input id="wiz-mx-server" placeholder="Server-Adresse (https://…)" />
+          <input id="wiz-mx-user" placeholder="Agenten-Konto (@agent:server.de)" />
+          <input id="wiz-mx-pass" type="password" placeholder="Passwort des Agenten-Kontos" />
+          <input id="wiz-mx-allow" placeholder="Deine Matrix-Adresse (@du:server.de)" />
+          <p class="muted">Nur diese Adresse darf den Agenten steuern. Mehrere
+             erlaubte Personen? Einfach mit Komma trennen.</p>
+          <input id="wiz-mx-admins" placeholder="Wer darf die Cloud freigeben? (leer = alle)" />
+          <p class="muted">Optional: Nur diese Personen dürfen die kostenpflichtige
+             Cloud erlauben. Leer = alle erlaubten Personen dürfen es.</p>
+          <div class="inline-row">
+            <button id="wiz-mx-test" class="btn-secondary">Verbindung testen</button>
+            <span id="wiz-mx-msg" class="muted"></span>
+          </div>
+          <p class="muted">Tipp: Lade das Agenten-Konto danach in deinem
+             Matrix-Programm in einen Raum mit dir ein – dort schreibst du ihm.</p>
+        </div>
+      </div>
+
+      <!-- Schritt 7: Fertig -->
+      <div class="wstep hidden" data-step="done">
+        <div class="wbig">🎉</div>
+        <h2>Alles bereit!</h2>
+        <p>Dein Agent ist eingerichtet. Du kannst die Einstellungen später
+           jederzeit im 🧠-Menü ändern.</p>
+        <div id="wiz-summary" class="summary"></div>
+      </div>
+
+      <!-- Navigation -->
+      <div class="wizard-nav">
+        <button id="wiz-back" class="btn-secondary">Zurück</button>
+        <button id="wiz-skip" class="btn-ghost">Überspringen</button>
+        <button id="wiz-next" class="btn-big">Weiter</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Chat -->
+  <section id="chat" class="hidden">
+    <div id="messages" class="messages"></div>
+
+    <!-- Einwilligungs-Dialog (bei Cloud-Eskalation) -->
+    <div id="consent" class="consent hidden">
+      <p class="consent-title">⚠️ Rückfrage erforderlich</p>
+      <p id="consent-reason"></p>
+      <details>
+        <summary>Welche Daten würden gesendet?</summary>
+        <pre id="consent-data"></pre>
+      </details>
+      <div class="consent-actions">
+        <button id="consent-no" class="btn-secondary">Nein, lokal bleiben</button>
+        <button id="consent-yes" class="btn-danger">Ja, senden</button>
+      </div>
+    </div>
+
+    <!-- Automatische Gedächtnis-Vorschläge -->
+    <div id="suggest-bar" class="suggest-bar hidden"></div>
+
+    <form id="composer">
+      <input id="input" type="text" placeholder="Aufgabe oder Frage …" autocomplete="off" />
+      <button type="submit">Senden</button>
+    </form>
+  </section>
+
+  <!-- Seitenpanel: Gedächtnis & Selbstoptimierung -->
+  <aside id="brain" class="brain hidden">
+    <div class="brain-head">
+      <h2>🧠 Gedächtnis & Optimierung</h2>
+      <button id="close-brain" class="btn-ghost">✕</button>
+    </div>
+
+    <section class="brain-section">
+      <h3>Lokales Modell</h3>
+      <div class="model-row">
+        <select id="model-select"></select>
+      </div>
+      <form id="pull-form" class="model-row">
+        <input id="pull-input" type="text" placeholder="Neues Modell laden (z. B. mistral) …" />
+        <button type="submit" class="btn-secondary">Laden</button>
+      </form>
+      <p id="pull-msg" class="muted"></p>
+      <label class="toggle">
+        <input id="autopilot-toggle" type="checkbox" />
+        <span>Autopilot: bei Schwierigkeiten autonom ein stärkeres lokales Modell nutzen</span>
+      </label>
+    </section>
+
+    <section class="brain-section">
+      <h3>Externe Skills (MCP)</h3>
+      <p class="muted">Beliebte Skills mit einem Klick hinzufügen:</p>
+      <div id="mcp-templates" class="mcp-templates"></div>
+      <div id="tpl-form-host"></div>
+      <div id="mcp-list"></div>
+      <details class="mcp-advanced">
+        <summary>Eigenen Skill-Server manuell hinzufügen</summary>
+      <form id="mcp-form">
+        <div class="model-row">
+          <input id="mcp-name" placeholder="Name (z. B. dateien)" />
+          <input id="mcp-cmd" placeholder="Befehl (z. B. npx)" />
+        </div>
+        <input id="mcp-args" placeholder="Argumente, mit Leerzeichen getrennt" />
+        <label class="toggle">
+          <input id="mcp-trust" type="checkbox" />
+          <span>Vertrauen – ohne Rückfrage ausführen</span>
+        </label>
+        <button type="submit" class="btn-secondary">Skill-Server hinzufügen</button>
+      </form>
+      </details>
+      <p id="mcp-msg" class="muted"></p>
+    </section>
+
+    <section class="brain-section">
+      <h3>Optimierungsvorschläge</h3>
+      <p id="metrics-line" class="muted"></p>
+      <div id="proposals"></div>
+      <button id="refresh-opt" class="btn-secondary">Vorschläge neu prüfen</button>
+    </section>
+
+    <section class="brain-section">
+      <h3>Gedächtnis</h3>
+      <form id="mem-form">
+        <input id="mem-input" type="text" placeholder="Etwas merken (z. B. eine Vorliebe) …" />
+        <button type="submit">Merken</button>
+      </form>
+      <div id="mem-list"></div>
+    </section>
+  </aside>
+  <div id="brain-backdrop" class="backdrop hidden"></div>
+
+  <script src="main.js"></script>
+  <script src="wizard.js"></script>
+</body>
+</html>

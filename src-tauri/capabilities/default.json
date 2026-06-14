@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Standard-Berechtigungen: Kern-APIs (Events fuer den Fortschritt der Einrichtung).",
+  "windows": ["main"],
+  "permissions": ["core:default"]
+}

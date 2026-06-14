@@ -1,0 +1,165 @@
+"""Einrichtungs-Assistent: installiert die lokale KI beim ersten Start.
+
+Aufgaben:
+  1. Hardware erkennen (RAM, grob die GPU) und passendes Modell waehlen.
+  2. Pruefen, ob Ollama installiert ist -- falls nicht, installieren.
+  3. Das gewaehlte Modell herunterladen ("ollama pull").
+
+Gibt Fortschritt als JSON-Zeilen auf stdout aus, damit die Tauri-GUI einen
+Fortschrittsbalken anzeigen kann. Plattformuebergreifend (Windows/macOS/Linux).
+"""
+from __future__ import annotations
+
+import json
+import os
+import platform
+import shutil
+import subprocess
+import sys
+import time
+import urllib.request
+
+
+def emit(stage: str, message: str, progress: float | None = None, **extra) -> None:
+    """Eine Fortschrittsmeldung als JSON-Zeile (von der GUI gelesen)."""
+    payload = {"stage": stage, "message": message, "progress": progress, **extra}
+    print(json.dumps(payload, ensure_ascii=False), flush=True)
+
+
+# --- 1. Hardware erkennen + Modell waehlen ------------------------------
+def total_ram_gb() -> float:
+    try:
+        if hasattr(os, "sysconf") and "SC_PAGE_SIZE" in os.sysconf_names:
+            return os.sysconf("SC_PAGE_SIZE") * os.sysconf("SC_PHYS_PAGES") / 1e9
+    except (ValueError, OSError):
+        pass
+    # Windows-Fallback ueber ctypes.
+    if os.name == "nt":
+        import ctypes
+
+        class MEMORYSTATUSEX(ctypes.Structure):
+            _fields_ = [
+                ("dwLength", ctypes.c_ulong),
+                ("dwMemoryLoad", ctypes.c_ulong),
+                ("ullTotalPhys", ctypes.c_ulonglong),
+                ("ullAvailPhys", ctypes.c_ulonglong),
+                ("ullTotalPageFile", ctypes.c_ulonglong),
+                ("ullAvailPageFile", ctypes.c_ulonglong),
+                ("ullTotalVirtual", ctypes.c_ulonglong),
+                ("ullAvailVirtual", ctypes.c_ulonglong),
+                ("ullAvailExtendedVirtual", ctypes.c_ulonglong),
+            ]
+
+        stat = MEMORYSTATUSEX()
+        stat.dwLength = ctypes.sizeof(MEMORYSTATUSEX)
+        ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(stat))
+        return stat.ullTotalPhys / 1e9
+    return 8.0  # vorsichtige Annahme
+
+
+def choose_model(ram_gb: float) -> str:
+    if ram_gb < 10:
+        return "qwen2.5:3b"
+    if ram_gb < 20:
+        return "qwen2.5:7b"
+    return "qwen2.5:14b"
+
+
+# --- 2. Ollama installieren ---------------------------------------------
+def ollama_installed() -> bool:
+    return shutil.which("ollama") is not None
+
+
+def install_ollama() -> bool:
+    system = platform.system()
+    emit("install_ollama", f"Installiere Ollama fuer {system} ...", 0.3)
+    try:
+        if system == "Darwin":  # macOS
+            subprocess.run(["brew", "install", "ollama"], check=True)
+        elif system == "Linux":
+            # Offizielles Installationsskript.
+            script = urllib.request.urlopen("https://ollama.com/install.sh", timeout=30).read()
+            subprocess.run(["sh", "-c", script.decode()], check=True)
+        elif system == "Windows":
+            url = "https://ollama.com/download/OllamaSetup.exe"
+            tmp = os.path.join(os.environ.get("TEMP", "."), "OllamaSetup.exe")
+            emit("install_ollama", "Lade Ollama-Installer herunter ...", 0.4)
+            urllib.request.urlretrieve(url, tmp)
+            emit("install_ollama", "Starte Ollama-Installer (still) ...", 0.6)
+            subprocess.run([tmp, "/VERYSILENT", "/NORESTART"], check=True)
+        else:
+            emit("error", f"Nicht unterstuetztes System: {system}")
+            return False
+    except (subprocess.CalledProcessError, OSError, urllib.error.URLError) as exc:
+        emit("error", f"Ollama-Installation fehlgeschlagen: {exc}")
+        return False
+    return True
+
+
+def ensure_ollama_running() -> bool:
+    """Startet 'ollama serve' im Hintergrund, falls noch nicht erreichbar."""
+    import requests
+
+    for _ in range(2):
+        try:
+            requests.get("http://127.0.0.1:11434/api/tags", timeout=2)
+            return True
+        except requests.RequestException:
+            pass
+        subprocess.Popen(
+            ["ollama", "serve"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+        time.sleep(3)
+    return False
+
+
+# --- 3. Modell herunterladen --------------------------------------------
+def pull_model(model: str) -> bool:
+    emit("pull_model", f"Lade lokales KI-Modell '{model}' herunter ...", 0.7)
+    proc = subprocess.Popen(
+        ["ollama", "pull", model],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+    )
+    for line in proc.stdout:  # type: ignore[union-attr]
+        emit("pull_model", line.strip(), 0.85)
+    proc.wait()
+    return proc.returncode == 0
+
+
+def main() -> int:
+    emit("detect", "Erkenne Hardware ...", 0.05)
+    ram = total_ram_gb()
+    model = choose_model(ram)
+    emit("detect", f"{ram:.0f} GB RAM erkannt -> Modell '{model}'", 0.1, model=model, ram_gb=ram)
+
+    if not ollama_installed():
+        if not install_ollama():
+            return 1
+    else:
+        emit("install_ollama", "Ollama bereits installiert.", 0.5)
+
+    if not ensure_ollama_running():
+        emit("error", "Ollama-Dienst konnte nicht gestartet werden.")
+        return 1
+
+    if not pull_model(model):
+        emit("error", f"Modell '{model}' konnte nicht geladen werden.")
+        return 1
+
+    # Embedding-Modell fuer das semantische Gedaechtnis (klein, ~270 MB).
+    # Nicht kritisch: schlaegt es fehl, faellt das Gedaechtnis auf die
+    # lexikalische Suche zurueck.
+    emit("pull_embed", "Lade Embedding-Modell fuer das Gedaechtnis ...", 0.95)
+    if not pull_model("nomic-embed-text"):
+        emit("pull_embed", "Embedding-Modell uebersprungen (Gedaechtnis bleibt lexikalisch).", 0.97)
+
+    emit("done", "Einrichtung abgeschlossen. Die lokale KI ist bereit.", 1.0, model=model)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

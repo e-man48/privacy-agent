@@ -1,0 +1,14 @@
+{
+  "name": "privacy-agent",
+  "version": "0.1.0",
+  "description": "Local-First KI-Agent mit Cloud-Eskalation (DSGVO-konform)",
+  "scripts": {
+    "tauri": "tauri",
+    "dev": "tauri dev",
+    "build": "tauri build",
+    "icons": "tauri icon app-icon.png"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2"
+  }
+}
