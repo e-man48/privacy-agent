@@ -96,9 +96,13 @@ jobs:
             Write-Host "Windows-Zertifikat importiert."
           }
 
-      - name: Tauri-Installer bauen
-        # macOS-Signing/Notarisierung: Tauri nutzt diese Variablen automatisch,
-        # FALLS die Secrets gesetzt sind. Leer = unsignierter Build (wie bisher).
+      # macOS-Signing nur aktivieren, WENN ein Zertifikat hinterlegt ist.
+      # (Leere APPLE_CERTIFICATE-Variable wuerde Tauri sonst zum Signieren mit
+      # leerem Zertifikat verleiten -> Bundle-Fehler. Daher per GITHUB_ENV nur
+      # bei vorhandenem Secret setzen.)
+      - name: macOS-Signing vorbereiten (nur wenn hinterlegt)
+        if: runner.os == 'macOS'
+        shell: bash
         env:
           APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
           APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
@@ -106,6 +110,24 @@ jobs:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          if [ -n "$APPLE_CERTIFICATE" ]; then
+            {
+              echo "APPLE_CERTIFICATE<<__EOF__"
+              echo "$APPLE_CERTIFICATE"
+              echo "__EOF__"
+              echo "APPLE_CERTIFICATE_PASSWORD=$APPLE_CERTIFICATE_PASSWORD"
+              echo "APPLE_SIGNING_IDENTITY=$APPLE_SIGNING_IDENTITY"
+              echo "APPLE_ID=$APPLE_ID"
+              echo "APPLE_PASSWORD=$APPLE_PASSWORD"
+              echo "APPLE_TEAM_ID=$APPLE_TEAM_ID"
+            } >> "$GITHUB_ENV"
+            echo "macOS-Signing aktiviert."
+          else
+            echo "Kein Apple-Zertifikat -- macOS-Build bleibt unsigniert."
+          fi
+
+      - name: Tauri-Installer bauen
         run: npm run build
 
       - name: Installer als Artefakt hochladen
