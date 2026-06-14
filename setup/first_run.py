@@ -66,8 +66,28 @@ def choose_model(ram_gb: float) -> str:
 
 
 # --- 2. Ollama installieren ---------------------------------------------
+def find_ollama() -> "str | None":
+    """Findet ollama.exe -- auch wenn es (noch) nicht im PATH des laufenden
+    Prozesses steht (typisch direkt nach der Installation auf Windows)."""
+    found = shutil.which("ollama")
+    if found:
+        return found
+    if os.name == "nt":
+        candidates = []
+        for base in (os.environ.get("LOCALAPPDATA", ""),
+                     os.environ.get("ProgramFiles", ""),
+                     os.environ.get("ProgramW6432", "")):
+            if base:
+                candidates.append(os.path.join(base, "Programs", "Ollama", "ollama.exe"))
+                candidates.append(os.path.join(base, "Ollama", "ollama.exe"))
+        for cand in candidates:
+            if os.path.isfile(cand):
+                return cand
+    return None
+
+
 def ollama_installed() -> bool:
-    return shutil.which("ollama") is not None
+    return find_ollama() is not None
 
 
 def _no_window() -> dict:
@@ -126,22 +146,33 @@ def install_ollama() -> bool:
 
 
 def ensure_ollama_running() -> bool:
-    """Startet 'ollama serve' im Hintergrund, falls noch nicht erreichbar."""
+    """Stellt sicher, dass der Ollama-Dienst laeuft.
+
+    Auf Windows startet Ollama meist von selbst (Tray). Wir warten daher
+    ausreichend lange auf die API und stossen den Dienst -- ueber den gefundenen
+    Pfad -- nur an, falls er nach ein paar Versuchen noch nicht erreichbar ist.
+    """
     import requests
 
-    for _ in range(2):
+    exe = find_ollama()
+    for attempt in range(15):  # ~30 Sekunden Geduld
         try:
             requests.get("http://127.0.0.1:11434/api/tags", timeout=2)
             return True
         except requests.RequestException:
             pass
-        subprocess.Popen(
-            ["ollama", "serve"],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            **_no_window(),
-        )
-        time.sleep(3)
+        # Nach dem zweiten Fehlversuch selbst starten (falls noch nicht laeuft).
+        if attempt == 1 and exe:
+            try:
+                subprocess.Popen(
+                    [exe, "serve"],
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    **_no_window(),
+                )
+            except OSError:
+                pass
+        time.sleep(2)
     return False
 
 
@@ -149,7 +180,7 @@ def ensure_ollama_running() -> bool:
 def pull_model(model: str) -> bool:
     emit("pull_model", f"Lade lokales KI-Modell '{model}' herunter ...", 0.7)
     proc = subprocess.Popen(
-        ["ollama", "pull", model],
+        [find_ollama() or "ollama", "pull", model],
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         text=True,
