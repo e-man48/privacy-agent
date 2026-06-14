@@ -62,6 +62,13 @@ jobs:
       - name: Icons erzeugen
         run: npm run icons
 
+      - name: Abhaengigkeits-Konflikt loesen (brotli / alloc-no-stdlib)
+        working-directory: src-tauri
+        run: |
+          cargo generate-lockfile
+          cargo update -p alloc-stdlib --precise 0.2.2
+          cargo update -p alloc-no-stdlib --precise 2.0.4
+
       - name: Tauri-Installer bauen
         run: npm run build
 
