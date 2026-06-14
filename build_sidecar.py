@@ -57,6 +57,10 @@ def build() -> None:
             "--collect-all", "fastapi",
             "--collect-all", "pydantic",
             "--collect-all", "anthropic",
+            # certifi/requests mitnehmen -> verlaessliche HTTPS-Downloads
+            # (sonst CERTIFICATE_VERIFY_FAILED im gebuendelten Python).
+            "--collect-all", "certifi",
+            "--collect-all", "requests",
             "--hidden-import", "agent.main",
             "--hidden-import", "setup.first_run",
             str(ROOT / "launcher.py"),

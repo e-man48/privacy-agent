@@ -70,6 +70,30 @@ def ollama_installed() -> bool:
     return shutil.which("ollama") is not None
 
 
+def _download(url: str, dest: str, timeout: int = 180) -> None:
+    """HTTPS-Download mit verlaesslicher Zertifikatspruefung (requests/certifi).
+
+    Wichtig im gebuendelten Programm: der eingebettete Python findet sonst die
+    System-Wurzelzertifikate nicht -> CERTIFICATE_VERIFY_FAILED. requests bringt
+    ueber certifi ein eigenes CA-Paket mit.
+    """
+    import requests
+
+    with requests.get(url, stream=True, timeout=timeout) as r:
+        r.raise_for_status()
+        with open(dest, "wb") as fh:
+            for chunk in r.iter_content(chunk_size=1 << 16):
+                fh.write(chunk)
+
+
+def _http_text(url: str, timeout: int = 30) -> str:
+    import requests
+
+    r = requests.get(url, timeout=timeout)
+    r.raise_for_status()
+    return r.text
+
+
 def install_ollama() -> bool:
     system = platform.system()
     emit("install_ollama", f"Installiere Ollama fuer {system} ...", 0.3)
@@ -78,19 +102,19 @@ def install_ollama() -> bool:
             subprocess.run(["brew", "install", "ollama"], check=True)
         elif system == "Linux":
             # Offizielles Installationsskript.
-            script = urllib.request.urlopen("https://ollama.com/install.sh", timeout=30).read()
-            subprocess.run(["sh", "-c", script.decode()], check=True)
+            script = _http_text("https://ollama.com/install.sh")
+            subprocess.run(["sh", "-c", script], check=True)
         elif system == "Windows":
             url = "https://ollama.com/download/OllamaSetup.exe"
             tmp = os.path.join(os.environ.get("TEMP", "."), "OllamaSetup.exe")
             emit("install_ollama", "Lade Ollama-Installer herunter ...", 0.4)
-            urllib.request.urlretrieve(url, tmp)
+            _download(url, tmp)
             emit("install_ollama", "Starte Ollama-Installer (still) ...", 0.6)
             subprocess.run([tmp, "/VERYSILENT", "/NORESTART"], check=True)
         else:
             emit("error", f"Nicht unterstuetztes System: {system}")
             return False
-    except (subprocess.CalledProcessError, OSError, urllib.error.URLError) as exc:
+    except Exception as exc:  # Netz-/SSL-/Installer-Fehler sauber melden
         emit("error", f"Ollama-Installation fehlgeschlagen: {exc}")
         return False
     return True

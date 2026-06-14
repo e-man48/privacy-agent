@@ -95,7 +95,14 @@ def install_node(emit: Callable[[str], None]) -> None:
     url = f"https://nodejs.org/dist/{NODE_VERSION}/{fname}"
     archive = runtimes_dir() / fname
     emit(f"Lade Node.js {NODE_VERSION} herunter …")
-    urllib.request.urlretrieve(url, archive)
+    # requests nutzt certifi -> verlaessliche TLS-Pruefung auch im Bundle.
+    import requests
+
+    with requests.get(url, stream=True, timeout=300) as r:
+        r.raise_for_status()
+        with open(archive, "wb") as fh:
+            for chunk in r.iter_content(chunk_size=1 << 16):
+                fh.write(chunk)
 
     emit("Entpacke Node.js …")
     if fname.endswith(".zip"):
