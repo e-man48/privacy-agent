@@ -17,7 +17,7 @@ from pydantic import BaseModel
 from . import (
     cloud_llm, config, connectors, consent_log, extractor, local_llm,
     mcp_catalog, mcp_client, memory, metrics, openrouter_auth, optimizer,
-    projects, router, runtimes, settings,
+    projects, router, runtimes, scheduler, settings,
 )
 
 
@@ -32,6 +32,7 @@ async def lifespan(app: FastAPI):
     yield
     await connectors.shutdown()
     mcp_client.stop()
+    scheduler.stop()
 
 
 app = FastAPI(title="Privacy-Agent", lifespan=lifespan)
@@ -117,6 +118,12 @@ class ProjectUpdateIn(BaseModel):
     status: Optional[str] = None
 
 
+class JobIn(BaseModel):
+    goal: str
+    priority: int = 0
+    project_id: Optional[str] = None
+
+
 @app.get("/health")
 def health() -> dict:
     return {"ok": True, "version": __import__("agent").__version__}
@@ -195,6 +202,20 @@ def projects_update(pid: str, body: ProjectUpdateIn) -> dict:
 @app.delete("/projects/{pid}")
 def projects_delete(pid: str) -> dict:
     return {"ok": projects.delete(pid)}
+
+
+# --- Hintergrund-Auftraege (Stufe B) ------------------------------------
+@app.post("/jobs")
+def jobs_create(body: JobIn) -> dict:
+    """Startet einen Auftrag im Hintergrund (Chat bleibt frei nutzbar)."""
+    pid = body.project_id or projects.get_active()[0]["id"]
+    jid = scheduler.enqueue(body.goal, pid, body.priority)
+    return {"ok": True, "id": jid}
+
+
+@app.get("/jobs")
+def jobs_list() -> dict:
+    return {"jobs": scheduler.list_jobs(), "active": scheduler.active_count()}
 
 
 # --- Gedaechtnis --------------------------------------------------------

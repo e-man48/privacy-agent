@@ -123,6 +123,54 @@ async function newProject() {
   loadProjects(false);
 }
 
+// --- Hintergrund-Aufträge (Stufe B) ------------------------------------
+let jobTimer = null;
+let lastActive = 0;
+
+el("bg-btn").addEventListener("click", async () => {
+  const text = el("input").value.trim();
+  if (!text) return;
+  el("input").value = "";
+  addMessage("⏳ Im Hintergrund: " + text, "user");
+  try {
+    await fetch(`${API}/jobs`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ goal: text }),
+    });
+  } catch {
+    addMessage("⚠️ Konnte Hintergrund-Auftrag nicht starten.", "assistant");
+    return;
+  }
+  startJobPolling();
+});
+
+function startJobPolling() {
+  if (jobTimer) return;
+  jobTimer = setInterval(async () => {
+    let d;
+    try {
+      d = await (await fetch(`${API}/jobs`)).json();
+    } catch {
+      return;
+    }
+    const bs = el("bg-status");
+    if (d.active > 0) {
+      bs.textContent = `⏳ ${d.active} Hintergrund-Auftrag(e) laufen …`;
+      bs.classList.remove("hidden");
+    } else {
+      bs.classList.add("hidden");
+    }
+    // Wenn ein Auftrag fertig wurde -> Verlauf des aktiven Projekts nachladen.
+    if (d.active < lastActive) loadProjects(true);
+    lastActive = d.active;
+    if (d.active === 0) {
+      clearInterval(jobTimer);
+      jobTimer = null;
+    }
+  }, 3000);
+}
+
 // --- Chat ---------------------------------------------------------------
 function addMessage(text, role, meta) {
   const div = document.createElement("div");
