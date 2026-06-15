@@ -59,12 +59,55 @@ def total_ram_gb() -> float:
     return 8.0  # vorsichtige Annahme
 
 
-def choose_model(ram_gb: float) -> str:
-    if ram_gb < 10:
+def has_usable_gpu() -> bool:
+    """Grobe Erkennung einer fuer KI brauchbaren GPU (NVIDIA-CUDA oder Apple-
+    Silicon/Metal). Andere (Intel-/AMD-iGPUs) nutzt Ollama kaum -> als CPU werten.
+    """
+    # NVIDIA: nvidia-smi vorhanden?
+    if shutil.which("nvidia-smi"):
+        return True
+    # Apple Silicon (arm64-Mac) -> Metal-GPU.
+    if platform.system() == "Darwin" and platform.machine().lower() in ("arm64", "aarch64"):
+        return True
+    # Windows: dedizierte NVIDIA/AMD-GPU im Geraetenamen?
+    if os.name == "nt":
+        try:
+            out = subprocess.run(
+                ["wmic", "path", "win32_VideoController", "get", "name"],
+                capture_output=True, text=True, timeout=6,
+                creationflags=0x08000000,
+            ).stdout.lower()
+            return "nvidia" in out or "geforce" in out or "rtx" in out or "radeon" in out
+        except Exception:
+            return False
+    # Linux: NVIDIA/AMD per lspci?
+    if shutil.which("lspci"):
+        try:
+            out = subprocess.run(["lspci"], capture_output=True, text=True, timeout=6).stdout.lower()
+            return "nvidia" in out or "radeon" in out
+        except Exception:
+            return False
+    return False
+
+
+def choose_model(ram_gb: float, gpu: bool) -> str:
+    """Waehlt das Modell anhand von RAM UND GPU.
+
+    Ohne brauchbare GPU laeuft alles auf der CPU -- dort sind kleinere Modelle
+    deutlich fluessiger, daher bewusst zurueckhaltender.
+    """
+    if gpu:
+        if ram_gb < 8:
+            return "qwen2.5:3b"
+        if ram_gb < 16:
+            return "qwen2.5:7b"
+        return "qwen2.5:14b"
+    # Nur-CPU: klein halten, damit es benutzbar bleibt.
+    if ram_gb < 8:
+        return "qwen2.5:1.5b"
+    if ram_gb < 16:
         return "qwen2.5:3b"
-    if ram_gb < 20:
-        return "qwen2.5:7b"
-    return "qwen2.5:14b"
+    return "qwen2.5:7b"
 
 
 # --- 2. Ollama installieren ---------------------------------------------
@@ -232,8 +275,11 @@ def pull_model(model: str, lo: float = 0.55, hi: float = 0.92) -> bool:
 def main() -> int:
     emit("detect", "Erkenne Hardware ...", 0.05)
     ram = total_ram_gb()
-    model = choose_model(ram)
-    emit("detect", f"{ram:.0f} GB RAM erkannt -> Modell '{model}'", 0.1, model=model, ram_gb=ram)
+    gpu = has_usable_gpu()
+    model = choose_model(ram, gpu)
+    hw = "GPU" if gpu else "nur CPU"
+    emit("detect", f"{ram:.0f} GB RAM, {hw} -> Modell '{model}'",
+         0.1, model=model, ram_gb=ram, gpu=gpu)
 
     if not ollama_installed():
         if not install_ollama():
