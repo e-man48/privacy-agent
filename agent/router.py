@@ -14,11 +14,29 @@ from __future__ import annotations
 
 import json
 import re
+import urllib.parse
 import uuid
+import webbrowser
 from dataclasses import dataclass, field
 from typing import Any, Optional
 
 from . import autopilot, cloud_llm, config, consent_log, local_llm, memory, metrics, principals
+
+_PROVIDER_LABEL = {"claude": "Claude", "chatgpt": "ChatGPT", "gemini": "Gemini"}
+
+
+def _provider_label(provider: str) -> str:
+    return _PROVIDER_LABEL.get(provider, "die KI")
+
+
+def _browser_url(provider: str, prompt: str) -> str:
+    """Web-Chat-URL des Abos -- mit vorbefuellter Frage, wo unterstuetzt."""
+    q = urllib.parse.quote(prompt)
+    if provider == "chatgpt":
+        return f"https://chatgpt.com/?q={q}"
+    if provider == "gemini":
+        return "https://gemini.google.com/app"
+    return f"https://claude.ai/new?q={q}"
 from .tools import TOOLS, run_tool, tool_descriptions
 
 _BASE_PROMPT = """Du bist ein eigenstaendiger, hilfreicher Assistent, der so weit \
@@ -115,14 +133,37 @@ def _try_parse_tool_call(text: str) -> Optional[dict]:
 
 
 def _cloud_or_block(principal, reason: str, preview: str, messages: list[dict]) -> dict:
-    """Fragt die Cloud-Einwilligung an -- aber nur, wenn der Principal das darf."""
-    if not principal.can_use_cloud:
+    """Behandelt die Eskalation je nach Notfall-Modus und Berechtigung."""
+    if not principal.can_use_cloud or config.CLOUD_MODE == "off":
         metrics.record("cloud_blocked", user=principal.id)
         return _answer(
-            "Ich komme hier lokal nicht sicher weiter und darf für dich die "
-            "Cloud nicht nutzen. Bitte frage eine dafür berechtigte Person.",
+            "Ich komme hier lokal nicht sicher weiter und darf/soll die "
+            "Notfall-Hilfe nicht nutzen. Du kannst sie im 🧠-Menü aktivieren – "
+            "oder eine berechtigte Person fragen.",
             source="local",
         )
+
+    if config.CLOUD_MODE == "browser":
+        # Abo-Hilfe im Browser: nur sinnvoll, wenn der Mensch am PC ist (GUI).
+        if principal.id != "local":
+            return _answer(
+                "Ich komme lokal nicht weiter. Die Abo-Hilfe im Browser geht nur "
+                "direkt am PC, nicht aus der Ferne.",
+                source="local",
+            )
+        label = _provider_label(config.BROWSER_PROVIDER)
+        return _consent(
+            PendingAction(
+                kind="browser",
+                reason=(f"Lokal unsicher. Soll ich {label} im Browser öffnen? "
+                        "Die Frage kommt in die Zwischenablage – du nutzt dann dein Abo."),
+                data_preview=preview,
+                messages=messages,
+                payload={"prompt": preview},
+            )
+        )
+
+    # CLOUD_MODE == "api"
     return _consent(
         PendingAction(kind="cloud", reason=reason, data_preview=preview, messages=messages)
     )
@@ -261,7 +302,27 @@ def resolve_consent(pending_id: str, approved: bool) -> dict:
 
     if action.kind == "tool":
         return _resume_tool(action)
+    if action.kind == "browser":
+        return _open_browser(action)
     return _escalate_to_cloud(action)
+
+
+def _open_browser(action: PendingAction) -> dict:
+    """Oeffnet das Abo-Web-Chat im Browser; die Frage geht in die Zwischenablage."""
+    prompt = action.payload.get("prompt", "")
+    try:
+        webbrowser.open(_browser_url(config.BROWSER_PROVIDER, prompt))
+    except Exception:  # noqa: BLE001 -- Browser-Oeffnen darf nie crashen
+        pass
+    metrics.record("browser_handoff", provider=config.BROWSER_PROVIDER)
+    label = _provider_label(config.BROWSER_PROVIDER)
+    return {
+        "type": "manual_cloud",
+        "text": (f"Ich habe {label} in deinem Browser geöffnet. Die Frage ist in "
+                 "der Zwischenablage – füge sie mit Strg+V ein."),
+        "clipboard": prompt,
+        "source": "manual",
+    }
 
 
 def _resume_tool(action: PendingAction) -> dict:

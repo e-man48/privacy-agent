@@ -69,6 +69,11 @@ function handleResult(res) {
     suggestMemories(); // nach jeder Antwort prüfen, ob etwas merkenswert ist
   } else if (res.type === "consent_required") {
     showConsent(res);
+  } else if (res.type === "manual_cloud") {
+    addMessage(res.text, "assistant");
+    if (res.clipboard) {
+      navigator.clipboard.writeText(res.clipboard).catch(() => {});
+    }
   } else if (res.type === "error") {
     addMessage("⚠️ " + res.text, "assistant");
   }
@@ -200,6 +205,7 @@ function openBrain() {
   el("brain").classList.remove("hidden");
   el("brain-backdrop").classList.remove("hidden");
   loadModels();
+  loadEmergency();
   loadMatrix();
   loadCatalog();
   loadMCP();
@@ -506,6 +512,86 @@ el("autopilot-toggle").addEventListener("change", async (e) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ auto_local_upgrade: e.target.checked }),
   });
+});
+
+// --- Modell-Sperre + Notfall-Hilfe -------------------------------------
+async function saveSettings(obj) {
+  await fetch(`${API}/setup/save`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ settings: obj }),
+  });
+}
+
+function refreshEmergencyRows(orKeySet) {
+  const mode = el("cloud-mode").value;
+  el("browser-provider-row").classList.toggle("hidden", mode !== "browser");
+  el("api-options").classList.toggle("hidden", mode !== "api");
+  el("openrouter-row").classList.toggle("hidden", el("cloud-provider").value !== "openrouter");
+  if (orKeySet !== undefined) {
+    el("openrouter-status").textContent = orKeySet
+      ? "🟢 Mit OpenRouter verbunden."
+      : "Noch nicht angemeldet.";
+  }
+}
+
+async function loadEmergency() {
+  try {
+    const st = await (await fetch(`${API}/setup/state`)).json();
+    const s = st.settings || {};
+    el("lock-toggle").checked = !!s.model_locked;
+    el("cloud-mode").value = s.cloud_mode || "api";
+    el("browser-provider").value = s.browser_provider || "claude";
+    el("cloud-provider").value = s.cloud_provider || "openrouter";
+    el("openrouter-model").value = s.openrouter_model || "";
+    el("autopilot-toggle").disabled = !!s.model_locked; // bei Sperre sichtbar aus
+    refreshEmergencyRows(!!s.openrouter_api_key_set);
+  } catch {
+    /* still */
+  }
+}
+
+el("lock-toggle").addEventListener("change", async (e) => {
+  await saveSettings({ model_locked: e.target.checked });
+  el("autopilot-toggle").disabled = e.target.checked;
+});
+
+el("cloud-mode").addEventListener("change", () => refreshEmergencyRows());
+el("cloud-provider").addEventListener("change", () => refreshEmergencyRows());
+
+el("openrouter-login").addEventListener("click", async () => {
+  el("openrouter-msg").textContent = "Browser öffnet sich – bitte anmelden …";
+  try {
+    await fetch(`${API}/oauth/openrouter/start`, { method: "POST" });
+  } catch {
+    el("openrouter-msg").textContent = "Konnte Anmeldung nicht starten.";
+    return;
+  }
+  // Auf den Schlüssel warten (Callback speichert ihn).
+  let tries = 0;
+  const poll = setInterval(async () => {
+    tries++;
+    try {
+      const st = await (await fetch(`${API}/setup/state`)).json();
+      if (st.settings && st.settings.openrouter_api_key_set) {
+        clearInterval(poll);
+        el("openrouter-msg").textContent = "✅ Angemeldet.";
+        el("openrouter-status").textContent = "🟢 Mit OpenRouter verbunden.";
+      }
+    } catch { /* weiter versuchen */ }
+    if (tries > 60) clearInterval(poll); // nach ~2 Min aufgeben
+  }, 2000);
+});
+
+el("cloud-mode-save").addEventListener("click", async () => {
+  el("cloud-mode-msg").textContent = "Speichere …";
+  await saveSettings({
+    cloud_mode: el("cloud-mode").value,
+    browser_provider: el("browser-provider").value,
+    cloud_provider: el("cloud-provider").value,
+    openrouter_model: el("openrouter-model").value.trim() || "openrouter/auto",
+  });
+  el("cloud-mode-msg").textContent = "Gespeichert.";
 });
 function closeBrain() {
   el("brain").classList.add("hidden");

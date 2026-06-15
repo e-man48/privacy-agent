@@ -23,6 +23,22 @@ CLOUD_MODEL = os.environ.get("CLOUD_MODEL", "claude-haiku-4-5-20251001")
 # Fuer schwierige Faelle kann auf das staerkste Modell hochgestuft werden.
 CLOUD_MODEL_STRONG = os.environ.get("CLOUD_MODEL_STRONG", "claude-opus-4-8")
 
+# --- Notfall-Modus ------------------------------------------------------
+# "off"     : nie Cloud, bleibt rein lokal.
+# "api"     : Cloud per API (nach Einwilligung) -- bisheriges Verhalten.
+# "browser" : Abo-Hilfe -- oeffnet das Web-Chat des Abos im Browser (nur am PC),
+#             der Mensch nutzt sein eigenes Abo. Frage kommt in die Zwischenablage.
+CLOUD_MODE = os.environ.get("CLOUD_MODE", "api")
+# Welches Abo-Web-Chat im Browser-Modus geoeffnet wird: claude | chatgpt | gemini.
+BROWSER_PROVIDER = os.environ.get("BROWSER_PROVIDER", "claude")
+
+# Im API-Modus: welcher Anbieter? "anthropic" (Claude) | "openrouter" (viele Modelle).
+CLOUD_PROVIDER = os.environ.get("CLOUD_PROVIDER", "anthropic")
+# OpenRouter: ein Konto/Login -> Zugang zu Claude, GPT, Gemini u.v.m.
+OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY", "")
+# "openrouter/auto" waehlt automatisch ein passendes Modell (sicherer Standard).
+OPENROUTER_MODEL = os.environ.get("OPENROUTER_MODEL", "openrouter/auto")
+
 # --- Eskalations-Schwellen ----------------------------------------------
 # Selbstbewertung 0-10; darunter wird eine Cloud-Eskalation vorgeschlagen.
 CONFIDENCE_THRESHOLD = int(os.environ.get("CONFIDENCE_THRESHOLD", "6"))
@@ -38,6 +54,10 @@ def _as_bool(v) -> bool:
 # Autopilot: Bei Schwierigkeiten autonom auf ein staerkeres LOKALES Modell
 # wechseln, bevor die Cloud vorgeschlagen wird (kostenlos, lokal, reversibel).
 AUTO_LOCAL_UPGRADE = _as_bool(os.environ.get("AUTO_LOCAL_UPGRADE", "true"))
+
+# Modell-Sperre: Wenn aktiv, darf der Agent (Autopilot/Optimierer) das Modell
+# NICHT mehr aendern -- nur der Mensch stellt es um, und es bleibt so.
+MODEL_LOCKED = _as_bool(os.environ.get("MODEL_LOCKED", "false"))
 
 # --- Semantisches Gedaechtnis (Embeddings) ------------------------------
 # Kosinus-Aehnlichkeit, ab der zwei Eintraege als Duplikat/Synonym gelten.
@@ -203,6 +223,18 @@ def apply_user_settings(data: dict) -> None:
         g["LOCAL_MODEL"] = str(data["local_model"])
     if "auto_local_upgrade" in data:
         g["AUTO_LOCAL_UPGRADE"] = _as_bool(data["auto_local_upgrade"])
+    if "model_locked" in data:
+        g["MODEL_LOCKED"] = _as_bool(data["model_locked"])
+    if data.get("cloud_mode") in ("off", "api", "browser"):
+        g["CLOUD_MODE"] = data["cloud_mode"]
+    if data.get("browser_provider") in ("claude", "chatgpt", "gemini"):
+        g["BROWSER_PROVIDER"] = data["browser_provider"]
+    if data.get("cloud_provider") in ("anthropic", "openrouter"):
+        g["CLOUD_PROVIDER"] = data["cloud_provider"]
+    if data.get("openrouter_api_key") is not None:
+        g["OPENROUTER_API_KEY"] = str(data["openrouter_api_key"])
+    if data.get("openrouter_model"):
+        g["OPENROUTER_MODEL"] = str(data["openrouter_model"])
     if data.get("decision_style") in _DECISION_STYLE:
         g["CONFIDENCE_THRESHOLD"] = _DECISION_STYLE[data["decision_style"]]
     if "connector" in data:

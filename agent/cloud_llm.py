@@ -16,6 +16,8 @@ class CloudLLMError(RuntimeError):
 
 
 def is_configured() -> bool:
+    if config.CLOUD_PROVIDER == "openrouter":
+        return bool(config.OPENROUTER_API_KEY)
     return bool(config.ANTHROPIC_API_KEY)
 
 
@@ -40,11 +42,37 @@ def test_key(api_key: str) -> tuple[bool, str]:
 
 
 def chat(messages: list[dict], system: Optional[str] = None, strong: bool = False) -> str:
-    """Sendet eine Anfrage an Claude. Setzt einen gueltigen API-Key voraus."""
+    """Sendet eine Anfrage an den konfigurierten Cloud-Anbieter."""
     if not is_configured():
-        raise CloudLLMError(
-            "Kein Anthropic-API-Schluessel hinterlegt. Cloud-Notfall nicht moeglich."
+        raise CloudLLMError("Kein Cloud-Zugang hinterlegt. Notfall-Hilfe nicht moeglich.")
+    if config.CLOUD_PROVIDER == "openrouter":
+        return _chat_openrouter(messages, system)
+    return _chat_anthropic(messages, system, strong)
+
+
+def _chat_openrouter(messages: list[dict], system: Optional[str]) -> str:
+    """OpenRouter (OpenAI-kompatibel) -- ein Zugang zu vielen Modellen."""
+    import requests
+
+    msgs = ([{"role": "system", "content": system}] if system else []) + messages
+    try:
+        r = requests.post(
+            "https://openrouter.ai/api/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {config.OPENROUTER_API_KEY}",
+                "HTTP-Referer": "https://privacy-agent.local",
+                "X-Title": "Privacy-Agent",
+            },
+            json={"model": config.OPENROUTER_MODEL, "messages": msgs, "max_tokens": 2048},
+            timeout=120,
         )
+        r.raise_for_status()
+        return r.json()["choices"][0]["message"]["content"].strip()
+    except Exception as exc:  # Netz-/Auth-/Format-Fehler
+        raise CloudLLMError(f"OpenRouter-Aufruf fehlgeschlagen: {exc}") from exc
+
+
+def _chat_anthropic(messages: list[dict], system: Optional[str], strong: bool) -> str:
     try:
         import anthropic  # lokal importiert, damit der lokale Pfad ohne SDK laeuft
     except ImportError as exc:

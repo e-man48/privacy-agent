@@ -16,7 +16,8 @@ from pydantic import BaseModel
 
 from . import (
     cloud_llm, config, connectors, consent_log, extractor, local_llm,
-    mcp_catalog, mcp_client, memory, metrics, optimizer, router, runtimes, settings,
+    mcp_catalog, mcp_client, memory, metrics, openrouter_auth, optimizer, router,
+    runtimes, settings,
 )
 
 
@@ -347,6 +348,38 @@ async def setup_matrix_test(body: MatrixTestIn) -> dict:
         body.matrix_password, body.matrix_access_token,
     )
     return {"ok": ok, "message": message}
+
+
+@app.post("/oauth/openrouter/start")
+def openrouter_start() -> dict:
+    """Oeffnet die OpenRouter-Anmeldung im Browser (OAuth-Login)."""
+    openrouter_auth.start()
+    return {"ok": True}
+
+
+@app.get("/oauth/openrouter/callback")
+def openrouter_callback(code: str = ""):
+    """Wird von OpenRouter nach der Anmeldung aufgerufen; holt den Schluessel."""
+    from fastapi.responses import HTMLResponse
+
+    page = "<html><body style='font-family:sans-serif;text-align:center;padding:3rem'>{}</body></html>"
+    if not code:
+        return HTMLResponse(page.format("<h2>Kein Code erhalten.</h2>"))
+    try:
+        key = openrouter_auth.exchange(code)
+    except Exception as exc:  # noqa: BLE001
+        return HTMLResponse(page.format(f"<h2>Anmeldung fehlgeschlagen:</h2><p>{exc}</p>"))
+    if not key:
+        return HTMLResponse(page.format("<h2>Kein Schlüssel erhalten.</h2>"))
+    settings.save({
+        "openrouter_api_key": key,
+        "cloud_provider": "openrouter",
+        "cloud_mode": "api",
+    })
+    return HTMLResponse(page.format(
+        "<h2>✅ Mit OpenRouter verbunden.</h2>"
+        "<p>Du kannst dieses Fenster schließen und zum Privacy-Agent zurückkehren.</p>"
+    ))
 
 
 @app.post("/setup/save")

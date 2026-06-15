@@ -183,6 +183,52 @@
         <input id="autopilot-toggle" type="checkbox" />
         <span>Autopilot: bei Schwierigkeiten autonom ein stärkeres lokales Modell nutzen</span>
       </label>
+      <label class="toggle">
+        <input id="lock-toggle" type="checkbox" />
+        <span>🔒 Modell fest – nur ich stelle es um, der Agent darf es nicht ändern</span>
+      </label>
+    </section>
+
+    <section class="brain-section">
+      <h3>Notfall-Hilfe</h3>
+      <p class="muted">Was passiert, wenn die lokale KI nicht weiterkommt?</p>
+      <div class="model-row">
+        <select id="cloud-mode">
+          <option value="off">Aus – nur lokal</option>
+          <option value="browser">Abo im Browser (du nutzt dein eigenes Abo)</option>
+          <option value="api">Cloud per API-Schlüssel</option>
+        </select>
+      </div>
+      <div id="browser-provider-row" class="model-row hidden">
+        <select id="browser-provider">
+          <option value="claude">Claude (claude.ai)</option>
+          <option value="chatgpt">ChatGPT (chatgpt.com)</option>
+          <option value="gemini">Gemini (gemini.google.com)</option>
+        </select>
+      </div>
+
+      <div id="api-options" class="hidden">
+        <div class="model-row">
+          <select id="cloud-provider">
+            <option value="openrouter">OpenRouter (ein Login → viele Modelle)</option>
+            <option value="anthropic">Anthropic (Claude direkt, API-Schlüssel)</option>
+          </select>
+        </div>
+        <div id="openrouter-row">
+          <p id="openrouter-status" class="muted"></p>
+          <input id="openrouter-model" placeholder="Modell (z. B. openrouter/auto)" />
+          <div class="inline-row">
+            <button id="openrouter-login" class="btn-secondary">Mit OpenRouter anmelden</button>
+            <span id="openrouter-msg" class="muted"></span>
+          </div>
+        </div>
+      </div>
+
+      <p class="muted">„Abo im Browser": Der Agent öffnet das Web-Chat deines
+         Abos und legt die Frage in die Zwischenablage – funktioniert nur direkt
+         am PC, nicht aus der Ferne.</p>
+      <button id="cloud-mode-save" class="btn-secondary">Speichern</button>
+      <span id="cloud-mode-msg" class="muted"></span>
     </section>
 
     <section class="brain-section">

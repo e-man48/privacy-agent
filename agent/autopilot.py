@@ -45,7 +45,8 @@ _MODEL_SIZES_B: dict[str, float] = {
 
 
 def enabled() -> bool:
-    return bool(config.AUTO_LOCAL_UPGRADE)
+    # Bei gesperrtem Modell darf der Agent NICHT autonom wechseln.
+    return bool(config.AUTO_LOCAL_UPGRADE) and not bool(config.MODEL_LOCKED)
 
 
 def _params(model: str):

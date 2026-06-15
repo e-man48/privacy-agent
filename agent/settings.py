@@ -15,13 +15,16 @@ _ALLOWED = {
     "onboarded",
     "anthropic_api_key", "cloud_model", "local_model",
     "decision_style", "auto_local_upgrade",
+    "model_locked", "cloud_mode", "browser_provider",
+    "cloud_provider", "openrouter_api_key", "openrouter_model",
     "connector",
     "matrix_homeserver", "matrix_user", "matrix_password",
     "matrix_access_token", "matrix_allowed_users", "matrix_admin_users",
 }
 
 # Schluessel, die in /setup/state NICHT im Klartext zurueckgegeben werden.
-_SECRET = {"anthropic_api_key", "matrix_password", "matrix_access_token"}
+_SECRET = {"anthropic_api_key", "matrix_password", "matrix_access_token",
+           "openrouter_api_key"}
 
 
 def load() -> dict:

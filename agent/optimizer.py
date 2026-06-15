@@ -88,7 +88,8 @@ def analyze() -> list[Proposal]:
         ))
 
     # Regel B: Viel eskaliert, Cloud wird akzeptiert -> staerkeres lokales Modell.
-    if esc >= 0.5 and deny < 0.5:
+    # Entfaellt, wenn der Mensch das Modell gesperrt hat.
+    if esc >= 0.5 and deny < 0.5 and not config.MODEL_LOCKED:
         bigger = _bigger_model(config.LOCAL_MODEL)
         if bigger:
             proposals.append(Proposal(
