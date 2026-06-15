@@ -207,10 +207,15 @@ def projects_delete(pid: str) -> dict:
 # --- Hintergrund-Auftraege (Stufe B) ------------------------------------
 @app.post("/jobs")
 def jobs_create(body: JobIn) -> dict:
-    """Startet einen Auftrag im Hintergrund (Chat bleibt frei nutzbar)."""
+    """Startet einen Auftrag im Hintergrund (Chat bleibt frei nutzbar).
+
+    Beginnt der Auftrag mit "dringend" (o.ae.), bekommt er Vorrang.
+    """
     pid = body.project_id or projects.get_active()[0]["id"]
-    jid = scheduler.enqueue(body.goal, pid, body.priority)
-    return {"ok": True, "id": jid}
+    urgency, goal = scheduler.parse_urgency(body.goal)
+    priority = max(body.priority, urgency)
+    jid = scheduler.enqueue(goal, pid, priority)
+    return {"ok": True, "id": jid, "urgent": priority >= scheduler.URGENT_PRIORITY}
 
 
 @app.get("/jobs")

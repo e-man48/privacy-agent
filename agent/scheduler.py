@@ -18,6 +18,24 @@ from . import principals, projects, router
 
 _jobs: dict[str, dict] = {}
 _lock = threading.Lock()
+
+# Schluesselwoerter am Anfang -> hohe Prioritaet (vor wartenden Auftraegen).
+_URGENT = ("dringend", "sofort", "urgent", "wichtig", "schnell", "eilt")
+URGENT_PRIORITY = 10
+
+
+def parse_urgency(text: str) -> tuple[int, str]:
+    """Erkennt ein Dringend-Schluesselwort am Anfang.
+
+    Rueckgabe: (Prioritaet, bereinigter Auftrag ohne das Schluesselwort).
+    """
+    clean = text.strip()
+    low = clean.lower()
+    for kw in _URGENT:
+        if low.startswith(kw):
+            rest = clean[len(kw):].lstrip(" :,-!.").strip()
+            return URGENT_PRIORITY, (rest or clean)
+    return 0, clean
 _worker: threading.Thread | None = None
 _running = False
 

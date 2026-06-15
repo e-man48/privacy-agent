@@ -131,17 +131,19 @@ el("bg-btn").addEventListener("click", async () => {
   const text = el("input").value.trim();
   if (!text) return;
   el("input").value = "";
-  addMessage("⏳ Im Hintergrund: " + text, "user");
+  let urgent = false;
   try {
-    await fetch(`${API}/jobs`, {
+    const r = await fetch(`${API}/jobs`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ goal: text }),
     });
+    urgent = (await r.json()).urgent;
   } catch {
     addMessage("⚠️ Konnte Hintergrund-Auftrag nicht starten.", "assistant");
     return;
   }
+  addMessage((urgent ? "⏳⚡ Im Hintergrund (Vorrang): " : "⏳ Im Hintergrund: ") + text, "user");
   startJobPolling();
 });
 
