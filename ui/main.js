@@ -34,9 +34,94 @@ function enterChat() {
   el("chat").classList.remove("hidden");
   el("open-brain").classList.remove("hidden");
   refreshStatus();
+  loadProjects();
   if (!statusTimer) statusTimer = setInterval(refreshStatus, 5000);
 }
 window.enterChat = enterChat;
+
+// --- Projekte (getrennte Arbeits-Threads) ------------------------------
+const PDOT = { active: "pdot-active", paused: "pdot-paused", done: "pdot-done" };
+
+async function loadProjects(reloadActive = true) {
+  let list;
+  try {
+    list = (await (await fetch(`${API}/projects`)).json()).projects || [];
+  } catch {
+    return;
+  }
+  const bar = el("project-bar");
+  bar.innerHTML = "";
+  let activeId = null;
+  list.forEach((p) => {
+    if (p.active) activeId = p.id;
+    const chip = document.createElement("div");
+    chip.className = "proj-chip" + (p.active ? " active" : "");
+    chip.innerHTML = `<span class="pdot ${PDOT[p.status] || "pdot-active"}"></span><span></span>`;
+    chip.querySelector("span:nth-child(2)").textContent = p.name;
+    chip.onclick = (e) => {
+      if (e.target.dataset.act) return; // Aktionsknopf, nicht wechseln
+      switchProject(p.id);
+    };
+    if (p.active) {
+      const paused = p.status === "paused";
+      chip.insertAdjacentHTML(
+        "beforeend",
+        `<button class="pact" data-act="toggle" title="${paused ? "Fortsetzen" : "Pausieren"}">${paused ? "▶" : "⏸"}</button>
+         <button class="pact" data-act="del" title="Löschen">✕</button>`
+      );
+      chip.querySelector('[data-act="toggle"]').onclick = async () => {
+        await fetch(`${API}/projects/${p.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: paused ? "active" : "paused" }),
+        });
+        loadProjects(false);
+      };
+      chip.querySelector('[data-act="del"]').onclick = async () => {
+        await fetch(`${API}/projects/${p.id}`, { method: "DELETE" });
+        loadProjects();
+      };
+    }
+    bar.appendChild(chip);
+  });
+  const add = document.createElement("button");
+  add.className = "proj-new";
+  add.textContent = "+ Projekt";
+  add.onclick = newProject;
+  bar.appendChild(add);
+
+  if (reloadActive && activeId) loadProjectMessages(activeId);
+}
+
+async function switchProject(id) {
+  await fetch(`${API}/projects/${id}/activate`, { method: "POST" });
+  el("suggest-bar").classList.add("hidden");
+  await loadProjects(true);
+}
+
+async function loadProjectMessages(id) {
+  try {
+    const d = await (await fetch(`${API}/projects/${id}/messages`)).json();
+    el("messages").innerHTML = "";
+    (d.messages || []).forEach((m) =>
+      addMessage(m.content, m.role === "user" ? "user" : "assistant")
+    );
+  } catch {
+    /* still */
+  }
+}
+
+async function newProject() {
+  const name = prompt("Name des neuen Projekts:");
+  if (!name) return;
+  await fetch(`${API}/projects`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name }),
+  });
+  el("messages").innerHTML = "";
+  loadProjects(false);
+}
 
 // --- Chat ---------------------------------------------------------------
 function addMessage(text, role, meta) {

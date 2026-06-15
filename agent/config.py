@@ -130,6 +130,7 @@ OPTIMIZATION_LOG_PATH = data_dir() / "optimization_log.jsonl"
 AUTOPILOT_PATH = data_dir() / "autopilot.json"  # Erfahrungs-Speicher pro Modell
 USER_SETTINGS_PATH = data_dir() / "user_settings.json"  # vom GUI-Assistenten
 MCP_CONFIG_PATH = data_dir() / "mcp_servers.json"        # externe Skills (MCP)
+PROJECTS_PATH = data_dir() / "projects.json"             # Projekte/Arbeits-Threads
 
 
 def load_mcp_servers() -> list[dict]:

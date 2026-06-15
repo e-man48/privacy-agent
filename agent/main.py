@@ -16,8 +16,8 @@ from pydantic import BaseModel
 
 from . import (
     cloud_llm, config, connectors, consent_log, extractor, local_llm,
-    mcp_catalog, mcp_client, memory, metrics, openrouter_auth, optimizer, router,
-    runtimes, settings,
+    mcp_catalog, mcp_client, memory, metrics, openrouter_auth, optimizer,
+    projects, router, runtimes, settings,
 )
 
 
@@ -42,8 +42,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Einfache, prozessweite Konversation. Fuer mehrere Sessions spaeter erweitern.
-_HISTORY: list[dict] = []
 
 
 class ChatIn(BaseModel):
@@ -110,6 +108,15 @@ class RuntimeIn(BaseModel):
     name: str  # "node" | "uv"
 
 
+class ProjectIn(BaseModel):
+    name: str
+
+
+class ProjectUpdateIn(BaseModel):
+    name: Optional[str] = None
+    status: Optional[str] = None
+
+
 @app.get("/health")
 def health() -> dict:
     return {"ok": True, "version": __import__("agent").__version__}
@@ -135,10 +142,13 @@ def log() -> dict:
 
 @app.post("/chat")
 def chat(body: ChatIn) -> dict:
-    _HISTORY.append({"role": "user", "content": body.message})
-    result = router.handle_task(_HISTORY)
+    project, data = projects.get_active()
+    project["history"].append({"role": "user", "content": body.message})
+    result = router.handle_task(project["history"])
     if result["type"] == "answer":
-        _HISTORY.append({"role": "assistant", "content": result["text"]})
+        project["history"].append({"role": "assistant", "content": result["text"]})
+    project["updated"] = projects._now()
+    projects.save(data)
     return result
 
 
@@ -146,14 +156,45 @@ def chat(body: ChatIn) -> dict:
 def consent(body: ConsentIn) -> dict:
     result = router.resolve_consent(body.pending_id, body.approved)
     if result.get("type") == "answer":
-        _HISTORY.append({"role": "assistant", "content": result["text"]})
+        project, data = projects.get_active()
+        project["history"].append({"role": "assistant", "content": result["text"]})
+        projects.save(data)
     return result
 
 
-@app.post("/reset")
-def reset() -> dict:
-    _HISTORY.clear()
-    return {"ok": True}
+# --- Projekte (getrennte Arbeits-Threads) -------------------------------
+@app.get("/projects")
+def projects_list() -> dict:
+    return {"projects": projects.public_list()}
+
+
+@app.post("/projects")
+def projects_create(body: ProjectIn) -> dict:
+    p = projects.create(body.name)
+    return {"ok": True, "id": p["id"]}
+
+
+@app.post("/projects/{pid}/activate")
+def projects_activate(pid: str) -> dict:
+    return {"ok": projects.set_active(pid)}
+
+
+@app.get("/projects/{pid}/messages")
+def projects_messages(pid: str) -> dict:
+    data = projects.load()
+    p = next((x for x in data["projects"] if x["id"] == pid), None)
+    return {"messages": p["history"] if p else []}
+
+
+@app.patch("/projects/{pid}")
+def projects_update(pid: str, body: ProjectUpdateIn) -> dict:
+    p = projects.update(pid, name=body.name, status=body.status)
+    return {"ok": p is not None}
+
+
+@app.delete("/projects/{pid}")
+def projects_delete(pid: str) -> dict:
+    return {"ok": projects.delete(pid)}
 
 
 # --- Gedaechtnis --------------------------------------------------------
@@ -182,8 +223,9 @@ def memory_delete(mem_id: str) -> dict:
 
 @app.post("/memory/suggest")
 def memory_suggest() -> dict:
-    """Automatische Vorschlaege aus dem laufenden Gespraech (lokal erzeugt)."""
-    cands = extractor.extract_candidates(_HISTORY, owner="local")
+    """Automatische Vorschlaege aus dem aktiven Projekt (lokal erzeugt)."""
+    project, _ = projects.get_active()
+    cands = extractor.extract_candidates(project["history"], owner="local")
     return {"candidates": [c.__dict__ for c in cands]}
 
 
