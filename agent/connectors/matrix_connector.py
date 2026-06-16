@@ -66,7 +66,8 @@ class MatrixConnector:
         self._client = None
 
     async def run(self) -> None:
-        from nio import AsyncClient, AsyncClientConfig, LoginResponse, RoomMessageText
+        from nio import (AsyncClient, AsyncClientConfig, InviteMemberEvent,
+                         LoginResponse, RoomMessageText)
 
         allowed = config.matrix_allowed_users()
         if not allowed:
@@ -131,7 +132,17 @@ class MatrixConnector:
                 content={"msgtype": "m.text", "body": reply},
             )
 
+        async def on_invite(room, event) -> None:
+            # Raum-Einladungen automatisch annehmen -- aber nur von erlaubten
+            # Nutzern (sonst koennte jeder den Agenten in Raeume ziehen).
+            if event.sender in allowed:
+                try:
+                    await client.join(room.room_id)
+                except Exception:  # noqa: BLE001
+                    pass
+
         client.add_event_callback(on_message, RoomMessageText)
+        client.add_event_callback(on_invite, InviteMemberEvent)
         state.update("matrix", True, f"Verbunden als {config.MATRIX_USER} "
                                      f"(E2EE: {'an' if _E2EE else 'aus'}).")
         try:
