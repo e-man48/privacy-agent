@@ -341,12 +341,59 @@ function openBrain() {
   el("brain-backdrop").classList.remove("hidden");
   loadModels();
   loadEmergency();
+  loadTailscale();
   loadMatrix();
   loadCatalog();
   loadMCP();
   loadProposals();
   loadMemory();
 }
+
+// --- Tailscale (privates Netz) -----------------------------------------
+async function loadTailscale() {
+  let s;
+  try {
+    s = await (await fetch(`${API}/tailscale`)).json();
+  } catch {
+    el("ts-status").textContent = "Backend nicht erreichbar.";
+    return;
+  }
+  if (!s.installed) {
+    el("ts-status").textContent = "🔴 Nicht installiert.";
+    el("ts-install").classList.remove("hidden");
+    el("ts-login").classList.add("hidden");
+  } else if (s.logged_in) {
+    el("ts-status").textContent = `🟢 Verbunden${s.name ? " · " + s.name : ""}${s.ip ? " (" + s.ip + ")" : ""}`;
+    el("ts-install").classList.add("hidden");
+    el("ts-login").classList.add("hidden");
+  } else {
+    el("ts-status").textContent = "🟡 Installiert, aber nicht angemeldet.";
+    el("ts-install").classList.add("hidden");
+    el("ts-login").classList.remove("hidden");
+  }
+}
+
+el("ts-install").addEventListener("click", async () => {
+  el("ts-msg").textContent = "Lade & installiere … (Windows-Abfrage bestätigen)";
+  try {
+    const d = await (await fetch(`${API}/tailscale/install`, { method: "POST" })).json();
+    el("ts-msg").textContent = d.ok ? "Installiert." : "Fehlgeschlagen (Details im Log).";
+  } catch {
+    el("ts-msg").textContent = "Installation nicht möglich.";
+  }
+  loadTailscale();
+});
+
+el("ts-login").addEventListener("click", async () => {
+  el("ts-msg").textContent = "Anmeldung startet – ggf. im Browser bestätigen …";
+  try {
+    const d = await (await fetch(`${API}/tailscale/login`, { method: "POST" })).json();
+    el("ts-msg").textContent = d.message || "";
+  } catch {
+    el("ts-msg").textContent = "Anmeldung nicht möglich.";
+  }
+  setTimeout(loadTailscale, 4000);
+});
 
 // --- Messenger (Matrix) nachträglich konfigurieren ---------------------
 async function loadMatrix() {

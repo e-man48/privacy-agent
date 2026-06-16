@@ -17,7 +17,7 @@ from pydantic import BaseModel
 from . import (
     cloud_llm, config, connectors, consent_log, extractor, local_llm,
     mcp_catalog, mcp_client, memory, metrics, openrouter_auth, optimizer,
-    projects, router, runtimes, scheduler, settings,
+    projects, router, runtimes, scheduler, settings, tailscale_setup,
 )
 
 
@@ -221,6 +221,25 @@ def jobs_create(body: JobIn) -> dict:
 @app.get("/jobs")
 def jobs_list() -> dict:
     return {"jobs": scheduler.list_jobs(), "active": scheduler.active_count()}
+
+
+# --- Tailscale (Ein-Klick-Einrichtung) ----------------------------------
+@app.get("/tailscale")
+def tailscale_status() -> dict:
+    return tailscale_setup.status()
+
+
+@app.post("/tailscale/install")
+def tailscale_install() -> dict:
+    log: list[str] = []
+    ok = tailscale_setup.install(log.append)
+    return {"ok": ok, "log": log, "status": tailscale_setup.status()}
+
+
+@app.post("/tailscale/login")
+def tailscale_login() -> dict:
+    ok, message = tailscale_setup.login()
+    return {"ok": ok, "message": message}
 
 
 # --- Gedaechtnis --------------------------------------------------------
