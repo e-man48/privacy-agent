@@ -66,6 +66,31 @@
       "command": "npx", "args": ["-y", "@modelcontextprotocol/server-google-maps"],
       "env": {"GOOGLE_MAPS_API_KEY": "{key}"}, "needs": "Node.js (npx)", "runtime": "node",
       "params": [{"key": "key", "label": "Google-Maps-API-Schlüssel", "kind": "secret", "placeholder": "von Google Cloud"}]
+    },
+    {
+      "id": "browser", "label": "Browser steuern", "icon": "🎭",
+      "description": "Webseiten öffnen, klicken, Formulare ausfüllen, Screenshots – ohne Schlüssel (Playwright).",
+      "command": "npx", "args": ["-y", "@playwright/mcp@latest"],
+      "env": {}, "needs": "Node.js (npx)", "runtime": "node", "params": []
+    },
+    {
+      "id": "websuche-frei", "label": "Websuche (ohne Schlüssel)", "icon": "🦆",
+      "description": "Im Web suchen über DuckDuckGo – ganz ohne API-Schlüssel.",
+      "command": "uvx", "args": ["duckduckgo-mcp-server"],
+      "env": {}, "needs": "Python (uvx)", "runtime": "uv", "params": []
+    },
+    {
+      "id": "wikipedia", "label": "Wikipedia", "icon": "📚",
+      "description": "Wikipedia-Artikel suchen, lesen und zusammenfassen – ohne Schlüssel.",
+      "command": "uvx", "args": ["wikipedia-mcp"],
+      "env": {}, "needs": "Python (uvx)", "runtime": "uv", "params": []
+    },
+    {
+      "id": "tavily", "label": "Tavily-Websuche", "icon": "🔍",
+      "description": "KI-optimierte Web-Recherche (oft bessere Treffer als klassische Suche).",
+      "command": "npx", "args": ["-y", "tavily-mcp@latest"],
+      "env": {"TAVILY_API_KEY": "{key}"}, "needs": "Node.js (npx)", "runtime": "node",
+      "params": [{"key": "key", "label": "Tavily-API-Schlüssel", "kind": "secret", "placeholder": "von tavily.com (kostenloses Kontingent)"}]
     }
   ]
 }
