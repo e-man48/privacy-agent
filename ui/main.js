@@ -598,6 +598,12 @@ function showTemplateForm(t) {
     const type = p.kind === "secret" ? "password" : "text";
     html += `<input data-k="${p.key}" type="${type}" placeholder="${p.label}" />`;
   });
+  if (t.login === "ms365") {
+    html += `<div class="ms365-login">
+      <button type="button" class="btn-secondary tpl-mslogin">🔑 Mit Microsoft anmelden</button>
+      <div class="ms365-result muted"></div>
+    </div>`;
+  }
   html += `<label class="toggle"><input type="checkbox" class="tpl-trust" />
       <span>Vertrauen – ohne Rückfrage ausführen</span></label>
     <div class="inline-row">
@@ -608,6 +614,31 @@ function showTemplateForm(t) {
   host.appendChild(f);
 
   if (t.runtime) ensureRuntimeUI(t.runtime, f.querySelector(".tpl-runtime"));
+
+  const msBtn = f.querySelector(".tpl-mslogin");
+  if (msBtn) {
+    const out = f.querySelector(".ms365-result");
+    msBtn.onclick = async () => {
+      msBtn.disabled = true;
+      out.innerHTML = "Anmeldung wird gestartet … (Browser öffnet sich gleich)";
+      try {
+        const r = await fetch(`${API}/ms365/login`, { method: "POST" });
+        const d = await r.json();
+        if (d.code) {
+          out.innerHTML = `Gib im Browser diesen Code ein:
+            <div class="ms365-code">${d.code}</div>
+            <a href="${d.url}" target="_blank" rel="noopener">Seite öffnen</a>
+            <p class="muted">Nach erfolgreicher Anmeldung unten auf „Installieren" klicken.</p>`;
+        } else {
+          out.innerHTML = `<a href="${d.url}" target="_blank" rel="noopener">Anmeldeseite öffnen</a>
+            <pre class="ms365-raw">${(d.raw || d.message || "Keine Code-Ausgabe erkannt.").replace(/</g, "&lt;")}</pre>`;
+        }
+      } catch {
+        out.textContent = "Backend nicht erreichbar.";
+      }
+      msBtn.disabled = false;
+    };
+  }
 
   f.querySelector(".tpl-install").onclick = async () => {
     const params = {};

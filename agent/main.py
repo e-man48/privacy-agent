@@ -17,7 +17,7 @@ from pydantic import BaseModel
 from . import (
     cloud_llm, config, connectors, consent_log, downloads, extractor, local_llm,
     local_matrix, mcp_catalog, mcp_client, memory, metrics, model_catalog,
-    openrouter_auth, optimizer, projects, router, runtimes, scheduler, settings,
+    ms365_auth, openrouter_auth, optimizer, projects, router, runtimes, scheduler, settings,
     tailscale_setup,
 )
 
@@ -473,6 +473,12 @@ def openrouter_start() -> dict:
     """Oeffnet die OpenRouter-Anmeldung im Browser (OAuth-Login)."""
     openrouter_auth.start()
     return {"ok": True}
+
+
+@app.post("/ms365/login")
+def ms365_login() -> dict:
+    """Startet die Microsoft-Anmeldung (Geraete-Code) fuer den Outlook-Skill."""
+    return ms365_auth.login()
 
 
 @app.get("/oauth/openrouter/callback")

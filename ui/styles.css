@@ -214,6 +214,9 @@ button:disabled:hover { filter: none; }
 .tpl-btn:hover { border-color: var(--accent); }
 .tpl-form { border: 1px solid var(--accent); border-radius: 10px; padding: 12px; margin: 8px 0; background: rgba(79,134,247,.06); display: flex; flex-direction: column; gap: 8px; }
 .tpl-form input[type="text"], .tpl-form input[type="password"] { padding: 9px 11px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
+.ms365-login { display: flex; flex-direction: column; gap: 6px; }
+.ms365-code { font-family: monospace; font-size: 1.5rem; font-weight: 700; letter-spacing: 3px; padding: 6px 12px; margin: 4px 0; background: var(--bg); border: 1px solid var(--accent); border-radius: 8px; display: inline-block; user-select: all; }
+.ms365-raw { font-size: .72rem; white-space: pre-wrap; max-height: 120px; overflow: auto; opacity: .7; }
 .rt-banner { display: flex; flex-direction: column; gap: 6px; padding: 10px; border: 1px dashed var(--accent); border-radius: 8px; font-size: .84rem; }
 .mcp-advanced { margin-top: 10px; }
 .mcp-advanced summary { cursor: pointer; color: var(--muted); font-size: .82rem; }
