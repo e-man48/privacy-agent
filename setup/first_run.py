@@ -277,6 +277,35 @@ def pull_model(model: str, lo: float = 0.55, hi: float = 0.92) -> bool:
         return False
 
 
+def _user_settings_path() -> str:
+    if os.name == "nt":
+        base = os.environ.get("APPDATA", os.path.expanduser("~"))
+    elif sys.platform == "darwin":
+        base = os.path.join(os.path.expanduser("~"), "Library", "Application Support")
+    else:
+        base = os.environ.get("XDG_DATA_HOME",
+                              os.path.join(os.path.expanduser("~"), ".local", "share"))
+    d = os.path.join(base, "PrivacyAgent")
+    os.makedirs(d, exist_ok=True)
+    return os.path.join(d, "user_settings.json")
+
+
+def _persist_local_model(model: str) -> None:
+    """Speichert das gewaehlte Modell in den Nutzereinstellungen (Fallback)."""
+    path = _user_settings_path()
+    try:
+        with open(path, "r", encoding="utf-8") as fh:
+            data = json.load(fh)
+    except (FileNotFoundError, json.JSONDecodeError):
+        data = {}
+    data["local_model"] = model
+    try:
+        with open(path, "w", encoding="utf-8") as fh:
+            json.dump(data, fh, ensure_ascii=False, indent=2)
+    except OSError:
+        pass
+
+
 def main() -> int:
     emit("detect", "Erkenne Hardware ...", 0.05)
     ram = total_ram_gb()
@@ -300,6 +329,16 @@ def main() -> int:
     if not pull_model(model, lo=0.55, hi=0.90):
         emit("error", f"Modell '{model}' konnte nicht geladen werden.")
         return 1
+
+    # Dem laufenden Backend das gewaehlte Modell mitteilen -- sonst prueft es
+    # weiter sein Standard-Modell und 'Modell bereit?' bleibt faelschlich auf
+    # nein (der Assistent koennte dann nicht weiter).
+    try:
+        import requests
+        requests.post("http://127.0.0.1:8765/model/set", json={"name": model}, timeout=5)
+    except Exception:  # Backend evtl. nicht erreichbar
+        pass
+    _persist_local_model(model)  # spaetestens beim naechsten Start aktiv
 
     # Embedding-Modell fuer das semantische Gedaechtnis (klein, ~270 MB).
     # Nicht kritisch: schlaegt es fehl, faellt das Gedaechtnis auf die
