@@ -1,0 +1,37 @@
+name: update-catalog
+
+# Aktualisiert catalog/models.json woechentlich aus ollama.com/library.
+# Die App holt sich die Datei automatisch -> neue Modelle ohne Neuinstallation.
+on:
+  schedule:
+    - cron: "0 4 * * 1" # jeden Montag 04:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Python einrichten
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Katalog aus ollama.com/library aktualisieren
+        run: python scripts/scrape_ollama.py
+
+      - name: Aenderungen committen (nur falls vorhanden)
+        run: |
+          if git diff --quiet -- catalog/models.json; then
+            echo "Keine Aenderung am Katalog."
+          else
+            git config user.name "catalog-bot"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add catalog/models.json
+            git commit -m "Modell-Katalog automatisch aktualisiert (ollama.com/library)"
+            git push
+          fi

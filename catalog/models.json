@@ -1,18 +1,887 @@
 {
-  "_hinweis": "Modell-Katalog des Privacy-Agent. Hier neue Modelle einfach ergaenzen -- die App holt sich diese Datei automatisch (taeglich). Felder: name (exakter Ollama-Name), label, size, tier (klein|mittel|groß|spezial), description.",
-  "models": [
-    {"name": "qwen2.5:1.5b", "label": "Qwen 2.5 (1.5B)", "size": "~1 GB", "tier": "klein", "description": "Sehr klein & schnell – für schwache PCs ohne GPU."},
-    {"name": "qwen2.5:3b", "label": "Qwen 2.5 (3B)", "size": "~2 GB", "tier": "klein", "description": "Klein, gut auf der CPU nutzbar (Standard für schwache Hardware)."},
-    {"name": "llama3.2:3b", "label": "Llama 3.2 (3B)", "size": "~2 GB", "tier": "klein", "description": "Metas kleines Modell, flott auf der CPU."},
-    {"name": "phi3.5", "label": "Phi-3.5 (3.8B)", "size": "~2.2 GB", "tier": "klein", "description": "Microsofts kompaktes, erstaunlich starkes Modell."},
-    {"name": "qwen2.5:7b", "label": "Qwen 2.5 (7B)", "size": "~4.7 GB", "tier": "mittel", "description": "Ausgewogen – guter Allrounder, braucht etwas RAM/GPU."},
-    {"name": "llama3.1:8b", "label": "Llama 3.1 (8B)", "size": "~4.9 GB", "tier": "mittel", "description": "Metas ausgewogenes Modell."},
-    {"name": "mistral:7b", "label": "Mistral (7B)", "size": "~4.1 GB", "tier": "mittel", "description": "Schnelles, solides Modell von Mistral."},
-    {"name": "gemma2:9b", "label": "Gemma 2 (9B)", "size": "~5.4 GB", "tier": "mittel", "description": "Googles Modell, stark im Verständnis."},
-    {"name": "qwen2.5:14b", "label": "Qwen 2.5 (14B)", "size": "~9 GB", "tier": "groß", "description": "Stark – braucht viel RAM oder eine GPU."},
-    {"name": "gemma2:27b", "label": "Gemma 2 (27B)", "size": "~16 GB", "tier": "groß", "description": "Sehr stark – nur mit viel RAM/guter GPU."},
-    {"name": "qwen2.5-coder:7b", "label": "Qwen 2.5 Coder (7B)", "size": "~4.7 GB", "tier": "spezial", "description": "Auf Programmieren spezialisiert."},
-    {"name": "deepseek-r1:7b", "label": "DeepSeek-R1 (7B)", "size": "~4.7 GB", "tier": "spezial", "description": "Stark im logischen Schlussfolgern (Reasoning)."},
-    {"name": "llava:7b", "label": "LLaVA (7B, Bilder)", "size": "~4.7 GB", "tier": "spezial", "description": "Kann Bilder ansehen und beschreiben (Vision)."}
-  ]
+ "_hinweis": "Automatisch aus ollama.com/library erzeugt (woechentlich). Manuell pflegbar, wird aber ueberschrieben.",
+ "models": [
+  {
+   "name": "llama3.1:8b",
+   "label": "llama3.1 (8b)",
+   "size": "~5.4 GB",
+   "tier": "mittel",
+   "description": "Llama 3.1 is a new state-of-the-art model from Meta available in 8B, 70B and 405B parameter sizes."
+  },
+  {
+   "name": "llama3.1:70b",
+   "label": "llama3.1 (70b)",
+   "size": "~47 GB",
+   "tier": "groß",
+   "description": "Llama 3.1 is a new state-of-the-art model from Meta available in 8B, 70B and 405B parameter sizes."
+  },
+  {
+   "name": "llama3.1:405b",
+   "label": "llama3.1 (405b)",
+   "size": "~271 GB",
+   "tier": "groß",
+   "description": "Llama 3.1 is a new state-of-the-art model from Meta available in 8B, 70B and 405B parameter sizes."
+  },
+  {
+   "name": "deepseek-r1:1.5b",
+   "label": "deepseek-r1 (1.5b)",
+   "size": "~1.0 GB",
+   "tier": "klein",
+   "description": "DeepSeek-R1 is a family of open reasoning models with performance approaching that of leading models, such as O3 and Gemini 2.5 Pro."
+  },
+  {
+   "name": "deepseek-r1:7b",
+   "label": "deepseek-r1 (7b)",
+   "size": "~4.7 GB",
+   "tier": "mittel",
+   "description": "DeepSeek-R1 is a family of open reasoning models with performance approaching that of leading models, such as O3 and Gemini 2.5 Pro."
+  },
+  {
+   "name": "deepseek-r1:8b",
+   "label": "deepseek-r1 (8b)",
+   "size": "~5.4 GB",
+   "tier": "mittel",
+   "description": "DeepSeek-R1 is a family of open reasoning models with performance approaching that of leading models, such as O3 and Gemini 2.5 Pro."
+  },
+  {
+   "name": "deepseek-r1:14b",
+   "label": "deepseek-r1 (14b)",
+   "size": "~9.4 GB",
+   "tier": "groß",
+   "description": "DeepSeek-R1 is a family of open reasoning models with performance approaching that of leading models, such as O3 and Gemini 2.5 Pro."
+  },
+  {
+   "name": "nomic-embed-text",
+   "label": "nomic-embed-text",
+   "size": "klein",
+   "tier": "spezial",
+   "description": "A high-performing open embedding model with a large token context window."
+  },
+  {
+   "name": "llama3.2:1b",
+   "label": "llama3.2 (1b)",
+   "size": "~0.7 GB",
+   "tier": "klein",
+   "description": "Meta's Llama 3.2 goes small with 1B and 3B models."
+  },
+  {
+   "name": "llama3.2:3b",
+   "label": "llama3.2 (3b)",
+   "size": "~2.0 GB",
+   "tier": "klein",
+   "description": "Meta's Llama 3.2 goes small with 1B and 3B models."
+  },
+  {
+   "name": "gemma3:1b",
+   "label": "gemma3 (1b)",
+   "size": "~0.7 GB",
+   "tier": "klein",
+   "description": "The current, most capable model that runs on a single GPU."
+  },
+  {
+   "name": "gemma3:4b",
+   "label": "gemma3 (4b)",
+   "size": "~2.7 GB",
+   "tier": "mittel",
+   "description": "The current, most capable model that runs on a single GPU."
+  },
+  {
+   "name": "gemma3:12b",
+   "label": "gemma3 (12b)",
+   "size": "~8.0 GB",
+   "tier": "mittel",
+   "description": "The current, most capable model that runs on a single GPU."
+  },
+  {
+   "name": "gemma3:27b",
+   "label": "gemma3 (27b)",
+   "size": "~18 GB",
+   "tier": "groß",
+   "description": "The current, most capable model that runs on a single GPU."
+  },
+  {
+   "name": "qwen2.5:0.5b",
+   "label": "qwen2.5 (0.5b)",
+   "size": "~0.3 GB",
+   "tier": "klein",
+   "description": "Qwen2.5 models are pretrained on Alibaba's latest large-scale dataset, encompassing up to 18 trillion tokens. The model supports up to 128K tokens and has multilingual su"
+  },
+  {
+   "name": "qwen2.5:1.5b",
+   "label": "qwen2.5 (1.5b)",
+   "size": "~1.0 GB",
+   "tier": "klein",
+   "description": "Qwen2.5 models are pretrained on Alibaba's latest large-scale dataset, encompassing up to 18 trillion tokens. The model supports up to 128K tokens and has multilingual su"
+  },
+  {
+   "name": "qwen2.5:3b",
+   "label": "qwen2.5 (3b)",
+   "size": "~2.0 GB",
+   "tier": "klein",
+   "description": "Qwen2.5 models are pretrained on Alibaba's latest large-scale dataset, encompassing up to 18 trillion tokens. The model supports up to 128K tokens and has multilingual su"
+  },
+  {
+   "name": "qwen2.5:7b",
+   "label": "qwen2.5 (7b)",
+   "size": "~4.7 GB",
+   "tier": "mittel",
+   "description": "Qwen2.5 models are pretrained on Alibaba's latest large-scale dataset, encompassing up to 18 trillion tokens. The model supports up to 128K tokens and has multilingual su"
+  },
+  {
+   "name": "qwen2.5:14b",
+   "label": "qwen2.5 (14b)",
+   "size": "~9.4 GB",
+   "tier": "groß",
+   "description": "Qwen2.5 models are pretrained on Alibaba's latest large-scale dataset, encompassing up to 18 trillion tokens. The model supports up to 128K tokens and has multilingual su"
+  },
+  {
+   "name": "qwen3:0.6b",
+   "label": "qwen3 (0.6b)",
+   "size": "~0.4 GB",
+   "tier": "klein",
+   "description": "Qwen3 is the latest generation of large language models in Qwen series, offering a comprehensive suite of dense and mixture-of-experts (MoE) models."
+  },
+  {
+   "name": "qwen3:1.7b",
+   "label": "qwen3 (1.7b)",
+   "size": "~1.1 GB",
+   "tier": "klein",
+   "description": "Qwen3 is the latest generation of large language models in Qwen series, offering a comprehensive suite of dense and mixture-of-experts (MoE) models."
+  },
+  {
+   "name": "qwen3:4b",
+   "label": "qwen3 (4b)",
+   "size": "~2.7 GB",
+   "tier": "mittel",
+   "description": "Qwen3 is the latest generation of large language models in Qwen series, offering a comprehensive suite of dense and mixture-of-experts (MoE) models."
+  },
+  {
+   "name": "qwen3:8b",
+   "label": "qwen3 (8b)",
+   "size": "~5.4 GB",
+   "tier": "mittel",
+   "description": "Qwen3 is the latest generation of large language models in Qwen series, offering a comprehensive suite of dense and mixture-of-experts (MoE) models."
+  },
+  {
+   "name": "mistral:7b",
+   "label": "mistral (7b)",
+   "size": "~4.7 GB",
+   "tier": "mittel",
+   "description": "The 7B model released by Mistral AI, updated to version 0.3."
+  },
+  {
+   "name": "gemma2:2b",
+   "label": "gemma2 (2b)",
+   "size": "~1.3 GB",
+   "tier": "klein",
+   "description": "Google Gemma 2 is a high-performing and efficient model available in three sizes: 2B, 9B, and 27B."
+  },
+  {
+   "name": "gemma2:9b",
+   "label": "gemma2 (9b)",
+   "size": "~6.0 GB",
+   "tier": "mittel",
+   "description": "Google Gemma 2 is a high-performing and efficient model available in three sizes: 2B, 9B, and 27B."
+  },
+  {
+   "name": "gemma2:27b",
+   "label": "gemma2 (27b)",
+   "size": "~18 GB",
+   "tier": "groß",
+   "description": "Google Gemma 2 is a high-performing and efficient model available in three sizes: 2B, 9B, and 27B."
+  },
+  {
+   "name": "llama3:8b",
+   "label": "llama3 (8b)",
+   "size": "~5.4 GB",
+   "tier": "mittel",
+   "description": "Meta Llama 3: The most capable openly available LLM to date"
+  },
+  {
+   "name": "llama3:70b",
+   "label": "llama3 (70b)",
+   "size": "~47 GB",
+   "tier": "groß",
+   "description": "Meta Llama 3: The most capable openly available LLM to date"
+  },
+  {
+   "name": "phi3:3.8b",
+   "label": "phi3 (3.8b)",
+   "size": "~2.5 GB",
+   "tier": "klein",
+   "description": "Phi-3 is a family of lightweight 3B (Mini) and 14B (Medium) state-of-the-art open models by Microsoft."
+  },
+  {
+   "name": "phi3:14b",
+   "label": "phi3 (14b)",
+   "size": "~9.4 GB",
+   "tier": "groß",
+   "description": "Phi-3 is a family of lightweight 3B (Mini) and 14B (Medium) state-of-the-art open models by Microsoft."
+  },
+  {
+   "name": "qwen2.5-coder:0.5b",
+   "label": "qwen2.5-coder (0.5b)",
+   "size": "~0.3 GB",
+   "tier": "klein",
+   "description": "The latest series of Code-Specific Qwen models, with significant improvements in code generation, code reasoning, and code fixing."
+  },
+  {
+   "name": "qwen2.5-coder:1.5b",
+   "label": "qwen2.5-coder (1.5b)",
+   "size": "~1.0 GB",
+   "tier": "klein",
+   "description": "The latest series of Code-Specific Qwen models, with significant improvements in code generation, code reasoning, and code fixing."
+  },
+  {
+   "name": "qwen2.5-coder:3b",
+   "label": "qwen2.5-coder (3b)",
+   "size": "~2.0 GB",
+   "tier": "klein",
+   "description": "The latest series of Code-Specific Qwen models, with significant improvements in code generation, code reasoning, and code fixing."
+  },
+  {
+   "name": "qwen2.5-coder:7b",
+   "label": "qwen2.5-coder (7b)",
+   "size": "~4.7 GB",
+   "tier": "mittel",
+   "description": "The latest series of Code-Specific Qwen models, with significant improvements in code generation, code reasoning, and code fixing."
+  },
+  {
+   "name": "qwen2.5-coder:14b",
+   "label": "qwen2.5-coder (14b)",
+   "size": "~9.4 GB",
+   "tier": "groß",
+   "description": "The latest series of Code-Specific Qwen models, with significant improvements in code generation, code reasoning, and code fixing."
+  },
+  {
+   "name": "llava:7b",
+   "label": "llava (7b)",
+   "size": "~4.7 GB",
+   "tier": "mittel",
+   "description": "🌋 LLaVA is a novel end-to-end trained large multimodal model that combines a vision encoder and Vicuna for general-purpose visual and language understanding. Updated to v"
+  },
+  {
+   "name": "llava:13b",
+   "label": "llava (13b)",
+   "size": "~8.7 GB",
+   "tier": "mittel",
+   "description": "🌋 LLaVA is a novel end-to-end trained large multimodal model that combines a vision encoder and Vicuna for general-purpose visual and language understanding. Updated to v"
+  },
+  {
+   "name": "llava:34b",
+   "label": "llava (34b)",
+   "size": "~23 GB",
+   "tier": "groß",
+   "description": "🌋 LLaVA is a novel end-to-end trained large multimodal model that combines a vision encoder and Vicuna for general-purpose visual and language understanding. Updated to v"
+  },
+  {
+   "name": "qwen3.5:0.8b",
+   "label": "qwen3.5 (0.8b)",
+   "size": "~0.5 GB",
+   "tier": "klein",
+   "description": "Qwen 3.5 is a family of open-source multimodal models that delivers exceptional utility and performance."
+  },
+  {
+   "name": "qwen3.5:2b",
+   "label": "qwen3.5 (2b)",
+   "size": "~1.3 GB",
+   "tier": "klein",
+   "description": "Qwen 3.5 is a family of open-source multimodal models that delivers exceptional utility and performance."
+  },
+  {
+   "name": "qwen3.5:4b",
+   "label": "qwen3.5 (4b)",
+   "size": "~2.7 GB",
+   "tier": "mittel",
+   "description": "Qwen 3.5 is a family of open-source multimodal models that delivers exceptional utility and performance."
+  },
+  {
+   "name": "mxbai-embed-large",
+   "label": "mxbai-embed-large",
+   "size": "klein",
+   "tier": "spezial",
+   "description": "State-of-the-art large embedding model from mixedbread.ai"
+  },
+  {
+   "name": "gpt-oss:20b",
+   "label": "gpt-oss (20b)",
+   "size": "~13 GB",
+   "tier": "groß",
+   "description": "OpenAI’s open-weight models designed for powerful reasoning, agentic tasks, and versatile developer use cases."
+  },
+  {
+   "name": "gpt-oss:120b",
+   "label": "gpt-oss (120b)",
+   "size": "~80 GB",
+   "tier": "groß",
+   "description": "OpenAI’s open-weight models designed for powerful reasoning, agentic tasks, and versatile developer use cases."
+  },
+  {
+   "name": "phi4:14b",
+   "label": "phi4 (14b)",
+   "size": "~9.4 GB",
+   "tier": "groß",
+   "description": "Phi-4 is a 14B parameter, state-of-the-art open model from Microsoft."
+  },
+  {
+   "name": "gemma:2b",
+   "label": "gemma (2b)",
+   "size": "~1.3 GB",
+   "tier": "klein",
+   "description": "Gemma is a family of lightweight, state-of-the-art open models built by Google DeepMind. Updated to version 1.1"
+  },
+  {
+   "name": "gemma:7b",
+   "label": "gemma (7b)",
+   "size": "~4.7 GB",
+   "tier": "mittel",
+   "description": "Gemma is a family of lightweight, state-of-the-art open models built by Google DeepMind. Updated to version 1.1"
+  },
+  {
+   "name": "llama2:7b",
+   "label": "llama2 (7b)",
+   "size": "~4.7 GB",
+   "tier": "mittel",
+   "description": "Llama 2 is a collection of foundation language models ranging from 7B to 70B parameters."
+  },
+  {
+   "name": "llama2:13b",
+   "label": "llama2 (13b)",
+   "size": "~8.7 GB",
+   "tier": "mittel",
+   "description": "Llama 2 is a collection of foundation language models ranging from 7B to 70B parameters."
+  },
+  {
+   "name": "llama2:70b",
+   "label": "llama2 (70b)",
+   "size": "~47 GB",
+   "tier": "groß",
+   "description": "Llama 2 is a collection of foundation language models ranging from 7B to 70B parameters."
+  },
+  {
+   "name": "qwen:0.5b",
+   "label": "qwen (0.5b)",
+   "size": "~0.3 GB",
+   "tier": "klein",
+   "description": "Qwen 1.5 is a series of large language models by Alibaba Cloud spanning from 0.5B to 110B parameters"
+  },
+  {
+   "name": "qwen:1.8b",
+   "label": "qwen (1.8b)",
+   "size": "~1.2 GB",
+   "tier": "klein",
+   "description": "Qwen 1.5 is a series of large language models by Alibaba Cloud spanning from 0.5B to 110B parameters"
+  },
+  {
+   "name": "qwen:4b",
+   "label": "qwen (4b)",
+   "size": "~2.7 GB",
+   "tier": "mittel",
+   "description": "Qwen 1.5 is a series of large language models by Alibaba Cloud spanning from 0.5B to 110B parameters"
+  },
+  {
+   "name": "qwen:7b",
+   "label": "qwen (7b)",
+   "size": "~4.7 GB",
+   "tier": "mittel",
+   "description": "Qwen 1.5 is a series of large language models by Alibaba Cloud spanning from 0.5B to 110B parameters"
+  },
+  {
+   "name": "qwen:14b",
+   "label": "qwen (14b)",
+   "size": "~9.4 GB",
+   "tier": "groß",
+   "description": "Qwen 1.5 is a series of large language models by Alibaba Cloud spanning from 0.5B to 110B parameters"
+  },
+  {
+   "name": "qwen:32b",
+   "label": "qwen (32b)",
+   "size": "~21 GB",
+   "tier": "groß",
+   "description": "Qwen 1.5 is a series of large language models by Alibaba Cloud spanning from 0.5B to 110B parameters"
+  },
+  {
+   "name": "qwen:72b",
+   "label": "qwen (72b)",
+   "size": "~48 GB",
+   "tier": "groß",
+   "description": "Qwen 1.5 is a series of large language models by Alibaba Cloud spanning from 0.5B to 110B parameters"
+  },
+  {
+   "name": "qwen3-coder:30b",
+   "label": "qwen3-coder (30b)",
+   "size": "~20 GB",
+   "tier": "groß",
+   "description": "Alibaba's performant long context models for agentic and coding tasks."
+  },
+  {
+   "name": "qwen3-coder:480b",
+   "label": "qwen3-coder (480b)",
+   "size": "~322 GB",
+   "tier": "groß",
+   "description": "Alibaba's performant long context models for agentic and coding tasks."
+  },
+  {
+   "name": "qwen2:0.5b",
+   "label": "qwen2 (0.5b)",
+   "size": "~0.3 GB",
+   "tier": "klein",
+   "description": "Qwen2 is a new series of large language models from Alibaba group"
+  },
+  {
+   "name": "qwen2:1.5b",
+   "label": "qwen2 (1.5b)",
+   "size": "~1.0 GB",
+   "tier": "klein",
+   "description": "Qwen2 is a new series of large language models from Alibaba group"
+  },
+  {
+   "name": "qwen2:7b",
+   "label": "qwen2 (7b)",
+   "size": "~4.7 GB",
+   "tier": "mittel",
+   "description": "Qwen2 is a new series of large language models from Alibaba group"
+  },
+  {
+   "name": "qwen2:72b",
+   "label": "qwen2 (72b)",
+   "size": "~48 GB",
+   "tier": "groß",
+   "description": "Qwen2 is a new series of large language models from Alibaba group"
+  },
+  {
+   "name": "codellama:7b",
+   "label": "codellama (7b)",
+   "size": "~4.7 GB",
+   "tier": "mittel",
+   "description": "A large language model that can use text prompts to generate and discuss code."
+  },
+  {
+   "name": "codellama:13b",
+   "label": "codellama (13b)",
+   "size": "~8.7 GB",
+   "tier": "mittel",
+   "description": "A large language model that can use text prompts to generate and discuss code."
+  },
+  {
+   "name": "codellama:34b",
+   "label": "codellama (34b)",
+   "size": "~23 GB",
+   "tier": "groß",
+   "description": "A large language model that can use text prompts to generate and discuss code."
+  },
+  {
+   "name": "codellama:70b",
+   "label": "codellama (70b)",
+   "size": "~47 GB",
+   "tier": "groß",
+   "description": "A large language model that can use text prompts to generate and discuss code."
+  },
+  {
+   "name": "minicpm-v:8b",
+   "label": "minicpm-v (8b)",
+   "size": "~5.4 GB",
+   "tier": "mittel",
+   "description": "A series of multimodal LLMs (MLLMs) designed for vision-language understanding."
+  },
+  {
+   "name": "tinyllama:1.1b",
+   "label": "tinyllama (1.1b)",
+   "size": "~0.7 GB",
+   "tier": "klein",
+   "description": "The TinyLlama project is an open endeavor to train a compact 1.1B Llama model on 3 trillion tokens."
+  },
+  {
+   "name": "mistral-nemo:12b",
+   "label": "mistral-nemo (12b)",
+   "size": "~8.0 GB",
+   "tier": "mittel",
+   "description": "A state-of-the-art 12B model with 128k context length, built by Mistral AI in collaboration with NVIDIA."
+  },
+  {
+   "name": "llama3.2-vision:11b",
+   "label": "llama3.2-vision (11b)",
+   "size": "~7.4 GB",
+   "tier": "mittel",
+   "description": "Llama 3.2 Vision is a collection of instruction-tuned image reasoning generative models in 11B and 90B sizes."
+  },
+  {
+   "name": "llama3.2-vision:90b",
+   "label": "llama3.2-vision (90b)",
+   "size": "~60 GB",
+   "tier": "groß",
+   "description": "Llama 3.2 Vision is a collection of instruction-tuned image reasoning generative models in 11B and 90B sizes."
+  },
+  {
+   "name": "deepseek-coder:1.3b",
+   "label": "deepseek-coder (1.3b)",
+   "size": "~0.9 GB",
+   "tier": "klein",
+   "description": "DeepSeek Coder is a capable coding model trained on two trillion code and natural language tokens."
+  },
+  {
+   "name": "deepseek-coder:6.7b",
+   "label": "deepseek-coder (6.7b)",
+   "size": "~4.5 GB",
+   "tier": "mittel",
+   "description": "DeepSeek Coder is a capable coding model trained on two trillion code and natural language tokens."
+  },
+  {
+   "name": "deepseek-coder:33b",
+   "label": "deepseek-coder (33b)",
+   "size": "~22 GB",
+   "tier": "groß",
+   "description": "DeepSeek Coder is a capable coding model trained on two trillion code and natural language tokens."
+  },
+  {
+   "name": "qwen3-vl:2b",
+   "label": "qwen3-vl (2b)",
+   "size": "~1.3 GB",
+   "tier": "klein",
+   "description": "The most powerful vision-language model in the Qwen model family to date."
+  },
+  {
+   "name": "qwen3-vl:4b",
+   "label": "qwen3-vl (4b)",
+   "size": "~2.7 GB",
+   "tier": "mittel",
+   "description": "The most powerful vision-language model in the Qwen model family to date."
+  },
+  {
+   "name": "qwen3-vl:8b",
+   "label": "qwen3-vl (8b)",
+   "size": "~5.4 GB",
+   "tier": "mittel",
+   "description": "The most powerful vision-language model in the Qwen model family to date."
+  },
+  {
+   "name": "llama3.3:70b",
+   "label": "llama3.3 (70b)",
+   "size": "~47 GB",
+   "tier": "groß",
+   "description": "New state of the art 70B model. Llama 3.3 70B offers similar performance compared to the Llama 3.1 405B model."
+  },
+  {
+   "name": "dolphin3:8b",
+   "label": "dolphin3 (8b)",
+   "size": "~5.4 GB",
+   "tier": "mittel",
+   "description": "Dolphin 3.0 Llama 3.1 8B 🐬 is the next generation of the Dolphin series of instruct-tuned models designed to be the ultimate general purpose local model, enabling coding,"
+  },
+  {
+   "name": "deepseek-v3:671b",
+   "label": "deepseek-v3 (671b)",
+   "size": "~450 GB",
+   "tier": "groß",
+   "description": "A strong Mixture-of-Experts (MoE) language model with 671B total parameters with 37B activated for each token."
+  },
+  {
+   "name": "olmo2:7b",
+   "label": "olmo2 (7b)",
+   "size": "~4.7 GB",
+   "tier": "mittel",
+   "description": "OLMo 2 is a new family of 7B and 13B models trained on up to 5T tokens. These models are on par with or better than equivalently sized fully open models, and competitive "
+  },
+  {
+   "name": "olmo2:13b",
+   "label": "olmo2 (13b)",
+   "size": "~8.7 GB",
+   "tier": "mittel",
+   "description": "OLMo 2 is a new family of 7B and 13B models trained on up to 5T tokens. These models are on par with or better than equivalently sized fully open models, and competitive "
+  },
+  {
+   "name": "smollm2:1.7b",
+   "label": "smollm2 (1.7b)",
+   "size": "~1.1 GB",
+   "tier": "klein",
+   "description": "SmolLM2 is a family of compact language models available in three size: 135M, 360M, and 1.7B parameters."
+  },
+  {
+   "name": "snowflake-arctic-embed",
+   "label": "snowflake-arctic-embed",
+   "size": "klein",
+   "tier": "spezial",
+   "description": "A suite of text embedding models by Snowflake, optimized for performance."
+  },
+  {
+   "name": "mistral-small:22b",
+   "label": "mistral-small (22b)",
+   "size": "~15 GB",
+   "tier": "groß",
+   "description": "Mistral Small 3 sets a new benchmark in the “small” Large Language Models category below 70B."
+  },
+  {
+   "name": "mistral-small:24b",
+   "label": "mistral-small (24b)",
+   "size": "~16 GB",
+   "tier": "groß",
+   "description": "Mistral Small 3 sets a new benchmark in the “small” Large Language Models category below 70B."
+  },
+  {
+   "name": "codegemma:2b",
+   "label": "codegemma (2b)",
+   "size": "~1.3 GB",
+   "tier": "klein",
+   "description": "CodeGemma is a collection of powerful, lightweight models that can perform a variety of coding tasks like fill-in-the-middle code completion, code generation, natural lan"
+  },
+  {
+   "name": "codegemma:7b",
+   "label": "codegemma (7b)",
+   "size": "~4.7 GB",
+   "tier": "mittel",
+   "description": "CodeGemma is a collection of powerful, lightweight models that can perform a variety of coding tasks like fill-in-the-middle code completion, code generation, natural lan"
+  },
+  {
+   "name": "granite3.1-moe:1b",
+   "label": "granite3.1-moe (1b)",
+   "size": "~0.7 GB",
+   "tier": "klein",
+   "description": "The IBM Granite 1B and 3B models are long-context mixture of experts (MoE) Granite models from IBM designed for low latency usage."
+  },
+  {
+   "name": "granite3.1-moe:3b",
+   "label": "granite3.1-moe (3b)",
+   "size": "~2.0 GB",
+   "tier": "klein",
+   "description": "The IBM Granite 1B and 3B models are long-context mixture of experts (MoE) Granite models from IBM designed for low latency usage."
+  },
+  {
+   "name": "orca-mini:3b",
+   "label": "orca-mini (3b)",
+   "size": "~2.0 GB",
+   "tier": "klein",
+   "description": "A general-purpose model ranging from 3 billion parameters to 70 billion, suitable for entry-level hardware."
+  },
+  {
+   "name": "orca-mini:7b",
+   "label": "orca-mini (7b)",
+   "size": "~4.7 GB",
+   "tier": "mittel",
+   "description": "A general-purpose model ranging from 3 billion parameters to 70 billion, suitable for entry-level hardware."
+  },
+  {
+   "name": "orca-mini:13b",
+   "label": "orca-mini (13b)",
+   "size": "~8.7 GB",
+   "tier": "mittel",
+   "description": "A general-purpose model ranging from 3 billion parameters to 70 billion, suitable for entry-level hardware."
+  },
+  {
+   "name": "orca-mini:70b",
+   "label": "orca-mini (70b)",
+   "size": "~47 GB",
+   "tier": "groß",
+   "description": "A general-purpose model ranging from 3 billion parameters to 70 billion, suitable for entry-level hardware."
+  },
+  {
+   "name": "starcoder2:3b",
+   "label": "starcoder2 (3b)",
+   "size": "~2.0 GB",
+   "tier": "klein",
+   "description": "StarCoder2 is the next generation of transparently trained open code LLMs that comes in three sizes: 3B, 7B and 15B parameters."
+  },
+  {
+   "name": "starcoder2:7b",
+   "label": "starcoder2 (7b)",
+   "size": "~4.7 GB",
+   "tier": "mittel",
+   "description": "StarCoder2 is the next generation of transparently trained open code LLMs that comes in three sizes: 3B, 7B and 15B parameters."
+  },
+  {
+   "name": "starcoder2:15b",
+   "label": "starcoder2 (15b)",
+   "size": "~10 GB",
+   "tier": "groß",
+   "description": "StarCoder2 is the next generation of transparently trained open code LLMs that comes in three sizes: 3B, 7B and 15B parameters."
+  },
+  {
+   "name": "deepseek-coder-v2:16b",
+   "label": "deepseek-coder-v2 (16b)",
+   "size": "~11 GB",
+   "tier": "groß",
+   "description": "An open-source Mixture-of-Experts code language model that achieves performance comparable to GPT4-Turbo in code-specific tasks."
+  },
+  {
+   "name": "deepseek-coder-v2:236b",
+   "label": "deepseek-coder-v2 (236b)",
+   "size": "~158 GB",
+   "tier": "groß",
+   "description": "An open-source Mixture-of-Experts code language model that achieves performance comparable to GPT4-Turbo in code-specific tasks."
+  },
+  {
+   "name": "llama2-uncensored:7b",
+   "label": "llama2-uncensored (7b)",
+   "size": "~4.7 GB",
+   "tier": "mittel",
+   "description": "Uncensored Llama 2 model by George Sung and Jarrad Hope."
+  },
+  {
+   "name": "llama2-uncensored:70b",
+   "label": "llama2-uncensored (70b)",
+   "size": "~47 GB",
+   "tier": "groß",
+   "description": "Uncensored Llama 2 model by George Sung and Jarrad Hope."
+  },
+  {
+   "name": "falcon3:1b",
+   "label": "falcon3 (1b)",
+   "size": "~0.7 GB",
+   "tier": "klein",
+   "description": "A family of efficient AI models under 10B parameters performant in science, math, and coding through innovative training techniques."
+  },
+  {
+   "name": "falcon3:3b",
+   "label": "falcon3 (3b)",
+   "size": "~2.0 GB",
+   "tier": "klein",
+   "description": "A family of efficient AI models under 10B parameters performant in science, math, and coding through innovative training techniques."
+  },
+  {
+   "name": "falcon3:7b",
+   "label": "falcon3 (7b)",
+   "size": "~4.7 GB",
+   "tier": "mittel",
+   "description": "A family of efficient AI models under 10B parameters performant in science, math, and coding through innovative training techniques."
+  },
+  {
+   "name": "falcon3:10b",
+   "label": "falcon3 (10b)",
+   "size": "~6.7 GB",
+   "tier": "mittel",
+   "description": "A family of efficient AI models under 10B parameters performant in science, math, and coding through innovative training techniques."
+  },
+  {
+   "name": "qwen2.5vl:3b",
+   "label": "qwen2.5vl (3b)",
+   "size": "~2.0 GB",
+   "tier": "klein",
+   "description": "Flagship vision-language model of Qwen and also a significant leap from the previous Qwen2-VL."
+  },
+  {
+   "name": "qwen2.5vl:7b",
+   "label": "qwen2.5vl (7b)",
+   "size": "~4.7 GB",
+   "tier": "mittel",
+   "description": "Flagship vision-language model of Qwen and also a significant leap from the previous Qwen2-VL."
+  },
+  {
+   "name": "qwen2.5vl:32b",
+   "label": "qwen2.5vl (32b)",
+   "size": "~21 GB",
+   "tier": "groß",
+   "description": "Flagship vision-language model of Qwen and also a significant leap from the previous Qwen2-VL."
+  },
+  {
+   "name": "qwen2.5vl:72b",
+   "label": "qwen2.5vl (72b)",
+   "size": "~48 GB",
+   "tier": "groß",
+   "description": "Flagship vision-language model of Qwen and also a significant leap from the previous Qwen2-VL."
+  },
+  {
+   "name": "qwen3.6:27b",
+   "label": "qwen3.6 (27b)",
+   "size": "~18 GB",
+   "tier": "groß",
+   "description": "Qwen3.6 delivers substantial upgrades in agentic coding and thinking preservation than previous Qwen models."
+  },
+  {
+   "name": "qwen3.6:35b",
+   "label": "qwen3.6 (35b)",
+   "size": "~23 GB",
+   "tier": "groß",
+   "description": "Qwen3.6 delivers substantial upgrades in agentic coding and thinking preservation than previous Qwen models."
+  },
+  {
+   "name": "nemotron-3-super:120b",
+   "label": "nemotron-3-super (120b)",
+   "size": "~80 GB",
+   "tier": "groß",
+   "description": "NVIDIA Nemotron 3 Super is a 120B open MoE model activating just 12B parameters to deliver maximum compute efficiency and accuracy for complex multi-agent applications."
+  },
+  {
+   "name": "llava-llama3:8b",
+   "label": "llava-llama3 (8b)",
+   "size": "~5.4 GB",
+   "tier": "mittel",
+   "description": "A LLaVA model fine-tuned from Llama 3 Instruct with better scores in several benchmarks."
+  },
+  {
+   "name": "mistral-small3.2:24b",
+   "label": "mistral-small3.2 (24b)",
+   "size": "~16 GB",
+   "tier": "groß",
+   "description": "An update to Mistral Small that improves on function calling, instruction following, and less repetition errors."
+  },
+  {
+   "name": "qwq:32b",
+   "label": "qwq (32b)",
+   "size": "~21 GB",
+   "tier": "groß",
+   "description": "QwQ is the reasoning model of the Qwen series."
+  },
+  {
+   "name": "qwen3-embedding",
+   "label": "qwen3-embedding",
+   "size": "klein",
+   "tier": "spezial",
+   "description": "Building upon the foundational models of the Qwen3 series, Qwen3 Embedding provides a comprehensive range of text embeddings models in various sizes"
+  },
+  {
+   "name": "cogito:3b",
+   "label": "cogito (3b)",
+   "size": "~2.0 GB",
+   "tier": "klein",
+   "description": "Cogito v1 Preview is a family of hybrid reasoning models by Deep Cogito that outperform the best available open models of the same size, including counterparts from LLaMA"
+  },
+  {
+   "name": "cogito:8b",
+   "label": "cogito (8b)",
+   "size": "~5.4 GB",
+   "tier": "mittel",
+   "description": "Cogito v1 Preview is a family of hybrid reasoning models by Deep Cogito that outperform the best available open models of the same size, including counterparts from LLaMA"
+  },
+  {
+   "name": "cogito:14b",
+   "label": "cogito (14b)",
+   "size": "~9.4 GB",
+   "tier": "groß",
+   "description": "Cogito v1 Preview is a family of hybrid reasoning models by Deep Cogito that outperform the best available open models of the same size, including counterparts from LLaMA"
+  },
+  {
+   "name": "cogito:32b",
+   "label": "cogito (32b)",
+   "size": "~21 GB",
+   "tier": "groß",
+   "description": "Cogito v1 Preview is a family of hybrid reasoning models by Deep Cogito that outperform the best available open models of the same size, including counterparts from LLaMA"
+  },
+  {
+   "name": "cogito:70b",
+   "label": "cogito (70b)",
+   "size": "~47 GB",
+   "tier": "groß",
+   "description": "Cogito v1 Preview is a family of hybrid reasoning models by Deep Cogito that outperform the best available open models of the same size, including counterparts from LLaMA"
+  },
+  {
+   "name": "dolphin-llama3:8b",
+   "label": "dolphin-llama3 (8b)",
+   "size": "~5.4 GB",
+   "tier": "mittel",
+   "description": "Dolphin 2.9 is a new model with 8B and 70B sizes by Eric Hartford based on Llama 3 that has a variety of instruction, conversational, and coding skills."
+  },
+  {
+   "name": "dolphin-llama3:70b",
+   "label": "dolphin-llama3 (70b)",
+   "size": "~47 GB",
+   "tier": "groß",
+   "description": "Dolphin 2.9 is a new model with 8B and 70B sizes by Eric Hartford based on Llama 3 that has a variety of instruction, conversational, and coding skills."
+  },
+  {
+   "name": "smollm:1.7b",
+   "label": "smollm (1.7b)",
+   "size": "~1.1 GB",
+   "tier": "klein",
+   "description": "🪐 A family of small models with 135M, 360M, and 1.7B parameters, trained on a new high-quality dataset."
+  }
+ ]
 }
