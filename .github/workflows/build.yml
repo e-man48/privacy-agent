@@ -7,10 +7,6 @@ on:
     tags: ["v*"]
   workflow_dispatch:
 
-# Schon jetzt auf Node.js 24 stellen (entfernt die Node-20-Deprecation-Warnung).
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
-
 jobs:
   build:
     strategy:
@@ -23,15 +19,15 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Python einrichten
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
       - name: Node einrichten
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: "20"
 
@@ -131,7 +127,7 @@ jobs:
         run: npm run build
 
       - name: Installer als Artefakt hochladen
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: privacy-agent-${{ matrix.os }}
           if-no-files-found: warn
