@@ -91,6 +91,28 @@
       "command": "npx", "args": ["-y", "tavily-mcp@latest"],
       "env": {"TAVILY_API_KEY": "{key}"}, "needs": "Node.js (npx)", "runtime": "node",
       "params": [{"key": "key", "label": "Tavily-API-Schlüssel", "kind": "secret", "placeholder": "von tavily.com (kostenloses Kontingent)"}]
+    },
+    {
+      "id": "outlook", "label": "Outlook E-Mail", "icon": "📧",
+      "description": "Outlook-/Microsoft-Postfach lesen, durchsuchen und senden (per IMAP/SMTP). Braucht ein App-Passwort.",
+      "command": "npx", "args": ["-y", "mcp-mail-server"],
+      "env": {"IMAP_HOST": "outlook.office365.com", "IMAP_PORT": "993", "IMAP_SECURE": "true", "SMTP_HOST": "smtp.office365.com", "SMTP_PORT": "587", "SMTP_SECURE": "false", "EMAIL_USER": "{user}", "EMAIL_PASS": "{pass}"},
+      "needs": "Node.js (npx)", "runtime": "node",
+      "params": [
+        {"key": "user", "label": "Deine Outlook-Adresse", "kind": "text", "placeholder": "name@outlook.com"},
+        {"key": "pass", "label": "App-Passwort (NICHT dein normales Passwort)", "kind": "secret", "placeholder": "App-Passwort aus den Microsoft-Sicherheitseinstellungen"}
+      ]
+    },
+    {
+      "id": "gmail", "label": "Gmail E-Mail", "icon": "✉️",
+      "description": "Gmail-Postfach lesen, durchsuchen und senden (per IMAP/SMTP). Braucht ein App-Passwort.",
+      "command": "npx", "args": ["-y", "mcp-mail-server"],
+      "env": {"IMAP_HOST": "imap.gmail.com", "IMAP_PORT": "993", "IMAP_SECURE": "true", "SMTP_HOST": "smtp.gmail.com", "SMTP_PORT": "465", "SMTP_SECURE": "true", "EMAIL_USER": "{user}", "EMAIL_PASS": "{pass}"},
+      "needs": "Node.js (npx)", "runtime": "node",
+      "params": [
+        {"key": "user", "label": "Deine Gmail-Adresse", "kind": "text", "placeholder": "name@gmail.com"},
+        {"key": "pass", "label": "App-Passwort (16-stellig)", "kind": "secret", "placeholder": "aus den Google-Kontoeinstellungen erzeugen"}
+      ]
     }
   ]
 }
