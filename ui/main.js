@@ -340,6 +340,7 @@ function openBrain() {
   el("brain").classList.remove("hidden");
   el("brain-backdrop").classList.remove("hidden");
   loadModels();
+  loadModelCatalog();
   loadEmergency();
   loadTailscale();
   loadLocalMatrix();
@@ -717,6 +718,44 @@ async function loadModels() {
     el("pull-msg").textContent = "Backend nicht erreichbar.";
   }
 }
+
+async function loadModelCatalog() {
+  let d;
+  try {
+    d = await (await fetch(`${API}/models/catalog`)).json();
+  } catch {
+    return;
+  }
+  const box = el("model-catalog");
+  box.innerHTML = "";
+  (d.models || []).forEach((m) => {
+    const busy = m.installed || m.downloading;
+    const state = m.installed ? "✅ installiert" : m.downloading ? "⬇ lädt …" : "";
+    const row = document.createElement("label");
+    row.className = "cat-row";
+    row.innerHTML = `<input type="checkbox" data-name="${m.name}" ${busy ? "checked disabled" : ""} />
+      <span class="cat-main"><b></b> <span class="muted">${m.size}</span>
+        <br><span class="cat-desc muted"></span></span>
+      <span class="cat-state">${state}</span>`;
+    row.querySelector("b").textContent = m.label;
+    row.querySelector(".cat-desc").textContent = m.description;
+    box.appendChild(row);
+  });
+}
+
+el("model-dl").addEventListener("click", async () => {
+  const picks = [...el("model-catalog").querySelectorAll("input[data-name]:checked:not([disabled])")];
+  if (!picks.length) return;
+  for (const cb of picks) {
+    await fetch(`${API}/model/pull`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: cb.dataset.name }),
+    });
+  }
+  loadModelCatalog();
+  loadModels();
+});
 
 el("autodl-toggle").addEventListener("change", async (e) => {
   await fetch(`${API}/setup/save`, {

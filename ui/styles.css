@@ -198,6 +198,12 @@ button:disabled:hover { filter: none; }
 .proposal-actions button { padding: 6px 12px; font-size: .82rem; }
 
 .brain-section > input { width: 100%; padding: 9px 11px; margin-bottom: 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
+#model-catalog { display: flex; flex-direction: column; gap: 4px; margin: 6px 0 10px; max-height: 240px; overflow-y: auto; }
+.cat-row { display: flex; align-items: flex-start; gap: 8px; padding: 7px 8px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); cursor: pointer; }
+.cat-row input { margin-top: 3px; accent-color: var(--accent); }
+.cat-main { flex: 1; font-size: .84rem; line-height: 1.35; }
+.cat-desc { font-size: .78rem; }
+.cat-state { font-size: .76rem; white-space: nowrap; }
 .model-row { display: flex; gap: 8px; margin-bottom: 8px; }
 .model-row select, .model-row input { flex: 1; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
 .toggle { display: flex; gap: 8px; align-items: flex-start; font-size: .82rem; color: var(--muted); cursor: pointer; margin-top: 4px; }

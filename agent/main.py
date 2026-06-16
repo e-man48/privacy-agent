@@ -15,9 +15,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from . import (
-    cloud_llm, config, connectors, consent_log, extractor, local_llm,
-    local_matrix, mcp_catalog, mcp_client, memory, metrics, openrouter_auth,
-    optimizer, projects, router, runtimes, scheduler, settings, tailscale_setup,
+    cloud_llm, config, connectors, consent_log, downloads, extractor, local_llm,
+    local_matrix, mcp_catalog, mcp_client, memory, metrics, model_catalog,
+    openrouter_auth, optimizer, projects, router, runtimes, scheduler, settings,
+    tailscale_setup,
 )
 
 
@@ -319,14 +320,26 @@ def optimize_apply(body: OptimizeIn) -> dict:
 # --- Lokale Modelle & Autopilot -----------------------------------------
 @app.get("/models")
 def models_list() -> dict:
-    from . import autopilot
     return {
         "current": config.LOCAL_MODEL,
         "installed": local_llm.list_models(),
         "auto_local_upgrade": config.AUTO_LOCAL_UPGRADE,
         "auto_download_models": config.AUTO_DOWNLOAD_MODELS,
-        "downloading": autopilot.downloading(),
+        "downloading": downloads.active(),
     }
+
+
+@app.get("/models/catalog")
+def models_catalog() -> dict:
+    """Empfohlene Modelle mit Status (installiert / laedt gerade)."""
+    installed = set(local_llm.list_models())
+    active = set(downloads.active())
+    out = []
+    for m in model_catalog.catalog():
+        out.append({**m,
+                    "installed": m["name"] in installed,
+                    "downloading": m["name"] in active})
+    return {"models": out}
 
 
 @app.post("/model/set")
@@ -338,18 +351,8 @@ def model_set(body: ModelIn) -> dict:
 
 @app.post("/model/pull")
 def model_pull(body: ModelIn) -> dict:
-    """Laedt ein neues Modell im Hintergrund (ollama pull)."""
-    import subprocess
-    import threading
-
-    def worker() -> None:
-        try:
-            from ._proc import no_window
-            subprocess.run(["ollama", "pull", body.name], check=True, **no_window())
-        except (subprocess.CalledProcessError, OSError):
-            pass
-
-    threading.Thread(target=worker, daemon=True).start()
+    """Laedt ein Modell im Hintergrund (ollama pull)."""
+    downloads.pull(body.name)
     return {"ok": True, "message": f"Download von '{body.name}' gestartet."}
 
 
