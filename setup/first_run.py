@@ -23,9 +23,14 @@ OLLAMA_HOST = "http://127.0.0.1:11434"
 
 
 def emit(stage: str, message: str, progress: float | None = None, **extra) -> None:
-    """Eine Fortschrittsmeldung als JSON-Zeile (von der GUI gelesen)."""
+    """Eine Fortschrittsmeldung als JSON-Zeile (von der GUI gelesen).
+
+    ensure_ascii=True (Standard): Sonderzeichen werden als \\uXXXX kodiert ->
+    die Ausgabe ist immer reines ASCII/gueltiges UTF-8, unabhaengig von der
+    Windows-Konsolen-Codepage (cp1252). Sonst: 'stream did not contain valid UTF-8'.
+    """
     payload = {"stage": stage, "message": message, "progress": progress, **extra}
-    print(json.dumps(payload, ensure_ascii=False), flush=True)
+    print(json.dumps(payload), flush=True)
 
 
 # --- 1. Hardware erkennen + Modell waehlen ------------------------------
