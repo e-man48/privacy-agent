@@ -16,8 +16,8 @@ from pydantic import BaseModel
 
 from . import (
     cloud_llm, config, connectors, consent_log, extractor, local_llm,
-    mcp_catalog, mcp_client, memory, metrics, openrouter_auth, optimizer,
-    projects, router, runtimes, scheduler, settings, tailscale_setup,
+    local_matrix, mcp_catalog, mcp_client, memory, metrics, openrouter_auth,
+    optimizer, projects, router, runtimes, scheduler, settings, tailscale_setup,
 )
 
 
@@ -240,6 +240,28 @@ def tailscale_install() -> dict:
 def tailscale_login() -> dict:
     ok, message = tailscale_setup.login()
     return {"ok": ok, "message": message}
+
+
+# --- Lokaler Matrix-Server (Docker, optional) ---------------------------
+class LocalMatrixIn(BaseModel):
+    server_name: str = "localhost"
+
+
+@app.get("/local-matrix")
+def local_matrix_status() -> dict:
+    return local_matrix.status()
+
+
+@app.post("/local-matrix/start")
+def local_matrix_start(body: LocalMatrixIn) -> dict:
+    log: list[str] = []
+    ok = local_matrix.start(body.server_name, log.append)
+    return {"ok": ok, "log": log, "status": local_matrix.status()}
+
+
+@app.post("/local-matrix/stop")
+def local_matrix_stop() -> dict:
+    return {"ok": local_matrix.stop()}
 
 
 # --- Gedaechtnis --------------------------------------------------------

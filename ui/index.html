@@ -263,6 +263,21 @@
     </section>
 
     <section class="brain-section">
+      <h3>Lokaler Matrix-Server (optional)</h3>
+      <p id="lm-status" class="muted">Status …</p>
+      <div id="lm-controls" class="hidden">
+        <input id="lm-name" placeholder="Server-Name (z. B. dein Tailscale-Name)" />
+        <div class="model-row">
+          <button id="lm-start" class="btn-secondary">Starten</button>
+          <button id="lm-stop" class="btn-secondary">Stoppen</button>
+        </div>
+        <p id="lm-info" class="muted"></p>
+      </div>
+      <p class="muted">Nur nötig, wenn du <b>keinen</b> eigenen Server (z. B. NAS)
+         hast. Läuft über Docker und ist nur online, solange dieser PC läuft.</p>
+    </section>
+
+    <section class="brain-section">
       <h3>Externe Skills (MCP)</h3>
       <p class="muted">Beliebte Skills mit einem Klick hinzufügen:</p>
       <div id="mcp-templates" class="mcp-templates"></div>

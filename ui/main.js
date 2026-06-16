@@ -342,12 +342,60 @@ function openBrain() {
   loadModels();
   loadEmergency();
   loadTailscale();
+  loadLocalMatrix();
   loadMatrix();
   loadCatalog();
   loadMCP();
   loadProposals();
   loadMemory();
 }
+
+// --- Lokaler Matrix-Server (Docker, optional) --------------------------
+async function loadLocalMatrix() {
+  let s;
+  try {
+    s = await (await fetch(`${API}/local-matrix`)).json();
+  } catch {
+    return;
+  }
+  if (!s.docker) {
+    el("lm-status").textContent =
+      "Braucht Docker Desktop (nicht gefunden). Für die meisten reicht ein NAS-/externer Server.";
+    el("lm-controls").classList.add("hidden");
+    return;
+  }
+  el("lm-controls").classList.remove("hidden");
+  if (s.server_name) el("lm-name").value = s.server_name;
+  if (s.running) {
+    el("lm-status").textContent = `🟢 Läuft · ${s.url} · Server-Name: ${s.server_name}`;
+    el("lm-info").innerHTML =
+      `Konten in Element anlegen mit Server-Adresse <b>${s.url}</b> und ` +
+      `Registrierungs-Token <code>${s.token}</code>.`;
+  } else {
+    el("lm-status").textContent = "🔴 Gestoppt.";
+    el("lm-info").textContent = "";
+  }
+}
+
+el("lm-start").addEventListener("click", async () => {
+  el("lm-info").textContent = "Starte … (beim ersten Mal lädt Docker das Image)";
+  try {
+    await fetch(`${API}/local-matrix/start`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ server_name: el("lm-name").value.trim() || "localhost" }),
+    });
+  } catch {
+    el("lm-info").textContent = "Start nicht möglich.";
+    return;
+  }
+  setTimeout(loadLocalMatrix, 2000);
+});
+
+el("lm-stop").addEventListener("click", async () => {
+  await fetch(`${API}/local-matrix/stop`, { method: "POST" });
+  loadLocalMatrix();
+});
 
 // --- Tailscale (privates Netz) -----------------------------------------
 async function loadTailscale() {
