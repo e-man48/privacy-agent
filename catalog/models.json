@@ -1,0 +1,18 @@
+{
+  "_hinweis": "Modell-Katalog des Privacy-Agent. Hier neue Modelle einfach ergaenzen -- die App holt sich diese Datei automatisch (taeglich). Felder: name (exakter Ollama-Name), label, size, tier (klein|mittel|groß|spezial), description.",
+  "models": [
+    {"name": "qwen2.5:1.5b", "label": "Qwen 2.5 (1.5B)", "size": "~1 GB", "tier": "klein", "description": "Sehr klein & schnell – für schwache PCs ohne GPU."},
+    {"name": "qwen2.5:3b", "label": "Qwen 2.5 (3B)", "size": "~2 GB", "tier": "klein", "description": "Klein, gut auf der CPU nutzbar (Standard für schwache Hardware)."},
+    {"name": "llama3.2:3b", "label": "Llama 3.2 (3B)", "size": "~2 GB", "tier": "klein", "description": "Metas kleines Modell, flott auf der CPU."},
+    {"name": "phi3.5", "label": "Phi-3.5 (3.8B)", "size": "~2.2 GB", "tier": "klein", "description": "Microsofts kompaktes, erstaunlich starkes Modell."},
+    {"name": "qwen2.5:7b", "label": "Qwen 2.5 (7B)", "size": "~4.7 GB", "tier": "mittel", "description": "Ausgewogen – guter Allrounder, braucht etwas RAM/GPU."},
+    {"name": "llama3.1:8b", "label": "Llama 3.1 (8B)", "size": "~4.9 GB", "tier": "mittel", "description": "Metas ausgewogenes Modell."},
+    {"name": "mistral:7b", "label": "Mistral (7B)", "size": "~4.1 GB", "tier": "mittel", "description": "Schnelles, solides Modell von Mistral."},
+    {"name": "gemma2:9b", "label": "Gemma 2 (9B)", "size": "~5.4 GB", "tier": "mittel", "description": "Googles Modell, stark im Verständnis."},
+    {"name": "qwen2.5:14b", "label": "Qwen 2.5 (14B)", "size": "~9 GB", "tier": "groß", "description": "Stark – braucht viel RAM oder eine GPU."},
+    {"name": "gemma2:27b", "label": "Gemma 2 (27B)", "size": "~16 GB", "tier": "groß", "description": "Sehr stark – nur mit viel RAM/guter GPU."},
+    {"name": "qwen2.5-coder:7b", "label": "Qwen 2.5 Coder (7B)", "size": "~4.7 GB", "tier": "spezial", "description": "Auf Programmieren spezialisiert."},
+    {"name": "deepseek-r1:7b", "label": "DeepSeek-R1 (7B)", "size": "~4.7 GB", "tier": "spezial", "description": "Stark im logischen Schlussfolgern (Reasoning)."},
+    {"name": "llava:7b", "label": "LLaVA (7B, Bilder)", "size": "~4.7 GB", "tier": "spezial", "description": "Kann Bilder ansehen und beschreiben (Vision)."}
+  ]
+}

@@ -719,10 +719,10 @@ async function loadModels() {
   }
 }
 
-async function loadModelCatalog() {
+async function loadModelCatalog(force = false) {
   let d;
   try {
-    d = await (await fetch(`${API}/models/catalog`)).json();
+    d = await (await fetch(`${API}/models/catalog${force ? "?refresh=true" : ""}`)).json();
   } catch {
     return;
   }
@@ -742,6 +742,8 @@ async function loadModelCatalog() {
     box.appendChild(row);
   });
 }
+
+el("catalog-refresh").addEventListener("click", () => loadModelCatalog(true));
 
 el("model-dl").addEventListener("click", async () => {
   const picks = [...el("model-catalog").querySelectorAll("input[data-name]:checked:not([disabled])")];

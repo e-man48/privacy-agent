@@ -330,12 +330,15 @@ def models_list() -> dict:
 
 
 @app.get("/models/catalog")
-def models_catalog() -> dict:
-    """Empfohlene Modelle mit Status (installiert / laedt gerade)."""
+def models_catalog(refresh: bool = False) -> dict:
+    """Empfohlene Modelle mit Status (installiert / laedt gerade).
+
+    refresh=true holt die Liste sofort neu aus der entfernten Quelle.
+    """
     installed = set(local_llm.list_models())
     active = set(downloads.active())
     out = []
-    for m in model_catalog.catalog():
+    for m in model_catalog.catalog(force=refresh):
         out.append({**m,
                     "installed": m["name"] in installed,
                     "downloading": m["name"] in active})
