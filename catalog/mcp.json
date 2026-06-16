@@ -1,0 +1,71 @@
+{
+  "_hinweis": "Skill-Katalog (MCP) des Privacy-Agent. Hier neue Skills ergaenzen -- die App holt sich diese Datei automatisch (taeglich/per Knopf). Felder: id, label, icon, description, command, args, env, params, needs, runtime. Platzhalter wie {path}/{token} werden durch die Nutzereingabe ersetzt.",
+  "templates": [
+    {
+      "id": "dateien", "label": "Dateien", "icon": "📁",
+      "description": "Lokale Dateien in einem Ordner lesen, durchsuchen und auflisten.",
+      "command": "npx", "args": ["-y", "@modelcontextprotocol/server-filesystem", "{path}"],
+      "env": {}, "needs": "Node.js (npx)", "runtime": "node",
+      "params": [{"key": "path", "label": "Welcher Ordner darf gelesen werden?", "kind": "path", "placeholder": "z. B. C:\\Users\\du\\Dokumente"}]
+    },
+    {
+      "id": "webseite", "label": "Webseite abrufen", "icon": "🌐",
+      "description": "Eine Webseite holen und als Text lesen – ohne Schlüssel.",
+      "command": "uvx", "args": ["mcp-server-fetch"],
+      "env": {}, "needs": "Python (uvx)", "runtime": "uv", "params": []
+    },
+    {
+      "id": "github", "label": "GitHub", "icon": "🐙",
+      "description": "GitHub-Repos durchsuchen, Issues und Pull Requests lesen/erstellen.",
+      "command": "npx", "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {"GITHUB_PERSONAL_ACCESS_TOKEN": "{token}"}, "needs": "Node.js (npx)", "runtime": "node",
+      "params": [{"key": "token", "label": "GitHub-Zugriffstoken (Personal Access Token)", "kind": "secret", "placeholder": "ghp_…"}]
+    },
+    {
+      "id": "websuche", "label": "Websuche", "icon": "🔎",
+      "description": "Im Web suchen (über Brave Search). Benötigt einen kostenlosen API-Schlüssel.",
+      "command": "npx", "args": ["-y", "@modelcontextprotocol/server-brave-search"],
+      "env": {"BRAVE_API_KEY": "{key}"}, "needs": "Node.js (npx)", "runtime": "node",
+      "params": [{"key": "key", "label": "Brave-Search-API-Schlüssel", "kind": "secret", "placeholder": "von search.brave.com/api"}]
+    },
+    {
+      "id": "gedaechtnis-graph", "label": "Wissensgraph-Gedächtnis", "icon": "🧠",
+      "description": "Ein dauerhaftes Wissens-Netz (Knowledge Graph) als Gedächtnis – ohne Schlüssel.",
+      "command": "npx", "args": ["-y", "@modelcontextprotocol/server-memory"],
+      "env": {}, "needs": "Node.js (npx)", "runtime": "node", "params": []
+    },
+    {
+      "id": "nachdenken", "label": "Schritt-für-Schritt-Denken", "icon": "🧩",
+      "description": "Hilft dem Agenten, schwierige Aufgaben in Denkschritte zu zerlegen.",
+      "command": "npx", "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "env": {}, "needs": "Node.js (npx)", "runtime": "node", "params": []
+    },
+    {
+      "id": "zeit", "label": "Zeit & Zeitzonen", "icon": "🕒",
+      "description": "Aktuelle Uhrzeit und Zeitzonen-Umrechnungen – ohne Schlüssel.",
+      "command": "uvx", "args": ["mcp-server-time"],
+      "env": {}, "needs": "Python (uvx)", "runtime": "uv", "params": []
+    },
+    {
+      "id": "git", "label": "Git-Projekt", "icon": "🌿",
+      "description": "Ein lokales Git-Repository lesen (Verlauf, Diffs, Status).",
+      "command": "uvx", "args": ["mcp-server-git", "--repository", "{path}"],
+      "env": {}, "needs": "Python (uvx)", "runtime": "uv",
+      "params": [{"key": "path", "label": "Pfad zum Git-Projekt", "kind": "path", "placeholder": "z. B. D:\\Projekte\\meinrepo"}]
+    },
+    {
+      "id": "sqlite", "label": "SQLite-Datenbank", "icon": "🗄️",
+      "description": "Eine lokale SQLite-Datenbank abfragen.",
+      "command": "uvx", "args": ["mcp-server-sqlite", "--db-path", "{path}"],
+      "env": {}, "needs": "Python (uvx)", "runtime": "uv",
+      "params": [{"key": "path", "label": "Pfad zur .db-Datei", "kind": "path", "placeholder": "z. B. D:\\daten\\meine.db"}]
+    },
+    {
+      "id": "landkarten", "label": "Google Maps", "icon": "🗺️",
+      "description": "Orte suchen, Routen und Entfernungen abfragen (Google Maps).",
+      "command": "npx", "args": ["-y", "@modelcontextprotocol/server-google-maps"],
+      "env": {"GOOGLE_MAPS_API_KEY": "{key}"}, "needs": "Node.js (npx)", "runtime": "node",
+      "params": [{"key": "key", "label": "Google-Maps-API-Schlüssel", "kind": "secret", "placeholder": "von Google Cloud"}]
+    }
+  ]
+}

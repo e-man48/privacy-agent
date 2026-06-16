@@ -524,10 +524,10 @@ el("mx2-off").addEventListener("click", async () => {
 });
 
 // --- MCP-Vorlagen (Ein-Klick) ------------------------------------------
-async function loadCatalog() {
+async function loadCatalog(force = false) {
   const box = el("mcp-templates");
   try {
-    const r = await fetch(`${API}/mcp/catalog`);
+    const r = await fetch(`${API}/mcp/catalog${force ? "?refresh=true" : ""}`);
     const d = await r.json();
     box.innerHTML = "";
     (d.templates || []).forEach((t) => {
@@ -543,6 +543,8 @@ async function loadCatalog() {
     box.innerHTML = "";
   }
 }
+
+el("mcp-cat-refresh").addEventListener("click", () => loadCatalog(true));
 
 const RUNTIME_LABEL = { node: "Node.js", uv: "uv" };
 

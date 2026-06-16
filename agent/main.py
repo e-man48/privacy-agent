@@ -415,8 +415,8 @@ def runtimes_install(body: RuntimeIn) -> dict:
 
 
 @app.get("/mcp/catalog")
-def mcp_catalog_list() -> dict:
-    return {"templates": mcp_catalog.public_catalog()}
+def mcp_catalog_list(refresh: bool = False) -> dict:
+    return {"templates": mcp_catalog.public_catalog(force=refresh)}
 
 
 @app.post("/mcp/install")
