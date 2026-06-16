@@ -319,10 +319,13 @@ def optimize_apply(body: OptimizeIn) -> dict:
 # --- Lokale Modelle & Autopilot -----------------------------------------
 @app.get("/models")
 def models_list() -> dict:
+    from . import autopilot
     return {
         "current": config.LOCAL_MODEL,
         "installed": local_llm.list_models(),
         "auto_local_upgrade": config.AUTO_LOCAL_UPGRADE,
+        "auto_download_models": config.AUTO_DOWNLOAD_MODELS,
+        "downloading": autopilot.downloading(),
     }
 
 

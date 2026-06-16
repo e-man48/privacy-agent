@@ -14,7 +14,7 @@ from . import config
 _ALLOWED = {
     "onboarded",
     "anthropic_api_key", "cloud_model", "local_model",
-    "decision_style", "auto_local_upgrade",
+    "decision_style", "auto_local_upgrade", "auto_download_models",
     "model_locked", "cloud_mode", "browser_provider",
     "cloud_provider", "openrouter_api_key", "openrouter_model",
     "connector",

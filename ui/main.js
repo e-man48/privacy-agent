@@ -708,10 +708,23 @@ async function loadModels() {
       sel.appendChild(o);
     });
     el("autopilot-toggle").checked = !!d.auto_local_upgrade;
+    el("autodl-toggle").checked = !!d.auto_download_models;
+    const dl = d.downloading || [];
+    el("dl-status").textContent = dl.length
+      ? `⬇ Lädt im Hintergrund: ${dl.join(", ")} …`
+      : "";
   } catch {
     el("pull-msg").textContent = "Backend nicht erreichbar.";
   }
 }
+
+el("autodl-toggle").addEventListener("change", async (e) => {
+  await fetch(`${API}/setup/save`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ settings: { auto_download_models: e.target.checked } }),
+  });
+});
 
 el("model-select").addEventListener("change", async (e) => {
   await fetch(`${API}/model/set`, {

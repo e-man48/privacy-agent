@@ -59,6 +59,10 @@ AUTO_LOCAL_UPGRADE = _as_bool(os.environ.get("AUTO_LOCAL_UPGRADE", "true"))
 # NICHT mehr aendern -- nur der Mensch stellt es um, und es bleibt so.
 MODEL_LOCKED = _as_bool(os.environ.get("MODEL_LOCKED", "false"))
 
+# Wenn aktiv (und keine Sperre): Der Autopilot darf bei Bedarf selbststaendig
+# ein staerkeres Open-Source-Modell herunterladen (im Hintergrund) und nutzen.
+AUTO_DOWNLOAD_MODELS = _as_bool(os.environ.get("AUTO_DOWNLOAD_MODELS", "true"))
+
 # --- Semantisches Gedaechtnis (Embeddings) ------------------------------
 # Kosinus-Aehnlichkeit, ab der zwei Eintraege als Duplikat/Synonym gelten.
 SEMANTIC_DUP_THRESHOLD = float(os.environ.get("SEMANTIC_DUP_THRESHOLD", "0.82"))
@@ -224,6 +228,8 @@ def apply_user_settings(data: dict) -> None:
         g["LOCAL_MODEL"] = str(data["local_model"])
     if "auto_local_upgrade" in data:
         g["AUTO_LOCAL_UPGRADE"] = _as_bool(data["auto_local_upgrade"])
+    if "auto_download_models" in data:
+        g["AUTO_DOWNLOAD_MODELS"] = _as_bool(data["auto_download_models"])
     if "model_locked" in data:
         g["MODEL_LOCKED"] = _as_bool(data["model_locked"])
     if data.get("cloud_mode") in ("off", "api", "browser"):

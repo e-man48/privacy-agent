@@ -16,9 +16,12 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
+import threading
 from datetime import datetime, timezone
 
 from . import config, local_llm, metrics
+from ._proc import no_window
 
 # Anzahl der Faelle, in denen ein staerkeres Modell "gewinnt", bevor es autonom
 # zum neuen Standard wird.
@@ -44,9 +47,46 @@ _MODEL_SIZES_B: dict[str, float] = {
 }
 
 
+# Modelle, die der Autopilot bei Bedarf selbst herunterladen darf (groessen-
+# geordnet). Es wird das naechstgroessere gewaehlt -- sanftes Hochstufen.
+_DOWNLOAD_LADDER = ["qwen2.5:3b", "qwen2.5:7b", "qwen2.5:14b", "qwen2.5:32b"]
+_downloading: set[str] = set()  # laufende Hintergrund-Downloads
+
+
 def enabled() -> bool:
     # Bei gesperrtem Modell darf der Agent NICHT autonom wechseln.
     return bool(config.AUTO_LOCAL_UPGRADE) and not bool(config.MODEL_LOCKED)
+
+
+def downloading() -> list[str]:
+    return sorted(_downloading)
+
+
+def _next_download_target(current: str):
+    """Naechstgroesseres Modell aus der Lade-Leiter, das noch fehlt."""
+    cur = _params(current) or 0.0
+    installed = set(local_llm.list_models())
+    for name in _DOWNLOAD_LADDER:
+        size = _params(name)
+        if size and size > cur and name not in installed and name not in _downloading:
+            return name
+    return None
+
+
+def _start_download(model: str) -> None:
+    """Laedt ein Modell im Hintergrund (blockiert die laufende Antwort nicht)."""
+    _downloading.add(model)
+
+    def worker() -> None:
+        try:
+            subprocess.run(["ollama", "pull", model], check=True, **no_window())
+            metrics.record("auto_download", model=model)
+        except Exception:  # noqa: BLE001
+            pass
+        finally:
+            _downloading.discard(model)
+
+    threading.Thread(target=worker, daemon=True).start()
 
 
 def _params(model: str):
@@ -127,6 +167,13 @@ def try_upgrade(convo: list[dict], task: str, base_confidence: int):
     """
     target = stronger_installed_model(config.LOCAL_MODEL)
     if not target:
+        # Kein staerkeres Modell installiert -> ggf. selbst herunterladen
+        # (im Hintergrund, fuer kuenftige Aufgaben). Diese Anfrage geht den
+        # normalen Weg (Cloud-Rueckfrage).
+        if config.AUTO_DOWNLOAD_MODELS and not config.MODEL_LOCKED:
+            dl = _next_download_target(config.LOCAL_MODEL)
+            if dl:
+                _start_download(dl)
         return None
     try:
         reply = local_llm.chat(convo, model=target)
