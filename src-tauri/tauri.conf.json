@@ -31,6 +31,11 @@
       "icons/icon.ico",
       "icons/icon.icns"
     ],
-    "externalBin": ["binaries/privacy-agent-backend"]
+    "externalBin": ["binaries/privacy-agent-backend"],
+    "windows": {
+      "nsis": {
+        "installerHooks": "installer-hooks.nsh"
+      }
+    }
   }
 }
