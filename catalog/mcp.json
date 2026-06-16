@@ -116,8 +116,8 @@
     },
     {
       "id": "outlook-login", "label": "Outlook (Login)", "icon": "📨",
-      "description": "Outlook-Mail UND Kalender über Microsoft-Anmeldung (Graph) – kein App-Passwort nötig, auch für Firmenkonten. Nur Lesen. Erst unten anmelden, dann installieren.",
-      "command": "npx", "args": ["-y", "@softeria/ms-365-mcp-server", "--read-only"],
+      "description": "Outlook-Mail UND Kalender über Microsoft-Anmeldung (Graph) – kein App-Passwort nötig, auch für Firmenkonten. Lesen UND Schreiben (Mails senden, Termine anlegen) – jede Aktion wird vorher abgefragt. Erst unten anmelden, dann installieren.",
+      "command": "npx", "args": ["-y", "@softeria/ms-365-mcp-server"],
       "env": {"MS365_MCP_TENANT_ID": "common"},
       "needs": "Node.js (npx)", "runtime": "node", "params": [],
       "login": "ms365"
