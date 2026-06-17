@@ -139,6 +139,38 @@ def _try_parse_tool_call(text: str) -> Optional[dict]:
     return None
 
 
+def _tool_specs() -> list[dict]:
+    """Werkzeug-Definitionen (JSON-Schema) fuer Ollamas Function-Calling."""
+    return [
+        {
+            "type": "function",
+            "function": {
+                "name": t.name,
+                "description": t.description,
+                "parameters": t.parameters or {"type": "object", "properties": {}},
+            },
+        }
+        for t in TOOLS.values()
+    ]
+
+
+def _native_call(tool_calls: list) -> Optional[dict]:
+    """Wandelt Ollamas ersten tool_call in unser {tool, args}-Format."""
+    if not tool_calls:
+        return None
+    fn = (tool_calls[0] or {}).get("function") or {}
+    name = fn.get("name")
+    if not name:
+        return None
+    args = fn.get("arguments")
+    if isinstance(args, str):
+        try:
+            args = json.loads(args)
+        except json.JSONDecodeError:
+            args = {}
+    return {"tool": name, "args": args if isinstance(args, dict) else {}}
+
+
 def _cloud_or_block(principal, reason: str, preview: str, messages: list[dict]) -> dict:
     """Behandelt die Eskalation je nach Notfall-Modus und Berechtigung."""
     if not principal.can_use_cloud or config.CLOUD_MODE == "off":
@@ -199,14 +231,19 @@ def handle_task(messages: list[dict], principal=None, max_tool_steps: int = 4) -
 
     for _ in range(max_tool_steps):
         try:
-            reply = local_llm.chat(convo)
+            if local_llm.supports_native_tools():
+                # Echtes Function-Calling (Ollama): zuverlaessiger als JSON-im-Text.
+                msg = local_llm.chat_tools(convo, _tool_specs())
+                reply = msg["content"]
+                call = _native_call(msg["tool_calls"]) or _try_parse_tool_call(reply)
+            else:
+                reply = local_llm.chat(convo)
+                call = _try_parse_tool_call(reply)
         except local_llm.LocalLLMError as exc:
             metrics.record("escalation_requested", reason="error")
             return _cloud_or_block(
                 principal, f"Lokale KI-Fehler: {exc}", _last_user(messages), messages
             )
-
-        call = _try_parse_tool_call(reply)
         if call is None:
             # Finale Antwort -> Konfidenz pruefen.
             task = _last_user(messages)

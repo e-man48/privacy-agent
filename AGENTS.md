@@ -100,8 +100,11 @@ Diese Regeln haben Vorrang vor jeder anderen Änderung. Wer Code anfasst, hält 
 
 1. `principal` bestimmen (lokal oder Messenger-Nutzer); Rechte prüfen.
 2. Lokale KI (Ollama) bearbeitet die Aufgabe; ggf. Werkzeug-Schleife
-   (`max_tool_steps`, Default 4). Werkzeuge mit `requires_consent`/`leaves_device`
-   lösen den Einwilligungs-Pfad aus.
+   (`max_tool_steps`, Default 4). **Werkzeugaufruf:** bei Ollama **natives
+   Function-Calling** (`local_llm.chat_tools` mit `tools`-Schema aus
+   `Tool.parameters`/MCP-`inputSchema`; `router._native_call` liest `tool_calls`),
+   sonst Rückfall auf JSON-im-Text (`_try_parse_tool_call`). Werkzeuge mit
+   `requires_consent`/`leaves_device` lösen den Einwilligungs-Pfad aus.
 3. Selbstbewertung < `CONFIDENCE_THRESHOLD` oder Fehlversuche > `MAX_LOCAL_RETRIES`:
    - Falls `AUTO_LOCAL_UPGRADE` und nicht `MODEL_LOCKED`: Autopilot versucht erst
      ein **größeres lokales** Modell (ggf. Hintergrund-Download).

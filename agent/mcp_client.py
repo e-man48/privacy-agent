@@ -169,8 +169,13 @@ def _register_tools(server: MCPServer) -> None:
                 return srv.call_tool(name, kwargs)
             return _call
 
+        # inputSchema des MCP-Servers als Parameter-Schema fuers Function-Calling.
+        schema = t.get("inputSchema")
+        if not isinstance(schema, dict) or "type" not in schema:
+            schema = {"type": "object", "properties": {}}
+
         TOOLS[full] = Tool(full, desc, make(server, t["name"]),
-                           requires_consent=not server.trust)
+                           requires_consent=not server.trust, parameters=schema)
 
 
 def start() -> None:

@@ -32,6 +32,44 @@ def _openai_headers() -> dict:
     return {"Authorization": f"Bearer {key}"} if key else {}
 
 
+def supports_native_tools() -> bool:
+    """Ollama beherrscht echtes Function-Calling (tools-Parameter)."""
+    return _backend() == "ollama"
+
+
+def chat_tools(messages: list[dict], tools: list[dict],
+               model: Optional[str] = None, temperature: float = 0.3) -> dict:
+    """Ollama-Chat MIT Werkzeugen (Function-Calling).
+
+    Gibt das Assistenten-Message-Objekt zurueck: {content, tool_calls}. Anders als
+    chat() nicht gestreamt (Tool-Aufrufe kommen gebuendelt). `tool_calls` ist eine
+    Liste von {function: {name, arguments}} -- leer, wenn das Modell direkt
+    antwortet.
+    """
+    model = model or config.LOCAL_MODEL
+    try:
+        r = requests.post(
+            f"{config.OLLAMA_HOST}/api/chat",
+            json={
+                "model": model,
+                "messages": messages,
+                "tools": tools,
+                "stream": False,
+                "keep_alive": config.OLLAMA_KEEP_ALIVE,
+                "options": {"temperature": temperature},
+            },
+            timeout=(10, config.LOCAL_READ_TIMEOUT),
+        )
+        r.raise_for_status()
+        msg = r.json().get("message", {}) or {}
+        return {"content": (msg.get("content") or "").strip(),
+                "tool_calls": msg.get("tool_calls") or []}
+    except requests.RequestException as exc:
+        raise LocalLLMError(f"Lokale KI nicht erreichbar: {exc}") from exc
+    except (KeyError, json.JSONDecodeError) as exc:
+        raise LocalLLMError(f"Unerwartete Antwort der lokalen KI: {exc}") from exc
+
+
 def is_available() -> bool:
     """Prueft, ob der lokale Motor (Ollama bzw. OpenAI-kompatibler Server) laeuft."""
     if _backend() == "openai":

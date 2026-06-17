@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable
+from typing import Callable, Optional
 
 
 @dataclass
@@ -18,6 +18,7 @@ class Tool:
     func: Callable[..., str]
     leaves_device: bool = False      # gibt Daten nach aussen (z.B. Web-Suche)
     requires_consent: bool = False   # braucht ausdrueckliche Nutzer-Genehmigung
+    parameters: Optional[dict] = None  # JSON-Schema der Argumente (Function-Calling)
 
 
 # --- Dateien lesen (lokal) ----------------------------------------------
@@ -98,29 +99,37 @@ def _web_search(query: str, max_results: int = 5) -> str:
     return "\n".join(f"- {t}" for t in titles) or "(keine Treffer)"
 
 
+def _schema(props: dict, required: Optional[list] = None) -> dict:
+    return {"type": "object", "properties": props, "required": required or []}
+
+
 TOOLS: dict[str, Tool] = {
     "read_file": Tool(
         "read_file",
         "Liest den Inhalt einer lokalen Datei. Argument: path (str).",
         _read_file,
+        parameters=_schema({"path": {"type": "string", "description": "Pfad zur Datei"}}, ["path"]),
     ),
     "list_dir": Tool(
         "list_dir",
         "Listet den Inhalt eines lokalen Verzeichnisses. Argument: path (str).",
         _list_dir,
+        parameters=_schema({"path": {"type": "string", "description": "Pfad zum Verzeichnis"}}),
     ),
     "run_python": Tool(
         "run_python",
         "Fuehrt kurzen Python-Code in einer Sandbox aus und gibt die Ausgabe zurueck. Argument: code (str).",
         _run_python,
         requires_consent=True,
+        parameters=_schema({"code": {"type": "string", "description": "Auszufuehrender Python-Code"}}, ["code"]),
     ),
     "web_search": Tool(
         "web_search",
-        "Sucht im Internet. ACHTUNG: verlaesst das Geraet. Argument: query (str).",
+        "Sucht aktuelle Informationen im Internet (Nachrichten, Wetter, Preise, Fakten). Argument: query (str).",
         _web_search,
         leaves_device=True,
         requires_consent=True,
+        parameters=_schema({"query": {"type": "string", "description": "Die Suchanfrage"}}, ["query"]),
     ),
 }
 
