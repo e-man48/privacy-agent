@@ -684,7 +684,11 @@ async function loadMCP() {
     const head = document.createElement("div");
     head.className = "inline-row";
     head.innerHTML = `<button id="mcp-reload" class="btn-ghost" title="Skills neu starten">↻ neu verbinden</button>
-      <span id="mcp-reload-msg" class="muted">${anyFailed ? "Tipp: Beim 1. Mal lädt der Skill erst herunter – „neu verbinden" hilft oft." : ""}</span>`;
+      <span id="mcp-reload-msg" class="muted"></span>`;
+    if (anyFailed) {
+      head.querySelector("#mcp-reload-msg").textContent =
+        "Tipp: Skills laden beim ersten Mal aus dem Netz – erneut verbinden hilft oft.";
+    }
     box.appendChild(head);
     head.querySelector("#mcp-reload").onclick = async () => {
       el("mcp-reload-msg").textContent = "Starte Skills neu … (kann beim ersten Mal dauern)";

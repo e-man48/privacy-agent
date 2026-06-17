@@ -59,6 +59,11 @@ jobs:
       - name: npm-Abhaengigkeiten
         run: npm install
 
+      - name: Frontend-Syntax pruefen (verhindert kaputte UI durch JS-Fehler)
+        run: |
+          node --check ui/main.js
+          node --check ui/wizard.js
+
       - name: Icons erzeugen
         run: npm run icons
 
