@@ -77,6 +77,10 @@ class LocalLaunchIn(BaseModel):
     kind: str
 
 
+class OpenUrlIn(BaseModel):
+    url: str
+
+
 class SettingsIn(BaseModel):
     auto_local_upgrade: bool
 
@@ -341,6 +345,23 @@ def local_probe() -> dict:
         "available": local_llm.is_available(),
         "models": local_llm.list_models(),
     }
+
+
+@app.post("/open-url")
+def open_url(body: OpenUrlIn) -> dict:
+    """Oeffnet eine http(s)-Adresse im Standard-Browser.
+
+    Noetig, weil die Tauri-WebView selbst keine externen Links/Fenster oeffnet
+    (window.open/target=_blank tun dort nichts). Nur http(s) zugelassen.
+    """
+    url = (body.url or "").strip()
+    if not (url.startswith("http://") or url.startswith("https://")):
+        return {"ok": False, "message": "Nur http(s)-Adressen erlaubt."}
+    import webbrowser
+    try:
+        return {"ok": bool(webbrowser.open(url))}
+    except Exception as exc:  # noqa: BLE001
+        return {"ok": False, "message": str(exc)}
 
 
 @app.get("/local/servers")

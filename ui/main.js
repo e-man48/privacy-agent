@@ -7,6 +7,30 @@ const API = "http://127.0.0.1:8765";
 const el = (id) => document.getElementById(id);
 const tauri = window.__TAURI__; // im Browser-Dev undefined
 
+// --- Externe Links im System-Browser oeffnen ---------------------------------
+// Die Tauri-WebView oeffnet selbst KEINE externen Links/Fenster (window.open und
+// target=_blank tun nichts). Darum laesst das Backend sie via webbrowser.open auf.
+async function openExternal(url) {
+  if (!url) return;
+  try {
+    await fetch(`${API}/open-url`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url }),
+    });
+  } catch { /* still */ }
+}
+window.openExternal = openExternal;
+
+// Jeden Klick auf einen http(s)-Link zentral abfangen und extern oeffnen.
+document.addEventListener("click", (e) => {
+  const a = e.target.closest ? e.target.closest('a[href^="http"]') : null;
+  if (a) {
+    e.preventDefault();
+    openExternal(a.getAttribute("href"));
+  }
+});
+
 // --- Status -------------------------------------------------------------
 let statusTimer = null;
 
