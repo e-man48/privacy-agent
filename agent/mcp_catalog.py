@@ -159,4 +159,5 @@ def build(template_id: str, params: Optional[dict] = None, trust: bool = False) 
         "env": env,
         "trust": trust,
         "enabled": True,
+        "runtime": tpl.get("runtime"),  # node | uv | None -- fuer Auto-Einrichtung
     }

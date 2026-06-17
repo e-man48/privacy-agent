@@ -87,7 +87,7 @@ Diese Regeln haben Vorrang vor jeder anderen Änderung. Wer Code anfasst, hält 
 | `projects.py` | Projekte/Arbeits-Threads (Nachrichtenverläufe) |
 | `scheduler.py` | Zeitgesteuerte Jobs |
 | `settings.py` | Persistenz der GUI-Einstellungen (`user_settings.json`), `public()` |
-| `runtimes.py` | Node/uv auffinden & installieren (`resolve`, `install`) |
+| `runtimes.py` | Node/uv auffinden & installieren (`resolve`, `ensure`, `runtime_for_command`). Wird bei der Ersteinrichtung (`first_run`) UND bei `/mcp/install` automatisch aufgerufen, damit Skills ohne manuellen Schritt laufen |
 | `sandbox.py` | `run_python` isoliert (Docker, sonst eingeschränkter Subprozess) |
 | `local_servers.py` | Schnellstart alternativer lokaler Server (llamafile herunterladen+starten; GPT4All/LM Studio/Jan starten o. Download-Seite). Endpunkte `/local/servers`, `/local/launch`, `/local/launch/status` |
 | `tailscale_setup.py` | Tailscale installieren/anmelden |

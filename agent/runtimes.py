@@ -70,6 +70,19 @@ def available(command: str) -> bool:
     return resolve(command) is not None
 
 
+def runtime_for_command(command: str) -> Optional[str]:
+    """Welche Laufzeit ein Befehl braucht: 'node' (npx/npm) oder 'uv' (uvx/uv).
+
+    Beruecksichtigt auch volle Pfade mit Endung (z.B. ...\\npx.cmd, npx.exe).
+    """
+    base = Path(str(command)).stem.lower()  # Endung (.cmd/.exe) entfernen
+    if base in ("npx", "npm", "node"):
+        return "node"
+    if base in ("uvx", "uv"):
+        return "uv"
+    return None
+
+
 def status() -> dict:
     return {
         "node": {"available": available("npx")},

@@ -137,9 +137,14 @@ Unter **Skills** wählst du aus fertigen Vorlagen (aktuell 17), z.B.:
 - 📨 **Outlook (Login)** – Mail **und** Kalender über Microsoft-Anmeldung
   (Knopf „Mit Microsoft anmelden", kein App-Passwort nötig)
 
-Manche Skills brauchen **Node** oder **uv** – die App bietet die Einrichtung per
-Knopf an. Skills, die Daten nach außen geben, fragen vorher um Erlaubnis (außer du
-setzt bewusst „Vertrauen – ohne Rückfrage").
+Manche Skills brauchen **Node** oder **uv**. Diese **Laufzeiten richtet die App
+automatisch ein** – schon bei der Ersteinrichtung und spätestens, wenn du einen
+Skill hinzufügst (ohne Admin-Rechte, in den App-Datenordner). Beim **ersten** Mal
+lädt ein Skill sein Paket zusätzlich aus dem Netz – das kann etwas dauern; falls
+„nicht verbunden" erscheint, hilft der Knopf **„↻ neu verbinden"**.
+
+Skills, die Daten nach außen geben, fragen vorher um Erlaubnis (außer du setzt
+bewusst „Vertrauen – ohne Rückfrage").
 
 ## 6. Messenger: den Agenten per Matrix steuern
 

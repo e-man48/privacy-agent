@@ -408,6 +408,15 @@ def mcp_list() -> dict:
 
 @app.post("/mcp/servers")
 def mcp_add(body: MCPServerIn) -> dict:
+    # Auch bei manuell hinzugefuegten Skills die Laufzeit (node/uv) bei Bedarf
+    # einrichten, damit npx-/uvx-Befehle gefunden werden.
+    rt = runtimes.runtime_for_command(body.command)
+    if rt and not runtimes.available("npx" if rt == "node" else "uvx"):
+        try:
+            runtimes.ensure(rt)
+        except Exception as exc:  # noqa: BLE001
+            return {"ok": False,
+                    "message": f"Konnte die benötigte Laufzeit ({rt}) nicht einrichten: {exc}"}
     servers = [s for s in config.load_mcp_servers() if s.get("name") != body.name]
     servers.append(body.model_dump())
     config.save_mcp_servers(servers)
@@ -452,11 +461,23 @@ def mcp_catalog_list(refresh: bool = False) -> dict:
 
 @app.post("/mcp/install")
 def mcp_install(body: MCPInstallIn) -> dict:
-    """Installiert einen Skill aus einer Ein-Klick-Vorlage."""
+    """Installiert einen Skill aus einer Ein-Klick-Vorlage.
+
+    Richtet die benoetigte Laufzeit (Node.js/uv) bei Bedarf automatisch ein --
+    so funktioniert ein Skill ohne manuellen Zwischenschritt.
+    """
     try:
         cfg = mcp_catalog.build(body.id, body.params, body.trust)
     except ValueError as exc:
         return {"ok": False, "message": str(exc)}
+    # Laufzeit (node/uv) bestimmen und notfalls installieren, BEVOR der Skill startet.
+    rt = cfg.pop("runtime", None) or runtimes.runtime_for_command(cfg["command"])
+    if rt and not runtimes.available("npx" if rt == "node" else "uvx"):
+        try:
+            runtimes.ensure(rt)
+        except Exception as exc:  # noqa: BLE001  Netz-/Installer-Fehler dem Nutzer zeigen
+            return {"ok": False,
+                    "message": f"Konnte die benötigte Laufzeit ({rt}) nicht einrichten: {exc}"}
     servers = [s for s in config.load_mcp_servers() if s.get("name") != cfg["name"]]
     servers.append(cfg)
     config.save_mcp_servers(servers)

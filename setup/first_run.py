@@ -306,6 +306,26 @@ def _persist_local_model(model: str) -> None:
         pass
 
 
+def setup_runtimes() -> None:
+    """Richtet Node.js und uv ein, damit externe Skills (MCP) sofort laufen.
+
+    Teil des Installationsprozesses: viele Skills brauchen npx (Node) oder uvx
+    (uv). Best effort -- schlaegt es fehl (z.B. kein Netz), bleibt die App nutzbar
+    und der Nutzer kann Skills spaeter nachruesten.
+    """
+    try:
+        from agent import runtimes
+    except Exception as exc:  # Bundle-/Importfehler nicht fatal
+        emit("runtimes", f"Skill-Laufzeiten uebersprungen ({exc}).")
+        return
+    for name, label, prog in (("node", "Node.js", 0.94), ("uv", "uv (Python)", 0.97)):
+        try:
+            emit("runtimes", f"Richte {label} fuer Skills ein ...", prog)
+            runtimes.ensure(name, lambda m: emit("runtimes", m))
+        except Exception as exc:  # noqa: BLE001
+            emit("runtimes", f"{label} uebersprungen ({exc}) -- Skills spaeter nachruestbar.")
+
+
 def main() -> int:
     emit("detect", "Erkenne Hardware ...", 0.05)
     ram = total_ram_gb()
@@ -325,8 +345,8 @@ def main() -> int:
         emit("error", "Ollama-Dienst konnte nicht gestartet werden.")
         return 1
 
-    # Hauptmodell: Fortschritt 0.55 .. 0.90.
-    if not pull_model(model, lo=0.55, hi=0.90):
+    # Hauptmodell: Fortschritt 0.55 .. 0.85.
+    if not pull_model(model, lo=0.55, hi=0.85):
         emit("error", f"Modell '{model}' konnte nicht geladen werden.")
         return 1
 
@@ -342,9 +362,12 @@ def main() -> int:
 
     # Embedding-Modell fuer das semantische Gedaechtnis (klein, ~270 MB).
     # Nicht kritisch: schlaegt es fehl, faellt das Gedaechtnis auf die
-    # lexikalische Suche zurueck. Fortschritt 0.90 .. 0.99 (kein Ruecksprung).
-    if not pull_model("nomic-embed-text", lo=0.90, hi=0.99):
-        emit("pull_embed", "Embedding-Modell uebersprungen (Gedaechtnis bleibt lexikalisch).", 0.99)
+    # lexikalische Suche zurueck. Fortschritt 0.85 .. 0.92.
+    if not pull_model("nomic-embed-text", lo=0.85, hi=0.92):
+        emit("pull_embed", "Embedding-Modell uebersprungen (Gedaechtnis bleibt lexikalisch).", 0.92)
+
+    # Laufzeiten fuer externe Skills (Node/uv) gleich mit einrichten. Best effort.
+    setup_runtimes()
 
     emit("done", "Einrichtung abgeschlossen. Die lokale KI ist bereit.", 1.0, model=model)
     return 0
