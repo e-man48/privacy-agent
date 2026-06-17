@@ -19,6 +19,7 @@ import shutil
 import socket
 import subprocess
 import threading
+import webbrowser
 from pathlib import Path
 from typing import Optional
 
@@ -188,8 +189,19 @@ def launch(kind: str) -> dict:
             note = ("LM Studio-Server wird gestartet …" if kind == "lmstudio"
                     else f"{pre['label']} gestartet – bitte einmalig den API-Server in der App aktivieren.")
             return {"ok": True, "launched": True, "url": pre["url"], "message": note}
-        return {"ok": False, "needs_install": True, "download_url": _DOWNLOAD_PAGE.get(kind),
-                "message": f"{pre['label']} ist nicht installiert – Download-Seite wird geöffnet."}
+        # Nicht installiert: Download-Seite SERVERSEITIG im Standard-Browser oeffnen
+        # (das WebView-eigene window.open funktioniert in Tauri nicht).
+        url = _DOWNLOAD_PAGE.get(kind)
+        opened = False
+        if url:
+            try:
+                opened = webbrowser.open(url)
+            except Exception:  # noqa: BLE001
+                opened = False
+        return {"ok": False, "needs_install": True, "download_url": url, "opened": opened,
+                "message": (f"{pre['label']} ist nicht installiert – Download-Seite im Browser geöffnet."
+                            if opened else
+                            f"{pre['label']} ist nicht installiert. Download-Seite: {url}")}
 
     return {"ok": True, "url": pre["url"], "message": "Adresse eingetragen."}
 

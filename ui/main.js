@@ -948,8 +948,9 @@ el("server-launch").addEventListener("click", async () => {
       body: JSON.stringify({ kind }),
     })).json();
   } catch { msg.textContent = "🔴 Konnte nicht starten (Backend nicht erreichbar)."; return; }
+  // Hinweis: window.open() funktioniert in der Tauri-WebView nicht -> das Backend
+  // oeffnet die Download-Seite selbst (webbrowser). Wir zeigen die Adresse zusaetzlich.
   msg.textContent = d.message || "";
-  if (d.download_url) window.open(d.download_url, "_blank");
   if (d.busy) {
     const poll = setInterval(async () => {
       try {
