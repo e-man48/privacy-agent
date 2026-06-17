@@ -15,6 +15,7 @@ mit Lese-Thread und Zeitlimits.
 """
 from __future__ import annotations
 
+import collections
 import itertools
 import json
 import os
@@ -48,20 +49,37 @@ class MCPServer:
         self._ids = itertools.count(1)
         self._send_lock = threading.Lock()
         self._pending: dict[int, dict] = {}
+        self._stderr_tail: "collections.deque[str]" = collections.deque(maxlen=40)
 
     # --- Lebenszyklus ---------------------------------------------------
     def start(self) -> None:
         full_env = {**os.environ, **{k: str(v) for k, v in self.env.items()}}
         # Befehl ueber System-PATH ODER verwaltete Laufzeiten (Node/uv) aufloesen.
-        resolved = runtimes.resolve(self.command) or shutil.which(self.command) or self.command
-        self.proc = subprocess.Popen(
-            [resolved, *self.args],
-            stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
-            text=True, bufsize=1, env=full_env, **no_window(),
-        )
+        resolved = runtimes.resolve(self.command) or shutil.which(self.command)
+        if not resolved:
+            # Haeufigste Ursache: Node.js (npx) bzw. uv (uvx) ist nicht eingerichtet.
+            raise MCPError(
+                f"Befehl '{self.command}' nicht gefunden. "
+                "Vermutlich fehlt Node.js (npx) oder uv (uvx) -- bitte unter "
+                "'Externe Skills' die Laufzeit einrichten."
+            )
+        try:
+            self.proc = subprocess.Popen(
+                [resolved, *self.args],
+                stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                text=True, bufsize=1, env=full_env, **no_window(),
+            )
+        except OSError as exc:
+            raise MCPError(f"Start fehlgeschlagen: {exc}") from exc
         threading.Thread(target=self._read_loop, daemon=True).start()
-        self._initialize()
-        self.tools = self._request("tools/list").get("tools", [])
+        threading.Thread(target=self._drain_stderr, daemon=True).start()
+        # Erst-Start kann dauern, weil npx/uvx das Paket zuerst herunterlaedt.
+        self._initialize(timeout=config.MCP_START_TIMEOUT)
+        self.tools = self._request("tools/list", timeout=config.MCP_START_TIMEOUT).get("tools", [])
+
+    def error_detail(self) -> str:
+        """Letzte Fehlerausgaben des Skill-Prozesses (zur Diagnose)."""
+        return "\n".join(self._stderr_tail).strip()
 
     def stop(self) -> None:
         try:
@@ -71,6 +89,15 @@ class MCPServer:
             pass
 
     # --- Protokoll ------------------------------------------------------
+    def _drain_stderr(self) -> None:
+        """Liest die Fehlerausgabe laufend (sonst blockiert der Prozess) und merkt sie."""
+        if not (self.proc and self.proc.stderr):
+            return
+        for line in self.proc.stderr:
+            line = line.rstrip()
+            if line:
+                self._stderr_tail.append(line)
+
     def _read_loop(self) -> None:
         assert self.proc and self.proc.stdout
         for line in self.proc.stdout:
@@ -107,12 +134,12 @@ class MCPServer:
             raise MCPError(msg["error"].get("message", "unbekannter Fehler"))
         return msg.get("result", {})
 
-    def _initialize(self) -> None:
+    def _initialize(self, timeout: float = 30) -> None:
         self._request("initialize", {
             "protocolVersion": "2024-11-05",
             "capabilities": {},
             "clientInfo": {"name": "PrivacyAgent", "version": "0.1.0"},
-        })
+        }, timeout=timeout)
         self._send({"jsonrpc": "2.0", "method": "notifications/initialized"})
 
     def call_tool(self, tool_name: str, arguments: dict) -> str:
@@ -158,7 +185,12 @@ def start() -> None:
         try:
             server.start()
         except (OSError, MCPError, json.JSONDecodeError) as exc:
-            STATUS[name] = {"connected": False, "tools": 0, "error": str(exc)}
+            detail = server.error_detail()
+            msg = str(exc)
+            if detail:
+                msg += f" — Details: {detail[-300:]}"
+            STATUS[name] = {"connected": False, "tools": 0, "error": msg}
+            server.stop()
             continue
         _SERVERS[name] = server
         _register_tools(server)

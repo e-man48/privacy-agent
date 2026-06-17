@@ -130,6 +130,11 @@ def matrix_store_dir():
     return d
 
 
+# --- Externe Skills (MCP) -----------------------------------------------
+# Zeitlimit (Sekunden) fuer den Start eines Skill-Servers. Grosszuegig, weil
+# npx/uvx das Paket beim ERSTEN Mal herunterladen muessen (kann dauern).
+MCP_START_TIMEOUT = int(os.environ.get("MCP_START_TIMEOUT", "120"))
+
 # --- Server -------------------------------------------------------------
 HOST = os.environ.get("AGENT_HOST", "127.0.0.1")
 PORT = int(os.environ.get("AGENT_PORT", "8765"))

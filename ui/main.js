@@ -680,15 +680,31 @@ async function loadMCP() {
       return;
     }
     box.innerHTML = "";
+    const anyFailed = servers.some((s) => !((d.status || {})[s.name] || {}).connected);
+    const head = document.createElement("div");
+    head.className = "inline-row";
+    head.innerHTML = `<button id="mcp-reload" class="btn-ghost" title="Skills neu starten">↻ neu verbinden</button>
+      <span id="mcp-reload-msg" class="muted">${anyFailed ? "Tipp: Beim 1. Mal lädt der Skill erst herunter – „neu verbinden" hilft oft." : ""}</span>`;
+    box.appendChild(head);
+    head.querySelector("#mcp-reload").onclick = async () => {
+      el("mcp-reload-msg").textContent = "Starte Skills neu … (kann beim ersten Mal dauern)";
+      try { await fetch(`${API}/mcp/reload`, { method: "POST" }); } catch {}
+      loadMCP();
+    };
     servers.forEach((s) => {
       const st = (d.status || {})[s.name] || {};
       const ok = st.connected;
       const count = st.tools != null ? `${st.tools} Werkzeug(e)` : "";
       const row = document.createElement("div");
       row.className = "mem-item";
-      row.innerHTML = `<span>${ok ? "🟢" : "🔴"} <b>${s.name}</b>
-          <span class="muted">${ok ? count : (st.error || "nicht verbunden")}</span></span>
+      const info = ok ? count : (st.error || "nicht verbunden");
+      row.innerHTML = `<span>${ok ? "🟢" : "🔴"} <b></b>
+          <span class="muted mcp-info"></span></span>
         <button class="mem-del" title="Entfernen">🗑</button>`;
+      row.querySelector("b").textContent = s.name;
+      const infoEl = row.querySelector(".mcp-info");
+      infoEl.textContent = info;
+      infoEl.title = info; // volle Fehlermeldung beim Drüberfahren
       row.querySelector(".mem-del").onclick = async () => {
         await fetch(`${API}/mcp/servers/${encodeURIComponent(s.name)}`, { method: "DELETE" });
         loadMCP();
