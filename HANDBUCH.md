@@ -1,0 +1,165 @@
+# Privacy-Agent — Handbuch für Menschen
+
+Ein **persönlicher KI-Assistent, der zuerst auf deinem eigenen Computer denkt** –
+mit einer lokalen, kostenlosen Open-Source-KI. Das Internet/die bezahlte Cloud
+wird **nur im Notfall und nur mit deiner ausdrücklichen Erlaubnis** genutzt.
+Deine Daten bleiben standardmäßig bei dir.
+
+> Technische Fassung für KI-/Entwickler: siehe [AGENTS.md](AGENTS.md).
+
+---
+
+## Inhalt
+1. [Was der Agent kann](#1-was-der-agent-kann)
+2. [Wie er „denkt" — die Reihenfolge](#2-wie-er-denkt--die-reihenfolge)
+3. [Installation & erster Start](#3-installation--erster-start)
+4. [Alle Einstellungen im Detail](#4-alle-einstellungen-im-detail)
+5. [Skills (externe Fähigkeiten)](#5-skills-externe-fähigkeiten)
+6. [Messenger: den Agenten per Matrix steuern](#6-messenger-den-agenten-per-matrix-steuern)
+7. [Wo deine Daten liegen](#7-wo-deine-daten-liegen)
+8. [Häufige Fragen](#8-häufige-fragen)
+
+---
+
+## 1. Was der Agent kann
+
+- **Fragen beantworten & Aufgaben erledigen** mit lokaler KI (Ollama).
+- **Gedächtnis:** merkt sich auf Wunsch Fakten über dich/deine Arbeit – getrennt
+  pro Person. Schlägt selbst Gedächtnis-Einträge vor.
+- **Selbstoptimierung:** schlägt Verbesserungen seiner Einstellungen vor – ändert
+  aber nur nach deiner Genehmigung (nie am Quellcode).
+- **Skills nachrüsten:** z.B. Dateien lesen, Websuche, Wikipedia, Browser steuern,
+  **Outlook/Gmail**, Kalender – per Ein-Klick-Vorlage.
+- **Per Messenger erreichbar** (Matrix), auch von unterwegs über ein privates Netz
+  (Tailscale).
+- **Autopilot:** wählt bei schwierigen Aufgaben selbstständig ein stärkeres lokales
+  Modell (und lädt es bei Bedarf herunter) – sofern nicht gesperrt.
+
+## 2. Wie er „denkt" — die Reihenfolge
+
+```
+1.  Lokale KI auf deinem PC        →  kostenlos, privat, immer zuerst
+       ↓  reicht nicht?
+2.  Größeres lokales Modell        →  Autopilot (falls erlaubt), noch immer lokal
+       ↓  reicht immer noch nicht?
+3.  Nachfrage an dich  →  Erst nach deinem „OK" geht etwas nach außen:
+       a) OpenRouter   →  günstig, ein Login für viele Modelle
+       b) Claude       →  letzte Stufe (Anthropic)
+```
+
+**Wichtig:** Schritt 3 passiert **nie automatisch** ohne deine Zustimmung, und jeder
+Außen-Kontakt wird protokolliert (nachlesbar).
+
+## 3. Installation & erster Start
+
+1. Installer ausführen (Windows/macOS/Linux).
+2. Beim ersten Start führt dich ein **Assistent** durch alles: Er prüft/installiert
+   die lokale KI (Ollama), wählt anhand deiner Hardware ein passendes Modell und
+   lädt es herunter.
+3. Optional: Cloud-Notfall, Messenger, Skills einrichten (alles auch später möglich).
+
+Du brauchst **keine Technik-Kenntnisse** – alle Einstellungen sind in der Oberfläche.
+
+## 4. Alle Einstellungen im Detail
+
+### 4.1 Lokale KI
+| Einstellung | Bedeutung | Empfehlung |
+|---|---|---|
+| **Lokales Modell** | Welches Open-Source-Modell antwortet (z.B. `qwen2.5:7b`). | Vom Assistenten passend zur Hardware gewählt. |
+| **Autopilot: stärkeres Modell** (`auto_local_upgrade`) | Bei schwierigen Aufgaben selbst auf ein größeres lokales Modell wechseln. | **An** – bleibt kostenlos & lokal. |
+| **Modelle selbst herunterladen** (`auto_download_models`) | Darf der Autopilot fehlende, größere Modelle im Hintergrund laden? | An, wenn genug Speicher/Bandbreite da ist. |
+| **Modell-Sperre** (`model_locked`) | Wenn an, ändert **nur du** das Modell – der Agent fasst es nicht an. | An, wenn du ein festes Modell willst. |
+
+### 4.2 Cloud-Notfall (geht nur nach Einwilligung)
+| Einstellung | Optionen | Bedeutung |
+|---|---|---|
+| **Notfall-Modus** (`cloud_mode`) | `off` / `api` / `browser` | `off` = nie Cloud (rein lokal). `api` = Cloud-KI per Schlüssel (nach OK). `browser` = öffnet das Web-Chat **deines Abos** und legt die Frage in die Zwischenablage (nur direkt am PC). |
+| **Anbieter-Kette** (`cloud_provider`) | **Automatisch (erst OpenRouter, dann Claude)** / **Nur Claude** | „Automatisch" ist empfohlen: günstig zuerst, Claude als Rückfall. |
+| **OpenRouter-Login** | Knopf „Mit OpenRouter anmelden" | Ein Login → viele Modelle. Kein Schlüssel tippen (OAuth). |
+| **OpenRouter-Modell** (`openrouter_model`) | z.B. `openrouter/auto` | `auto` wählt automatisch ein passendes Modell. |
+| **Claude/Anthropic-Schlüssel** (`anthropic_api_key`) | API-Schlüssel | Für die letzte Eskalationsstufe (oder „Nur Claude"). |
+| **Abo im Browser** (`browser_provider`) | `claude` / `chatgpt` / `gemini` | Welches Web-Chat im `browser`-Modus geöffnet wird. |
+
+> Hinweis: Ein Abo-Login (claude.ai usw.) lässt sich **nicht** als API verwenden
+> (Nutzungsbedingungen). Dafür gibt es den `browser`-Modus oder OpenRouter.
+
+### 4.3 Entscheidungs-Stil & Schwellen
+| Einstellung | Bedeutung |
+|---|---|
+| **Entscheidungs-Stil** (`decision_style`) | `cautious` (vorsichtig, fragt früher nach), `balanced` (ausgewogen), `autonomous` (eigenständiger). Setzt intern die Sicherheits-Schwelle. |
+| **Sicherheits-Schwelle** (`CONFIDENCE_THRESHOLD`, 0–10) | Unter diesem Selbst-Vertrauen schlägt er Eskalation vor. |
+| **Lokale Wiederholungen** (`MAX_LOCAL_RETRIES`) | Wie oft lokal erneut versucht wird, bevor eskaliert wird. |
+
+### 4.4 Gedächtnis
+| Einstellung | Bedeutung |
+|---|---|
+| **Duplikat-Schwelle** (`SEMANTIC_DUP_THRESHOLD`) | Ab welcher Ähnlichkeit zwei Einträge als dasselbe gelten. |
+| **Relevanz-Schwelle** (`SEMANTIC_MIN_SIM`) | Ab welcher Ähnlichkeit ein Eintrag bei der Suche genutzt wird. |
+| **Embedding-Modell** (`EMBED_MODEL`) | Kleines lokales Modell für die Bedeutungs-Suche (Standard `nomic-embed-text`). |
+
+### 4.5 Code-Sandbox (Werkzeug „Python ausführen")
+| Einstellung | Bedeutung |
+|---|---|
+| **Backend** (`SANDBOX_BACKEND`) | `auto` (Docker falls vorhanden, sonst eingeschränkter Subprozess), `docker`, `subprocess`. |
+| **Zeitlimit** (`SANDBOX_TIMEOUT`) | Max. Sekunden pro Ausführung. |
+| **Speicherlimit** (`SANDBOX_MEM_MB`) | Max. Arbeitsspeicher (MB). |
+
+### 4.6 Messenger (Matrix)
+| Einstellung | Bedeutung |
+|---|---|
+| **Connector** (`connector`) | `none` oder `matrix`. |
+| **Homeserver / Nutzer / Passwort oder Token** | Zugang des Agenten-Kontos. |
+| **Erlaubte Nutzer** (`matrix_allowed_users`) | Nur diese dürfen den Agenten steuern. **Leer = niemand.** |
+| **Admin-Nutzer** (`matrix_admin_users`) | Nur diese dürfen die bezahlte Cloud freigeben. Leer = alle erlaubten. |
+
+## 5. Skills (externe Fähigkeiten)
+
+Unter **Skills** wählst du aus fertigen Vorlagen (aktuell 17), z.B.:
+
+- 📁 Dateien · 🌐 Webseite abrufen · 🔎/🦆/🔍 Websuche (Brave/DuckDuckGo/Tavily) ·
+  📚 Wikipedia · 🎭 Browser steuern · 🐙 GitHub · 🗺️ Google Maps · 🗄️ SQLite ·
+  🌿 Git · 🧠 Wissensgraph · 🕒 Zeit · 🧩 Schritt-für-Schritt-Denken
+- 📧 **Outlook E-Mail** & ✉️ **Gmail** (per App-Passwort)
+- 📨 **Outlook (Login)** – Mail **und** Kalender über Microsoft-Anmeldung
+  (Knopf „Mit Microsoft anmelden", kein App-Passwort nötig)
+
+Manche Skills brauchen **Node** oder **uv** – die App bietet die Einrichtung per
+Knopf an. Skills, die Daten nach außen geben, fragen vorher um Erlaubnis (außer du
+setzt bewusst „Vertrauen – ohne Rückfrage").
+
+## 6. Messenger: den Agenten per Matrix steuern
+
+1. Connector auf **Matrix** stellen, Agenten-Konto eintragen (Server, Nutzer,
+   Passwort/Token).
+2. Unter **Erlaubte Nutzer** deine Matrix-ID eintragen (z.B. `@max:dein-server`).
+3. Optional: **Tailscale** installieren/anmelden, um sicher von unterwegs auf den
+   eigenen Server zuzugreifen; oder einen **lokalen Matrix-Server** (Docker) starten.
+
+## 7. Wo deine Daten liegen
+
+Alles bleibt lokal in deinem Nutzer-Ordner:
+- **Windows:** `%APPDATA%\PrivacyAgent`
+- **macOS:** `~/Library/Application Support/PrivacyAgent`
+- **Linux:** `~/.local/share/PrivacyAgent`
+
+Darin u.a.: `consent_log.jsonl` (Protokoll jedes Außen-Kontakts), `memories.jsonl`
+(Gedächtnis), `user_settings.json` (deine Einstellungen), `mcp_servers.json`
+(Skills). Du kannst diese Dateien einsehen und löschen.
+
+## 8. Häufige Fragen
+
+**Kostet das etwas?** Die lokale KI ist kostenlos. Nur wenn du die Cloud-Eskalation
+nutzt (OpenRouter/Claude), entstehen dort ggf. Kosten – und nur nach deinem OK.
+
+**Geht etwas ohne mein Wissen ins Internet?** Nein. Außen-Kontakte laufen über eine
+Einwilligung und werden protokolliert.
+
+**Kann ich mehrere Personen zulassen?** Ja, über Matrix mit getrennten Rechten und
+getrenntem Gedächtnis pro Person.
+
+**Wie ändere ich das Modell im laufenden Betrieb?** In der Oberfläche unter Modelle
+ankreuzen/auswählen; mit **Modell-Sperre** legst du es fest.
+
+**Schickt der Agent eigenständig E-Mails?** Nur wenn du den Outlook-/Gmail-Skill mit
+Schreibrechten installierst – und auch dann wird jede Schreibaktion vorher abgefragt
+(außer du setzt bewusst „Vertrauen").
