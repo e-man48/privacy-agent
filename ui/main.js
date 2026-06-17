@@ -30,6 +30,7 @@ function setStatus(kind, text) {
 
 // Wird vom Einrichtungs-Assistenten (wizard.js) aufgerufen, sobald er fertig ist.
 function enterChat() {
+  el("loading").classList.add("hidden");
   el("wizard").classList.add("hidden");
   el("chat").classList.remove("hidden");
   el("open-brain").classList.remove("hidden");
@@ -1140,13 +1141,17 @@ async function bootstrap() {
     if (st.onboarded && st.model_ready) {
       enterChat();
     } else {
+      el("loading").classList.add("hidden");
       el("open-brain").classList.add("hidden");
       el("chat").classList.add("hidden");
       el("wizard").classList.remove("hidden");
       window.Wizard.init(st); // wizard.js
     }
   } catch {
+    // Backend noch nicht erreichbar -> sichtbare Meldung statt schwarz, dann erneut.
     setStatus("warn", "Verbinde mit Agent …");
+    const msg = el("loading-msg");
+    if (msg) msg.textContent = "Backend startet noch … (beim ersten Start kann das etwas dauern)";
     setTimeout(bootstrap, 1500);
   }
 }

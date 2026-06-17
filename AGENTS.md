@@ -146,7 +146,13 @@ Windows `%APPDATA%/PrivacyAgent`, macOS `~/Library/Application Support/PrivacyAg
 Linux `~/.local/share/PrivacyAgent`. Dateien:
 `consent_log.jsonl`, `memories.jsonl`, `metrics.jsonl`, `overrides.json`,
 `optimization_log.jsonl`, `autopilot.json`, `user_settings.json`,
-`mcp_servers.json`, `projects.json`, `matrix/`.
+`mcp_servers.json`, `projects.json`, `matrix/`,
+`backend-start.log` (stdout/stderr des Sidecars beim Start -- erste Anlaufstelle
+bei „Fenster bleibt leer/Verbinde"; von `src-tauri/src/main.rs` geschrieben).
+
+Start der Tauri-Huelle: `spawn_backend()` startet das Sidecar nur, wenn auf
+127.0.0.1:8765 noch keines lauscht (kein Doppelstart/Port-Konflikt). Die GUI zeigt
+bis zur Backend-Erreichbarkeit einen Lade-Screen (`#loading`), nie ein schwarzes Fenster.
 
 ## 9. Kataloge (remote aktualisierbar)
 

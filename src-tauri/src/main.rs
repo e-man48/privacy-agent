@@ -13,9 +13,12 @@
 
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+use std::fs::OpenOptions;
 use std::io::{BufRead, BufReader};
+use std::net::TcpStream;
 use std::path::PathBuf;
 use std::process::{Command, Stdio};
+use std::time::Duration;
 
 use tauri::Emitter;
 
@@ -47,10 +50,68 @@ fn sidecar_path() -> PathBuf {
     dir
 }
 
-/// Startet das Backend (Modus "serve") im Hintergrund.
+/// Nutzerspezifischer Datenordner -- identisch zu config.data_dir() im Backend,
+/// damit GUI und Backend dieselben Dateien (z.B. das Startup-Log) nutzen.
+fn data_dir() -> PathBuf {
+    #[cfg(windows)]
+    let base = std::env::var("APPDATA")
+        .map(PathBuf::from)
+        .unwrap_or_else(|_| {
+            PathBuf::from(std::env::var("USERPROFILE").unwrap_or_default())
+                .join("AppData")
+                .join("Roaming")
+        });
+    #[cfg(target_os = "macos")]
+    let base = PathBuf::from(std::env::var("HOME").unwrap_or_default())
+        .join("Library")
+        .join("Application Support");
+    #[cfg(all(unix, not(target_os = "macos")))]
+    let base = std::env::var("XDG_DATA_HOME").map(PathBuf::from).unwrap_or_else(|_| {
+        PathBuf::from(std::env::var("HOME").unwrap_or_default())
+            .join(".local")
+            .join("share")
+    });
+
+    let dir = base.join("PrivacyAgent");
+    let _ = std::fs::create_dir_all(&dir);
+    dir
+}
+
+/// Prueft, ob bereits ein Backend auf 127.0.0.1:8765 lauscht.
+fn backend_running() -> bool {
+    match "127.0.0.1:8765".parse::<std::net::SocketAddr>() {
+        Ok(addr) => TcpStream::connect_timeout(&addr, Duration::from_millis(300)).is_ok(),
+        Err(_) => false,
+    }
+}
+
+/// Startet das Backend (Modus "serve") im Hintergrund -- aber NUR, wenn nicht
+/// schon eines laeuft (verhindert Doppelstart / Port-Konflikt). Die Start-
+/// Ausgabe wird in <Datenordner>/backend-start.log umgeleitet (Diagnose).
 fn spawn_backend() {
+    if backend_running() {
+        return; // Es laeuft bereits eines -- kein zweites starten.
+    }
     let mut cmd = Command::new(sidecar_path());
-    cmd.arg("serve").stdout(Stdio::null()).stderr(Stdio::null());
+    cmd.arg("serve");
+
+    // stdout/stderr in eine bei jedem Start frische Logdatei schreiben.
+    let log_path = data_dir().join("backend-start.log");
+    match OpenOptions::new()
+        .create(true)
+        .write(true)
+        .truncate(true)
+        .open(&log_path)
+        .and_then(|f| f.try_clone().map(|f2| (f, f2)))
+    {
+        Ok((out, err)) => {
+            cmd.stdout(Stdio::from(out)).stderr(Stdio::from(err));
+        }
+        Err(_) => {
+            cmd.stdout(Stdio::null()).stderr(Stdio::null());
+        }
+    }
+
     hide_window(&mut cmd);
     let _ = cmd.spawn();
 }
