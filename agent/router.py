@@ -45,10 +45,17 @@ wie moeglich lokal und datenschutzfreundlich arbeitet.
 Dir stehen folgende Werkzeuge zur Verfuegung:
 {tools}
 
-Wenn du ein Werkzeug brauchst, antworte AUSSCHLIESSLICH mit einem JSON-Objekt:
-  {{"tool": "name", "args": {{...}}}}
-Wenn du die Aufgabe final beantworten kannst, antworte mit normalem Text \
-(kein JSON). Nutze Werkzeuge nur, wenn noetig."""
+REGELN ZUR WERKZEUG-NUTZUNG (wichtig):
+1. Brauchst du ein Werkzeug, antworte AUSSCHLIESSLICH mit GENAU EINEM JSON-Objekt \
+und sonst NICHTS davor oder danach:
+  {{"tool": "web_search", "args": {{"query": "deine Suchanfrage"}}}}
+2. Nutze IMMER ein Such-Werkzeug (z.B. web_search), wenn die Frage AKTUELLE, \
+zeitabhaengige oder dir nicht sicher bekannte Fakten betrifft -- z.B. Nachrichten, \
+Wetter, Preise, Ergebnisse, Termine, Ereignisse, Personen oder alles nach deinem \
+Wissensstand. RATE NICHT und erfinde nichts -- suche stattdessen.
+3. Verwende exakt die oben gelisteten Werkzeug-Namen (z.B. "web_search").
+4. Erst wenn du genug Informationen hast, antworte mit normalem Text (kein JSON). \
+Bei reinem Allgemeinwissen, das sich nicht aendert, kannst du direkt antworten."""
 
 
 def build_system_prompt(task: str, owner: Optional[str] = None) -> str:
