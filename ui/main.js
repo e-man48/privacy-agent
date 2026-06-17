@@ -866,6 +866,7 @@ async function loadEmergency() {
     el("local-openai-url").value = s.local_openai_base_url || "";
     el("local-openai-model").value = s.local_openai_model || "";
     toggleBackendUI();
+    loadServerPresets();
     refreshEmergencyRows(!!s.openrouter_api_key_set);
   } catch {
     /* still */
@@ -878,10 +879,76 @@ el("lock-toggle").addEventListener("change", async (e) => {
 });
 
 // --- Lokaler Motor: Ollama oder OpenAI-kompatibler Server ---------------
+let _serverPresets = {};
+
 function toggleBackendUI() {
   const openai = el("local-backend").value === "openai";
   el("openai-backend-row").classList.toggle("hidden", !openai);
   el("ollama-only").classList.toggle("hidden", openai);
+}
+
+async function loadServerPresets() {
+  if (Object.keys(_serverPresets).length) return; // nur einmal
+  try {
+    const d = await (await fetch(`${API}/local/servers`)).json();
+    const sel = el("server-preset");
+    (d.servers || []).forEach((s) => {
+      _serverPresets[s.id] = s;
+      const o = document.createElement("option");
+      o.value = s.id;
+      o.textContent = s.label;
+      sel.appendChild(o);
+    });
+  } catch { /* still */ }
+}
+
+el("server-preset").addEventListener("change", () => {
+  const p = _serverPresets[el("server-preset").value];
+  if (p) el("local-openai-url").value = p.url;
+});
+
+el("server-launch").addEventListener("click", async () => {
+  const kind = el("server-preset").value;
+  const msg = el("server-launch-msg");
+  if (!kind) { msg.textContent = "Bitte zuerst oben eine App/Server wählen."; return; }
+  // Auswahl als Backend speichern, damit der Test danach passt.
+  if (_serverPresets[kind]) el("local-openai-url").value = _serverPresets[kind].url;
+  await saveSettings({
+    local_backend: "openai",
+    local_openai_base_url: el("local-openai-url").value.trim(),
+  });
+  el("local-backend").value = "openai";
+  toggleBackendUI();
+  msg.textContent = "Starte …";
+  let d;
+  try {
+    d = await (await fetch(`${API}/local/launch`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ kind }),
+    })).json();
+  } catch { msg.textContent = "🔴 Konnte nicht starten (Backend nicht erreichbar)."; return; }
+  msg.textContent = d.message || "";
+  if (d.download_url) window.open(d.download_url, "_blank");
+  if (d.busy) {
+    const poll = setInterval(async () => {
+      try {
+        const st = await (await fetch(`${API}/local/launch/status`)).json();
+        msg.textContent = st.message || "";
+        if (!st.busy) { clearInterval(poll); setTimeout(probeLocalBackend, 1500); }
+      } catch { /* weiter */ }
+    }, 2000);
+  } else if (d.launched || d.running) {
+    setTimeout(probeLocalBackend, 2500);
+  }
+});
+
+async function probeLocalBackend() {
+  try {
+    const d = await (await fetch(`${API}/local/probe`)).json();
+    el("local-backend-msg").textContent = d.available
+      ? `🟢 Erreichbar${d.models && d.models.length ? " (" + d.models.length + " Modell(e))" : ""}.`
+      : "🔴 Noch nicht erreichbar – Server startet evtl. noch oder API-Modus in der App aktivieren.";
+  } catch { /* still */ }
 }
 
 el("local-backend").addEventListener("change", async () => {

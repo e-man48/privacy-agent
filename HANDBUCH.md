@@ -74,8 +74,15 @@ Du brauchst **keine Technik-Kenntnisse** – alle Einstellungen sind in der Ober
 
 > Hinweis: Mit dem Motor „eigener Server" entfallen **Auto-Download**, **Autopilot**
 > und der **Modell-Katalog** (die hängen an Ollama). Du stellst dann Modell und
-> Server selbst bereit – z.B. eine **llamafile** (eine Datei, Doppelklick startet
-> sie und liefert die KI unter `http://127.0.0.1:8080/v1`).
+> Server selbst bereit.
+>
+> **Schnellauswahl + Starten:** Wähle in der Liste deinen Server (GPT4All, LM Studio,
+> Jan, llamafile) – die Adresse wird automatisch eingetragen. Der Knopf **„Starten"**:
+> - **llamafile:** lädt beim ersten Mal automatisch eine kleine KI-Datei herunter
+>   und startet sie – **vollautomatisch, ohne Ollama**.
+> - **GPT4All / LM Studio / Jan:** startet die App, falls installiert (LM Studio sogar
+>   den API-Server direkt); sonst öffnet sich die Download-Seite. Bei GPT4All/Jan musst
+>   du den **API-Server einmalig in der App aktivieren** (Einstellungen).
 
 ### 4.2 Cloud-Notfall (geht nur nach Einwilligung)
 | Einstellung | Optionen | Bedeutung |

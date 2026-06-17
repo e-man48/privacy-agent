@@ -181,6 +181,11 @@
         </select>
       </div>
       <div id="openai-backend-row" class="hidden">
+        <div class="model-row">
+          <select id="server-preset"><option value="">— Schnellauswahl: App/Server —</option></select>
+          <button id="server-launch" class="btn-secondary" type="button">Starten</button>
+        </div>
+        <p id="server-launch-msg" class="muted"></p>
         <input id="local-openai-url" type="text" placeholder="Adresse des Servers (z. B. http://127.0.0.1:8080/v1)" />
         <input id="local-openai-model" type="text" placeholder="Modellname (oft beliebig) – optional" />
         <div class="inline-row">

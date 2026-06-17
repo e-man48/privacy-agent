@@ -89,6 +89,7 @@ Diese Regeln haben Vorrang vor jeder anderen Änderung. Wer Code anfasst, hält 
 | `settings.py` | Persistenz der GUI-Einstellungen (`user_settings.json`), `public()` |
 | `runtimes.py` | Node/uv auffinden & installieren (`resolve`, `install`) |
 | `sandbox.py` | `run_python` isoliert (Docker, sonst eingeschränkter Subprozess) |
+| `local_servers.py` | Schnellstart alternativer lokaler Server (llamafile herunterladen+starten; GPT4All/LM Studio/Jan starten o. Download-Seite). Endpunkte `/local/servers`, `/local/launch`, `/local/launch/status` |
 | `tailscale_setup.py` | Tailscale installieren/anmelden |
 | `local_matrix.py` | Lokaler Matrix-Server (Conduit) via Docker |
 | `extractor.py` | Inhalts-/Faktenextraktion (z.B. Gedächtnis-Vorschläge) |

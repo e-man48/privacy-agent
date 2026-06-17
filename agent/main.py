@@ -16,7 +16,7 @@ from pydantic import BaseModel
 
 from . import (
     cloud_llm, config, connectors, consent_log, downloads, extractor, local_llm,
-    local_matrix, mcp_catalog, mcp_client, memory, metrics, model_catalog,
+    local_matrix, local_servers, mcp_catalog, mcp_client, memory, metrics, model_catalog,
     ms365_auth, openrouter_auth, optimizer, projects, router, runtimes, scheduler, settings,
     tailscale_setup,
 )
@@ -71,6 +71,10 @@ class DismissIn(BaseModel):
 
 class ModelIn(BaseModel):
     name: str
+
+
+class LocalLaunchIn(BaseModel):
+    kind: str
 
 
 class SettingsIn(BaseModel):
@@ -337,6 +341,23 @@ def local_probe() -> dict:
         "available": local_llm.is_available(),
         "models": local_llm.list_models(),
     }
+
+
+@app.get("/local/servers")
+def local_servers_list() -> dict:
+    """Vorlagen fuer alternative lokale Server (Adresse/Port je App)."""
+    return {"servers": local_servers.presets()}
+
+
+@app.post("/local/launch")
+def local_launch(body: LocalLaunchIn) -> dict:
+    """Startet den gewaehlten Server (llamafile: laedt + startet; Apps: starten/Download)."""
+    return local_servers.launch(body.kind)
+
+
+@app.get("/local/launch/status")
+def local_launch_status() -> dict:
+    return local_servers.launch_status()
 
 
 @app.get("/models/catalog")
