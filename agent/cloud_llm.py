@@ -15,10 +15,29 @@ class CloudLLMError(RuntimeError):
     """Cloud-KI nicht erreichbar oder nicht konfiguriert."""
 
 
-def is_configured() -> bool:
+def _providers() -> list[str]:
+    """Reihenfolge der Cloud-Anbieter fuer die Notfall-Eskalation.
+
+    Lokale KI laeuft immer zuerst (siehe router.py). Reicht sie nicht, wird in
+    dieser Reihenfolge eskaliert -- jeweils nur, wenn ein Schluessel vorliegt:
+
+    * CLOUD_PROVIDER == "openrouter" (Standard): erst OpenRouter, dann Claude.
+    * CLOUD_PROVIDER == "anthropic": ausschliesslich Claude (Anthropic).
+    """
+    avail: list[str] = []
     if config.CLOUD_PROVIDER == "openrouter":
-        return bool(config.OPENROUTER_API_KEY)
-    return bool(config.ANTHROPIC_API_KEY)
+        if config.OPENROUTER_API_KEY:
+            avail.append("openrouter")
+        if config.ANTHROPIC_API_KEY:
+            avail.append("anthropic")
+    else:  # "anthropic" -> nur Claude direkt
+        if config.ANTHROPIC_API_KEY:
+            avail.append("anthropic")
+    return avail
+
+
+def is_configured() -> bool:
+    return bool(_providers())
 
 
 def test_key(api_key: str) -> tuple[bool, str]:
@@ -42,12 +61,23 @@ def test_key(api_key: str) -> tuple[bool, str]:
 
 
 def chat(messages: list[dict], system: Optional[str] = None, strong: bool = False) -> str:
-    """Sendet eine Anfrage an den konfigurierten Cloud-Anbieter."""
-    if not is_configured():
+    """Eskaliert in fester Reihenfolge: erst OpenRouter, dann Claude.
+
+    Schlaegt ein Anbieter fehl (Netz/Auth), wird automatisch der naechste in der
+    Kette versucht. Erst wenn alle scheitern, wird der Fehler weitergereicht.
+    """
+    providers = _providers()
+    if not providers:
         raise CloudLLMError("Kein Cloud-Zugang hinterlegt. Notfall-Hilfe nicht moeglich.")
-    if config.CLOUD_PROVIDER == "openrouter":
-        return _chat_openrouter(messages, system)
-    return _chat_anthropic(messages, system, strong)
+    last_err: Optional[CloudLLMError] = None
+    for prov in providers:
+        try:
+            if prov == "openrouter":
+                return _chat_openrouter(messages, system)
+            return _chat_anthropic(messages, system, strong)
+        except CloudLLMError as exc:
+            last_err = exc  # naechsten Anbieter in der Kette versuchen
+    raise last_err  # type: ignore[misc]
 
 
 def _chat_openrouter(messages: list[dict], system: Optional[str]) -> str:

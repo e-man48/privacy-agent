@@ -32,8 +32,10 @@ CLOUD_MODE = os.environ.get("CLOUD_MODE", "api")
 # Welches Abo-Web-Chat im Browser-Modus geoeffnet wird: claude | chatgpt | gemini.
 BROWSER_PROVIDER = os.environ.get("BROWSER_PROVIDER", "claude")
 
-# Im API-Modus: welcher Anbieter? "anthropic" (Claude) | "openrouter" (viele Modelle).
-CLOUD_PROVIDER = os.environ.get("CLOUD_PROVIDER", "anthropic")
+# Im API-Modus: Eskalations-Kette nach der lokalen KI.
+#   "openrouter" (Standard): erst OpenRouter, dann Claude als letzte Stufe.
+#   "anthropic"            : ausschliesslich Claude direkt.
+CLOUD_PROVIDER = os.environ.get("CLOUD_PROVIDER", "openrouter")
 # OpenRouter: ein Konto/Login -> Zugang zu Claude, GPT, Gemini u.v.m.
 OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY", "")
 # "openrouter/auto" waehlt automatisch ein passendes Modell (sicherer Standard).
