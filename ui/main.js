@@ -862,6 +862,10 @@ async function loadEmergency() {
     el("cloud-provider").value = s.cloud_provider || "openrouter";
     el("openrouter-model").value = s.openrouter_model || "";
     el("autopilot-toggle").disabled = !!s.model_locked; // bei Sperre sichtbar aus
+    el("local-backend").value = s.local_backend || "ollama";
+    el("local-openai-url").value = s.local_openai_base_url || "";
+    el("local-openai-model").value = s.local_openai_model || "";
+    toggleBackendUI();
     refreshEmergencyRows(!!s.openrouter_api_key_set);
   } catch {
     /* still */
@@ -871,6 +875,38 @@ async function loadEmergency() {
 el("lock-toggle").addEventListener("change", async (e) => {
   await saveSettings({ model_locked: e.target.checked });
   el("autopilot-toggle").disabled = e.target.checked;
+});
+
+// --- Lokaler Motor: Ollama oder OpenAI-kompatibler Server ---------------
+function toggleBackendUI() {
+  const openai = el("local-backend").value === "openai";
+  el("openai-backend-row").classList.toggle("hidden", !openai);
+  el("ollama-only").classList.toggle("hidden", openai);
+}
+
+el("local-backend").addEventListener("change", async () => {
+  toggleBackendUI();
+  await saveSettings({ local_backend: el("local-backend").value });
+  refreshStatus();
+});
+
+el("local-backend-test").addEventListener("click", async () => {
+  const msg = el("local-backend-msg");
+  msg.textContent = "Speichere & teste …";
+  await saveSettings({
+    local_backend: "openai",
+    local_openai_base_url: el("local-openai-url").value.trim() || "http://127.0.0.1:8080/v1",
+    local_openai_model: el("local-openai-model").value.trim(),
+  });
+  try {
+    const d = await (await fetch(`${API}/local/probe`)).json();
+    msg.textContent = d.available
+      ? `🟢 Erreichbar${d.models && d.models.length ? " (" + d.models.length + " Modell(e))" : ""}.`
+      : "🔴 Nicht erreichbar – läuft der Server unter der angegebenen Adresse?";
+  } catch {
+    msg.textContent = "🔴 Test fehlgeschlagen (Backend nicht erreichbar).";
+  }
+  refreshStatus();
 });
 
 el("cloud-mode").addEventListener("change", () => refreshEmergencyRows());

@@ -175,6 +175,23 @@
     <section class="brain-section">
       <h3>Lokales Modell</h3>
       <div class="model-row">
+        <select id="local-backend" title="Lokaler Motor">
+          <option value="ollama">Ollama – Standard, installiert &amp; verwaltet Modelle</option>
+          <option value="openai">Anderer lokaler Server (llama.cpp · llamafile · LM Studio …)</option>
+        </select>
+      </div>
+      <div id="openai-backend-row" class="hidden">
+        <input id="local-openai-url" type="text" placeholder="Adresse des Servers (z. B. http://127.0.0.1:8080/v1)" />
+        <input id="local-openai-model" type="text" placeholder="Modellname (oft beliebig) – optional" />
+        <div class="inline-row">
+          <button id="local-backend-test" class="btn-secondary" type="button">Speichern &amp; testen</button>
+          <span id="local-backend-msg" class="muted"></span>
+        </div>
+        <p class="muted">💡 <b>llamafile</b> ist eine einzige Datei – kein Installer, kein Dienst.
+           Mit dieser Option läuft der Agent ganz <b>ohne Ollama</b>; Auto-Download/-Wechsel entfällt dann.</p>
+      </div>
+      <div id="ollama-only">
+      <div class="model-row">
         <select id="model-select"></select>
       </div>
       <form id="pull-form" class="model-row">
@@ -197,6 +214,7 @@
         <span>⬇ Bei Bedarf stärkere Open-Source-Modelle automatisch herunterladen</span>
       </label>
       <p id="dl-status" class="muted"></p>
+      </div><!-- /#ollama-only -->
       <label class="toggle">
         <input id="lock-toggle" type="checkbox" />
         <span>🔒 Modell fest – nur ich stelle es um, der Agent darf es nicht ändern</span>

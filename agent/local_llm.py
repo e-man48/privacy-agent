@@ -18,8 +18,31 @@ class LocalLLMError(RuntimeError):
     """Lokale KI nicht erreichbar oder Antwort fehlerhaft."""
 
 
+def _backend() -> str:
+    """Welcher lokale Motor: 'ollama' (Standard) oder 'openai' (kompatibler Server)."""
+    return (config.LOCAL_BACKEND or "ollama").strip().lower()
+
+
+def _openai_base() -> str:
+    return config.LOCAL_OPENAI_BASE_URL.rstrip("/")
+
+
+def _openai_headers() -> dict:
+    key = config.LOCAL_OPENAI_API_KEY
+    return {"Authorization": f"Bearer {key}"} if key else {}
+
+
 def is_available() -> bool:
-    """Prueft, ob der Ollama-Dienst laeuft."""
+    """Prueft, ob der lokale Motor (Ollama bzw. OpenAI-kompatibler Server) laeuft."""
+    if _backend() == "openai":
+        try:
+            r = requests.get(f"{_openai_base()}/models", timeout=2, headers=_openai_headers())
+            return r.status_code < 500
+        except requests.RequestException:
+            try:  # manche Server haben kein /models -- Basis-URL genuegt
+                return requests.get(_openai_base(), timeout=2).status_code < 500
+            except requests.RequestException:
+                return False
     try:
         r = requests.get(f"{config.OLLAMA_HOST}/api/tags", timeout=2)
         return r.status_code == 200
@@ -28,7 +51,14 @@ def is_available() -> bool:
 
 
 def list_models() -> list[str]:
-    """Liefert die Namen aller lokal installierten Ollama-Modelle."""
+    """Liefert die Namen der verfuegbaren lokalen Modelle."""
+    if _backend() == "openai":
+        try:
+            r = requests.get(f"{_openai_base()}/models", timeout=5, headers=_openai_headers())
+            r.raise_for_status()
+            return [m.get("id", "") for m in r.json().get("data", []) if m.get("id")]
+        except requests.RequestException:
+            return []
     try:
         r = requests.get(f"{config.OLLAMA_HOST}/api/tags", timeout=5)
         r.raise_for_status()
@@ -38,7 +68,11 @@ def list_models() -> list[str]:
 
 
 def has_model(model: str) -> bool:
-    """Prueft, ob das gewuenschte Modell bereits lokal vorhanden ist."""
+    """Prueft, ob das gewuenschte Modell bereit ist."""
+    if _backend() == "openai":
+        # Ein OpenAI-kompatibler Server liefert, was er geladen hat -- es reicht,
+        # dass er erreichbar ist (Modellname ist oft frei waehlbar/egal).
+        return is_available()
     try:
         r = requests.get(f"{config.OLLAMA_HOST}/api/tags", timeout=5)
         r.raise_for_status()
@@ -52,12 +86,18 @@ def has_model(model: str) -> bool:
 def chat(messages: list[dict], model: Optional[str] = None, temperature: float = 0.3) -> str:
     """Fuehrt einen Chat-Aufruf gegen die lokale KI aus.
 
-    Nutzt **Streaming**: Ollama liefert die Antwort Token fuer Token, statt sie
-    erst komplett zu berechnen und am Stueck zu senden. Dadurch trifft das
-    Lese-Zeitlimit nicht mehr waehrend einer noch laufenden, langsamen Antwort
-    (haeufige Ursache fuer "Read timed out"). `keep_alive` haelt das Modell
-    danach im Speicher, damit nicht jede Anfrage einen Kaltstart ausloest.
+    Waehlt je nach `config.LOCAL_BACKEND` den Motor: Ollama (Standard) oder einen
+    beliebigen OpenAI-kompatiblen lokalen Server (llama.cpp, llamafile, LM Studio,
+    Jan ...). Beide Pfade nutzen **Streaming**, damit das Lese-Zeitlimit nicht
+    waehrend einer langsamen Generierung greift ("Read timed out").
     """
+    if _backend() == "openai":
+        return _chat_openai(messages, model, temperature)
+    return _chat_ollama(messages, model, temperature)
+
+
+def _chat_ollama(messages: list[dict], model: Optional[str], temperature: float) -> str:
+    """Ollama (/api/chat). `keep_alive` haelt das Modell im Speicher (weniger Kaltstarts)."""
     model = model or config.LOCAL_MODEL
     try:
         with requests.post(
@@ -91,6 +131,48 @@ def chat(messages: list[dict], model: Optional[str] = None, temperature: float =
             return "".join(parts).strip()
     except requests.RequestException as exc:
         raise LocalLLMError(f"Lokale KI nicht erreichbar: {exc}") from exc
+    except (KeyError, json.JSONDecodeError) as exc:
+        raise LocalLLMError(f"Unerwartete Antwort der lokalen KI: {exc}") from exc
+
+
+def _chat_openai(messages: list[dict], model: Optional[str], temperature: float) -> str:
+    """OpenAI-kompatibler lokaler Server (/v1/chat/completions, SSE-Streaming).
+
+    Funktioniert mit llama.cpp `llama-server`, llamafile, LM Studio, Jan u.a.
+    """
+    model = model or config.LOCAL_OPENAI_MODEL or config.LOCAL_MODEL
+    try:
+        with requests.post(
+            f"{_openai_base()}/chat/completions",
+            headers=_openai_headers(),
+            json={
+                "model": model,
+                "messages": messages,
+                "temperature": temperature,
+                "stream": True,
+            },
+            stream=True,
+            timeout=(10, config.LOCAL_READ_TIMEOUT),
+        ) as r:
+            r.raise_for_status()
+            parts: list[str] = []
+            for line in r.iter_lines(decode_unicode=True):
+                if not line or not line.startswith("data:"):
+                    continue
+                data = line[5:].strip()
+                if data == "[DONE]":
+                    break
+                obj = json.loads(data)
+                if obj.get("error"):
+                    raise LocalLLMError(f"Lokale KI meldet: {obj['error']}")
+                delta = (obj.get("choices") or [{}])[0].get("delta", {}).get("content")
+                if delta:
+                    parts.append(delta)
+            return "".join(parts).strip()
+    except requests.RequestException as exc:
+        raise LocalLLMError(
+            f"Lokale KI (OpenAI-kompatibel, {_openai_base()}) nicht erreichbar: {exc}"
+        ) from exc
     except (KeyError, json.JSONDecodeError) as exc:
         raise LocalLLMError(f"Unerwartete Antwort der lokalen KI: {exc}") from exc
 

@@ -9,7 +9,20 @@ import os
 from pathlib import Path
 
 
-# --- Lokale KI (Ollama) -------------------------------------------------
+# --- Lokale KI ----------------------------------------------------------
+# Welcher lokale Motor: "ollama" (Standard -- Auto-Install, Modellverwaltung,
+# GPU-Erkennung) ODER "openai" = irgendein OpenAI-kompatibler lokaler Server
+# (llama.cpp llama-server, llamafile, LM Studio, Jan ...). Mit "openai" laeuft
+# der Agent komplett OHNE Ollama -- dafuer entfallen Auto-Download/-Wechsel.
+LOCAL_BACKEND = os.environ.get("LOCAL_BACKEND", "ollama")
+# Basis-URL des OpenAI-kompatiblen Servers (inklusive /v1).
+LOCAL_OPENAI_BASE_URL = os.environ.get("LOCAL_OPENAI_BASE_URL", "http://127.0.0.1:8080/v1")
+# Optionaler Schluessel (die meisten lokalen Server brauchen keinen).
+LOCAL_OPENAI_API_KEY = os.environ.get("LOCAL_OPENAI_API_KEY", "")
+# Modellname, den der Server erwartet (bei Single-Model-Servern oft egal).
+LOCAL_OPENAI_MODEL = os.environ.get("LOCAL_OPENAI_MODEL", "")
+
+# --- Ollama -------------------------------------------------------------
 OLLAMA_HOST = os.environ.get("OLLAMA_HOST", "http://127.0.0.1:11434")
 # Wird vom Einrichtungs-Assistenten anhand der Hardware gesetzt.
 LOCAL_MODEL = os.environ.get("LOCAL_MODEL", "qwen2.5:7b")
@@ -235,6 +248,14 @@ def apply_user_settings(data: dict) -> None:
         g["CLOUD_MODEL"] = str(data["cloud_model"])
     if data.get("local_model"):
         g["LOCAL_MODEL"] = str(data["local_model"])
+    if data.get("local_backend") in ("ollama", "openai"):
+        g["LOCAL_BACKEND"] = data["local_backend"]
+    if data.get("local_openai_base_url"):
+        g["LOCAL_OPENAI_BASE_URL"] = str(data["local_openai_base_url"])
+    if data.get("local_openai_model") is not None:
+        g["LOCAL_OPENAI_MODEL"] = str(data["local_openai_model"])
+    if data.get("local_openai_api_key") is not None:
+        g["LOCAL_OPENAI_API_KEY"] = str(data["local_openai_api_key"])
     if "auto_local_upgrade" in data:
         g["AUTO_LOCAL_UPGRADE"] = _as_bool(data["auto_local_upgrade"])
     if "auto_download_models" in data:

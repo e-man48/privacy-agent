@@ -65,10 +65,17 @@ Du brauchst **keine Technik-Kenntnisse** – alle Einstellungen sind in der Ober
 ### 4.1 Lokale KI
 | Einstellung | Bedeutung | Empfehlung |
 |---|---|---|
+| **Lokaler Motor** (`local_backend`) | `Ollama` (Standard – installiert & verwaltet Modelle, GPU-Erkennung) **oder** ein eigener **OpenAI-kompatibler Server** (llama.cpp `llama-server`, **llamafile**, LM Studio, Jan). Mit der zweiten Option läuft der Agent **ganz ohne Ollama**. | Ollama, außer du willst es bewusst schlank. |
+| **Server-Adresse** (`local_openai_base_url`) | Nur bei „eigener Server": URL inkl. `/v1`, z.B. `http://127.0.0.1:8080/v1`. Knopf **„Speichern & testen"** prüft die Erreichbarkeit. | – |
 | **Lokales Modell** | Welches Open-Source-Modell antwortet (z.B. `qwen2.5:7b`). | Vom Assistenten passend zur Hardware gewählt. |
 | **Autopilot: stärkeres Modell** (`auto_local_upgrade`) | Bei schwierigen Aufgaben selbst auf ein größeres lokales Modell wechseln. | **An** – bleibt kostenlos & lokal. |
 | **Modelle selbst herunterladen** (`auto_download_models`) | Darf der Autopilot fehlende, größere Modelle im Hintergrund laden? | An, wenn genug Speicher/Bandbreite da ist. |
 | **Modell-Sperre** (`model_locked`) | Wenn an, ändert **nur du** das Modell – der Agent fasst es nicht an. | An, wenn du ein festes Modell willst. |
+
+> Hinweis: Mit dem Motor „eigener Server" entfallen **Auto-Download**, **Autopilot**
+> und der **Modell-Katalog** (die hängen an Ollama). Du stellst dann Modell und
+> Server selbst bereit – z.B. eine **llamafile** (eine Datei, Doppelklick startet
+> sie und liefert die KI unter `http://127.0.0.1:8080/v1`).
 
 ### 4.2 Cloud-Notfall (geht nur nach Einwilligung)
 | Einstellung | Optionen | Bedeutung |

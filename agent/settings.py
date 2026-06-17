@@ -14,6 +14,8 @@ from . import config
 _ALLOWED = {
     "onboarded",
     "anthropic_api_key", "cloud_model", "local_model",
+    "local_backend", "local_openai_base_url", "local_openai_model",
+    "local_openai_api_key",
     "decision_style", "auto_local_upgrade", "auto_download_models",
     "model_locked", "cloud_mode", "browser_provider",
     "cloud_provider", "openrouter_api_key", "openrouter_model",
@@ -24,7 +26,7 @@ _ALLOWED = {
 
 # Schluessel, die in /setup/state NICHT im Klartext zurueckgegeben werden.
 _SECRET = {"anthropic_api_key", "matrix_password", "matrix_access_token",
-           "openrouter_api_key"}
+           "openrouter_api_key", "local_openai_api_key"}
 
 
 def load() -> dict:

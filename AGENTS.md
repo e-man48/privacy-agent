@@ -69,7 +69,7 @@ Diese Regeln haben Vorrang vor jeder anderen Änderung. Wer Code anfasst, hält 
 | `main.py` | FastAPI-App + alle HTTP-Endpunkte, Lifespan |
 | `config.py` | Zentrale Einstellungen, Overrides, `_TUNABLE`, Datenpfade |
 | `router.py` | Kernlogik: lokale Bearbeitung, Werkzeug-Schleife, Eskalation/Einwilligung |
-| `local_llm.py` | Ollama-Anbindung (chat, list_models, has_model, is_available) |
+| `local_llm.py` | Lokaler Motor (chat/list_models/has_model/is_available). Dispatch per `config.LOCAL_BACKEND`: `ollama` (`/api/chat`) **oder** `openai` (OpenAI-kompatibel `/v1/chat/completions`: llama.cpp/llamafile/LM Studio). Beide **streamen** (gegen „Read timed out"). |
 | `cloud_llm.py` | Cloud-Kette: `_providers()` = OpenRouter→Anthropic, `chat()` mit Auto-Fallback |
 | `openrouter_auth.py` | OpenRouter OAuth (PKCE) Login-Flow |
 | `ms365_auth.py` | Microsoft-365-Geräte-Code-Login für den Outlook-Skill |

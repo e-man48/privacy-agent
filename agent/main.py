@@ -329,6 +329,16 @@ def models_list() -> dict:
     }
 
 
+@app.get("/local/probe")
+def local_probe() -> dict:
+    """Prueft den aktuell eingestellten lokalen Motor (Ollama oder OpenAI-kompatibel)."""
+    return {
+        "backend": config.LOCAL_BACKEND,
+        "available": local_llm.is_available(),
+        "models": local_llm.list_models(),
+    }
+
+
 @app.get("/models/catalog")
 def models_catalog(refresh: bool = False) -> dict:
     """Empfohlene Modelle mit Status (installiert / laedt gerade).
