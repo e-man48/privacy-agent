@@ -50,21 +50,45 @@ def has_model(model: str) -> bool:
 
 
 def chat(messages: list[dict], model: Optional[str] = None, temperature: float = 0.3) -> str:
-    """Fuehrt einen Chat-Aufruf gegen die lokale KI aus."""
+    """Fuehrt einen Chat-Aufruf gegen die lokale KI aus.
+
+    Nutzt **Streaming**: Ollama liefert die Antwort Token fuer Token, statt sie
+    erst komplett zu berechnen und am Stueck zu senden. Dadurch trifft das
+    Lese-Zeitlimit nicht mehr waehrend einer noch laufenden, langsamen Antwort
+    (haeufige Ursache fuer "Read timed out"). `keep_alive` haelt das Modell
+    danach im Speicher, damit nicht jede Anfrage einen Kaltstart ausloest.
+    """
     model = model or config.LOCAL_MODEL
     try:
-        r = requests.post(
+        with requests.post(
             f"{config.OLLAMA_HOST}/api/chat",
             json={
                 "model": model,
                 "messages": messages,
-                "stream": False,
+                "stream": True,
+                "keep_alive": config.OLLAMA_KEEP_ALIVE,
                 "options": {"temperature": temperature},
             },
-            timeout=120,
-        )
-        r.raise_for_status()
-        return r.json()["message"]["content"].strip()
+            stream=True,
+            # (Verbindungs-Timeout, Lese-Timeout je Datenpaket). Das Lese-Timeout
+            # wird mit jedem Token zurueckgesetzt -- es greift nur, wenn Ollama
+            # gar nichts liefert (z.B. beim erstmaligen Laden eines grossen Modells).
+            timeout=(10, config.LOCAL_READ_TIMEOUT),
+        ) as r:
+            r.raise_for_status()
+            parts: list[str] = []
+            for line in r.iter_lines(decode_unicode=True):
+                if not line:
+                    continue
+                obj = json.loads(line)
+                if obj.get("error"):
+                    raise LocalLLMError(f"Ollama meldet: {obj['error']}")
+                chunk = (obj.get("message") or {}).get("content")
+                if chunk:
+                    parts.append(chunk)
+                if obj.get("done"):
+                    break
+            return "".join(parts).strip()
     except requests.RequestException as exc:
         raise LocalLLMError(f"Lokale KI nicht erreichbar: {exc}") from exc
     except (KeyError, json.JSONDecodeError) as exc:

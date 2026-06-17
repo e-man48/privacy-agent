@@ -13,6 +13,13 @@ from pathlib import Path
 OLLAMA_HOST = os.environ.get("OLLAMA_HOST", "http://127.0.0.1:11434")
 # Wird vom Einrichtungs-Assistenten anhand der Hardware gesetzt.
 LOCAL_MODEL = os.environ.get("LOCAL_MODEL", "qwen2.5:7b")
+# Lese-Timeout (Sekunden) je Datenpaket beim Streaming. Wird mit jedem Token
+# zurueckgesetzt -- greift nur, wenn Ollama gar nichts liefert (z.B. erstmaliges
+# Laden eines grossen Modells auf langsamer Hardware). Grosszuegig waehlen.
+LOCAL_READ_TIMEOUT = int(os.environ.get("LOCAL_READ_TIMEOUT", "300"))
+# Wie lange Ollama das Modell nach einer Anfrage im RAM/VRAM behaelt. Weniger
+# Kaltstarts = schnellere Folgeantworten. "30m", "1h" oder "-1" (dauerhaft).
+OLLAMA_KEEP_ALIVE = os.environ.get("OLLAMA_KEEP_ALIVE", "30m")
 # Lokales Embedding-Modell fuer das semantische Gedaechtnis (klein, ~270 MB).
 EMBED_MODEL = os.environ.get("EMBED_MODEL", "nomic-embed-text")
 
