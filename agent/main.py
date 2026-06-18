@@ -17,8 +17,8 @@ from pydantic import BaseModel
 from . import (
     cloud_llm, config, connectors, consent_log, downloads, extractor, local_llm,
     local_matrix, local_servers, mcp_catalog, mcp_client, memory, metrics, model_catalog,
-    ms365_auth, openrouter_auth, optimizer, projects, router, runtimes, scheduler, settings,
-    tailscale_setup,
+    ms365_auth, openrouter_auth, optimizer, projects, router, runtimes, scheduler,
+    secret_store, settings, tailscale_setup,
 )
 
 
@@ -27,6 +27,11 @@ async def lifespan(app: FastAPI):
     # Externe Skills (MCP) im Hintergrund starten -- blockiert den Start nicht,
     # falls ein Server langsam ist.
     import threading
+    # Evtl. noch im Klartext gespeicherte Schluessel einmalig verschluesseln.
+    try:
+        settings.migrate_secrets()
+    except Exception:  # noqa: BLE001  -- Migration darf den Start nie verhindern
+        pass
     threading.Thread(target=mcp_client.start, daemon=True).start()
     # Messenger-Connector (z.B. Matrix) starten, falls konfiguriert.
     await connectors.maybe_start()
@@ -520,6 +525,7 @@ def setup_state() -> dict:
         "installed_models": local_llm.list_models() if ollama else [],
         "cloud_configured": bool(config.ANTHROPIC_API_KEY),
         "connector": connectors.status(),
+        "secret_store": secret_store.backend(),
         "settings": saved,
     }
 

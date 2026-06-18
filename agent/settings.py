@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import json
 
-from . import config
+from . import config, secret_store
 
 # Schluessel, die der Assistent setzen darf (Whitelist).
 _ALLOWED = {
@@ -31,23 +31,52 @@ _SECRET = {"anthropic_api_key", "matrix_password", "matrix_access_token",
 
 
 def load() -> dict:
+    """Liest die Einstellungen und entschluesselt die Geheimnisse (in den Speicher)."""
     try:
-        return json.loads(config.USER_SETTINGS_PATH.read_text(encoding="utf-8"))
+        data = json.loads(config.USER_SETTINGS_PATH.read_text(encoding="utf-8"))
     except (FileNotFoundError, json.JSONDecodeError):
         return {}
+    return secret_store.reveal(data)
+
+
+def _write(data: dict) -> None:
+    """Schreibt die Einstellungen -- Geheimnisse dabei VERSCHLUESSELT (nie Klartext)."""
+    to_store = dict(data)
+    for key in _SECRET:
+        value = to_store.get(key)
+        if value:
+            to_store[key] = secret_store.encrypt(key, str(value))
+    config.USER_SETTINGS_PATH.write_text(
+        json.dumps(to_store, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
 
 
 def save(partial: dict) -> dict:
-    """Fuegt Einstellungen zusammen, speichert sie und macht sie sofort aktiv."""
+    """Fuegt Einstellungen zusammen, speichert sie (verschluesselt) und macht sie aktiv."""
     data = load()
     for key, value in partial.items():
         if key in _ALLOWED:
             data[key] = value
-    config.USER_SETTINGS_PATH.write_text(
-        json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8"
-    )
-    config.apply_user_settings(data)  # sofort wirksam, kein Neustart noetig
+    _write(data)
+    config.apply_user_settings(data)  # sofort wirksam (Klartext im Speicher)
     return data
+
+
+def migrate_secrets() -> None:
+    """Verschluesselt einmalig evtl. noch im Klartext gespeicherte Geheimnisse.
+
+    Wird beim Backend-Start aufgerufen. Liegt schon alles verschluesselt vor oder
+    gibt es kein Krypto-Backend (selten), passiert nichts.
+    """
+    if secret_store.backend() == "plain":
+        return
+    try:
+        raw = json.loads(config.USER_SETTINGS_PATH.read_text(encoding="utf-8"))
+    except (FileNotFoundError, json.JSONDecodeError):
+        return
+    needs = any(raw.get(k) and not secret_store.is_encrypted(raw[k]) for k in _SECRET)
+    if needs:
+        _write(secret_store.reveal(raw))  # neu schreiben -> Geheimnisse verschluesselt
 
 
 def public() -> dict:

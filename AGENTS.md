@@ -86,7 +86,8 @@ Diese Regeln haben Vorrang vor jeder anderen Änderung. Wer Code anfasst, hält 
 | `principals.py` | Identitäten/Rechte (lokal, Matrix-Nutzer), `can_use_cloud` |
 | `projects.py` | Projekte/Arbeits-Threads (Nachrichtenverläufe) |
 | `scheduler.py` | Zeitgesteuerte Jobs |
-| `settings.py` | Persistenz der GUI-Einstellungen (`user_settings.json`), `public()` |
+| `settings.py` | Persistenz der GUI-Einstellungen (`user_settings.json`); Geheimnisse VERSCHLUESSELT (`_write`/`load`/`migrate_secrets`), `public()` maskiert |
+| `secret_store.py` | Verschluesselung von Schluesseln at-rest: Windows DPAPI (ctypes, kein Dep), sonst `keyring`; `encrypt`/`decrypt`/`reveal`/`backend`. Token-Format `enc:dpapi:`/`enc:keyring:` |
 | `runtimes.py` | Node/uv auffinden & installieren (`resolve`, `ensure`, `runtime_for_command`). Wird bei der Ersteinrichtung (`first_run`) UND bei `/mcp/install` automatisch aufgerufen, damit Skills ohne manuellen Schritt laufen |
 | `sandbox.py` | `run_python` isoliert (Docker, sonst eingeschränkter Subprozess) |
 | `local_servers.py` | Schnellstart alternativer lokaler Server (llamafile herunterladen+starten; GPT4All/LM Studio/Jan starten o. Download-Seite). Endpunkte `/local/servers`, `/local/launch`, `/local/launch/status` |

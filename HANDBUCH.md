@@ -166,6 +166,18 @@ Darin u.a.: `consent_log.jsonl` (Protokoll jedes Außen-Kontakts), `memories.jso
 (Gedächtnis), `user_settings.json` (deine Einstellungen), `mcp_servers.json`
 (Skills). Du kannst diese Dateien einsehen und löschen.
 
+### 🔐 Schlüssel-Sicherheit (DSGVO Art. 32)
+Deine **API-Schlüssel** (Claude, OpenRouter, Mistral …) liegen **nicht im Klartext**
+in `user_settings.json`, sondern **verschlüsselt**:
+- **Windows:** über **DPAPI** – an dein Windows-Konto gebunden, **nur du auf diesem
+  Rechner** kannst entschlüsseln. Kein Master-Passwort, automatisch aktiv.
+- **macOS/Linux:** über den **System-Schlüsselbund** (falls `keyring` vorhanden).
+
+Zusätzlich: Schlüssel werden **nie** an die KI, in Protokolle oder an fremde Skills
+weitergegeben (Skills laufen mit von Geheimnissen bereinigter Umgebung), in der
+Oberfläche nur als „🟢 hinterlegt" angezeigt, und beim Cloud-Aufruf nur per HTTPS
+an den offiziellen Anbieter gesendet – **kein Proxy, kein Dritter**.
+
 ## 8. Häufige Fragen
 
 **Kostet das etwas?** Die lokale KI ist kostenlos. Nur wenn du die Cloud-Eskalation

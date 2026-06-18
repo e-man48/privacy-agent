@@ -909,6 +909,11 @@ async function loadEmergency() {
     el("cloud-provider").value = s.cloud_provider || "auto";
     el("openrouter-model").value = s.openrouter_model || "";
     el("mistral-status").textContent = s.mistral_api_key_set ? "🟢 Mistral-Schlüssel hinterlegt." : "";
+    const ss = st.secret_store;
+    el("secret-status").textContent =
+      ss === "dpapi" ? "🔐 Schlüssel werden verschlüsselt im Windows-Tresor gespeichert (nur du auf diesem Rechner)."
+      : ss === "keyring" ? "🔐 Schlüssel werden im System-Schlüsselbund gespeichert."
+      : "⚠️ Kein Tresor verfügbar – Schlüssel werden unverschlüsselt gespeichert.";
     el("autopilot-toggle").disabled = !!s.model_locked; // bei Sperre sichtbar aus
     el("local-backend").value = s.local_backend || "ollama";
     el("local-openai-url").value = s.local_openai_base_url || "";

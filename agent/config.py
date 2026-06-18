@@ -304,10 +304,13 @@ def apply_user_settings(data: dict) -> None:
 def _load_user_settings() -> dict:
     import json
 
+    from . import secret_store
+
     try:
-        return json.loads(USER_SETTINGS_PATH.read_text(encoding="utf-8"))
+        data = json.loads(USER_SETTINGS_PATH.read_text(encoding="utf-8"))
     except (FileNotFoundError, json.JSONDecodeError):
         return {}
+    return secret_store.reveal(data)  # verschluesselte Schluessel lesbar machen
 
 
 apply_user_settings(_load_user_settings())
