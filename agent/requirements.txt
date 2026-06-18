@@ -7,6 +7,12 @@ pydantic>=2.6
 # Cloud-Notfall (nur genutzt, wenn ein API-Schluessel gesetzt ist)
 anthropic>=0.39
 
+# Verschluesselte Schluessel-Ablage at-rest. Windows nutzt DPAPI (ctypes, ohne
+# Paket); macOS nutzt den Schluesselbund (in keyring eingebaut); Linux braucht
+# zusaetzlich 'secretstorage' (zieht jeepney + cryptography als Backend).
+keyring>=24
+secretstorage>=3.3 ; sys_platform == "linux"
+
 # Messenger-Connector Matrix (nur genutzt, wenn CONNECTOR=matrix).
 # Fuer Ende-zu-Ende-Verschluesselung zusaetzlich 'python-olm' (braucht libolm):
 #   matrix-nio[e2e]

@@ -171,7 +171,8 @@ Deine **API-Schlüssel** (Claude, OpenRouter, Mistral …) liegen **nicht im Kla
 in `user_settings.json`, sondern **verschlüsselt**:
 - **Windows:** über **DPAPI** – an dein Windows-Konto gebunden, **nur du auf diesem
   Rechner** kannst entschlüsseln. Kein Master-Passwort, automatisch aktiv.
-- **macOS/Linux:** über den **System-Schlüsselbund** (falls `keyring` vorhanden).
+- **macOS/Linux:** über den **System-Schlüsselbund** (Keychain bzw. Secret Service –
+  ist fest in der App enthalten).
 
 Zusätzlich: Schlüssel werden **nie** an die KI, in Protokolle oder an fremde Skills
 weitergegeben (Skills laufen mit von Geheimnissen bereinigter Umgebung), in der

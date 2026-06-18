@@ -45,29 +45,40 @@ def build() -> None:
     triple = host_triple()
     ext = ".exe" if os.name == "nt" else ""
 
+    args = [
+        sys.executable, "-m", "PyInstaller",
+        "--onefile", "--noconfirm", "--clean",
+        "--name", NAME,
+        "--paths", str(ROOT),
+        # Dynamisch geladene Module, die PyInstaller sonst uebersieht:
+        "--collect-all", "uvicorn",
+        "--collect-all", "fastapi",
+        "--collect-all", "pydantic",
+        "--collect-all", "anthropic",
+        # certifi/requests mitnehmen -> verlaessliche HTTPS-Downloads
+        # (sonst CERTIFICATE_VERIFY_FAILED im gebuendelten Python).
+        "--collect-all", "certifi",
+        "--collect-all", "requests",
+        # Schluessel-Tresor: keyring + Metadaten (sonst findet die Backend-
+        # Discovery im Bundle nichts). Windows nutzt DPAPI, braucht keyring nicht.
+        "--collect-all", "keyring",
+        "--copy-metadata", "keyring",
+    ]
+
+    # Linux: Secret-Service-Backend (secretstorage -> jeepney) mitnehmen.
+    if sys.platform.startswith("linux"):
+        for pkg in ("secretstorage", "jeepney"):
+            args += ["--collect-all", pkg]
+        args += ["--copy-metadata", "secretstorage"]
+
+    args += [
+        "--hidden-import", "agent.main",
+        "--hidden-import", "setup.first_run",
+        str(ROOT / "launcher.py"),
+    ]
+
     print(f"==> Baue Sidecar fuer {triple} ...")
-    subprocess.run(
-        [
-            sys.executable, "-m", "PyInstaller",
-            "--onefile", "--noconfirm", "--clean",
-            "--name", NAME,
-            "--paths", str(ROOT),
-            # Dynamisch geladene Module, die PyInstaller sonst uebersieht:
-            "--collect-all", "uvicorn",
-            "--collect-all", "fastapi",
-            "--collect-all", "pydantic",
-            "--collect-all", "anthropic",
-            # certifi/requests mitnehmen -> verlaessliche HTTPS-Downloads
-            # (sonst CERTIFICATE_VERIFY_FAILED im gebuendelten Python).
-            "--collect-all", "certifi",
-            "--collect-all", "requests",
-            "--hidden-import", "agent.main",
-            "--hidden-import", "setup.first_run",
-            str(ROOT / "launcher.py"),
-        ],
-        check=True,
-        cwd=ROOT,
-    )
+    subprocess.run(args, check=True, cwd=ROOT)
 
     BIN_DIR.mkdir(parents=True, exist_ok=True)
     src = ROOT / "dist" / f"{NAME}{ext}"

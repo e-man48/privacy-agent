@@ -48,12 +48,28 @@ def _dpapi(data: bytes, protect: bool) -> bytes:
 
 
 def _keyring():
-    """Liefert das keyring-Modul, falls verfuegbar (sonst None)."""
+    """Liefert das keyring-Modul mit gesetztem Backend, falls verfuegbar.
+
+    Im gebuendelten Sidecar findet keyrings Entry-Point-Discovery oft kein
+    Backend ('fail'-Keyring). Dann setzen wir das passende OS-Backend explizit.
+    """
     try:
+        import sys
         import keyring  # type: ignore
-        return keyring
-    except Exception:  # noqa: BLE001  -- nicht installiert / kein Backend
+    except Exception:  # noqa: BLE001  -- nicht installiert
         return None
+    try:
+        current = type(keyring.get_keyring()).__module__ or ""
+        if "fail" in current:
+            if sys.platform == "darwin":
+                from keyring.backends import macOS  # type: ignore
+                keyring.set_keyring(macOS.Keyring())
+            elif sys.platform.startswith("linux"):
+                from keyring.backends import SecretService  # type: ignore
+                keyring.set_keyring(SecretService.Keyring())
+    except Exception:  # noqa: BLE001  -- Backend nicht verfuegbar -> Aufrufer faellt zurueck
+        pass
+    return keyring
 
 
 def backend() -> str:
