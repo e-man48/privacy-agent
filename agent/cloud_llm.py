@@ -15,25 +15,37 @@ class CloudLLMError(RuntimeError):
     """Cloud-KI nicht erreichbar oder nicht konfiguriert."""
 
 
+_CHAIN = ["openrouter", "mistral", "anthropic"]
+
+
+def _key_for(provider: str) -> str:
+    return {
+        "openrouter": config.OPENROUTER_API_KEY,
+        "mistral": config.MISTRAL_API_KEY,
+        "anthropic": config.ANTHROPIC_API_KEY,
+    }.get(provider, "")
+
+
 def _providers() -> list[str]:
     """Reihenfolge der Cloud-Anbieter fuer die Notfall-Eskalation.
 
     Lokale KI laeuft immer zuerst (siehe router.py). Reicht sie nicht, wird in
     dieser Reihenfolge eskaliert -- jeweils nur, wenn ein Schluessel vorliegt:
 
-    * CLOUD_PROVIDER == "openrouter" (Standard): erst OpenRouter, dann Claude.
+    * CLOUD_PROVIDER == "auto" (Standard): automatisch JEDER hinterlegte Anbieter
+      in der Reihenfolge OpenRouter -> Mistral -> Claude (mit Fallback).
     * CLOUD_PROVIDER == "anthropic": ausschliesslich Claude (Anthropic).
+    * Ein konkreter Anbietername: dieser zuerst, dann der Rest der Kette.
     """
-    avail: list[str] = []
-    if config.CLOUD_PROVIDER == "openrouter":
-        if config.OPENROUTER_API_KEY:
-            avail.append("openrouter")
-        if config.ANTHROPIC_API_KEY:
-            avail.append("anthropic")
-    else:  # "anthropic" -> nur Claude direkt
-        if config.ANTHROPIC_API_KEY:
-            avail.append("anthropic")
-    return avail
+    if config.CLOUD_PROVIDER == "anthropic":
+        order = ["anthropic"]
+    else:
+        order = list(_CHAIN)
+        pref = config.CLOUD_PROVIDER
+        if pref in order:  # bevorzugten Anbieter nach vorne
+            order.remove(pref)
+            order.insert(0, pref)
+    return [p for p in order if _key_for(p)]
 
 
 def is_configured() -> bool:
@@ -74,6 +86,8 @@ def chat(messages: list[dict], system: Optional[str] = None, strong: bool = Fals
         try:
             if prov == "openrouter":
                 return _chat_openrouter(messages, system)
+            if prov == "mistral":
+                return _chat_mistral(messages, system)
             return _chat_anthropic(messages, system, strong)
         except CloudLLMError as exc:
             last_err = exc  # naechsten Anbieter in der Kette versuchen
@@ -100,6 +114,24 @@ def _chat_openrouter(messages: list[dict], system: Optional[str]) -> str:
         return r.json()["choices"][0]["message"]["content"].strip()
     except Exception as exc:  # Netz-/Auth-/Format-Fehler
         raise CloudLLMError(f"OpenRouter-Aufruf fehlgeschlagen: {exc}") from exc
+
+
+def _chat_mistral(messages: list[dict], system: Optional[str]) -> str:
+    """Mistral AI (eigene Cloud-API, OpenAI-kompatibel)."""
+    import requests
+
+    msgs = ([{"role": "system", "content": system}] if system else []) + messages
+    try:
+        r = requests.post(
+            "https://api.mistral.ai/v1/chat/completions",
+            headers={"Authorization": f"Bearer {config.MISTRAL_API_KEY}"},
+            json={"model": config.MISTRAL_MODEL, "messages": msgs, "max_tokens": 2048},
+            timeout=120,
+        )
+        r.raise_for_status()
+        return r.json()["choices"][0]["message"]["content"].strip()
+    except Exception as exc:  # Netz-/Auth-/Format-Fehler
+        raise CloudLLMError(f"Mistral-Aufruf fehlgeschlagen: {exc}") from exc
 
 
 def _chat_anthropic(messages: list[dict], system: Optional[str], strong: bool) -> str:

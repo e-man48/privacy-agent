@@ -889,7 +889,9 @@ function refreshEmergencyRows(orKeySet) {
   const mode = el("cloud-mode").value;
   el("browser-provider-row").classList.toggle("hidden", mode !== "browser");
   el("api-options").classList.toggle("hidden", mode !== "api");
-  el("openrouter-row").classList.toggle("hidden", el("cloud-provider").value !== "openrouter");
+  // In "auto" (Standard) OpenRouter-Login UND Mistral-Schluessel zeigen; bei
+  // "Nur Claude" ausblenden.
+  el("openrouter-row").classList.toggle("hidden", el("cloud-provider").value === "anthropic");
   if (orKeySet !== undefined) {
     el("openrouter-status").textContent = orKeySet
       ? "🟢 Mit OpenRouter verbunden."
@@ -904,8 +906,9 @@ async function loadEmergency() {
     el("lock-toggle").checked = !!s.model_locked;
     el("cloud-mode").value = s.cloud_mode || "api";
     el("browser-provider").value = s.browser_provider || "claude";
-    el("cloud-provider").value = s.cloud_provider || "openrouter";
+    el("cloud-provider").value = s.cloud_provider || "auto";
     el("openrouter-model").value = s.openrouter_model || "";
+    el("mistral-status").textContent = s.mistral_api_key_set ? "🟢 Mistral-Schlüssel hinterlegt." : "";
     el("autopilot-toggle").disabled = !!s.model_locked; // bei Sperre sichtbar aus
     el("local-backend").value = s.local_backend || "ollama";
     el("local-openai-url").value = s.local_openai_base_url || "";
@@ -1051,12 +1054,20 @@ el("openrouter-login").addEventListener("click", async () => {
 
 el("cloud-mode-save").addEventListener("click", async () => {
   el("cloud-mode-msg").textContent = "Speichere …";
-  await saveSettings({
+  const obj = {
     cloud_mode: el("cloud-mode").value,
     browser_provider: el("browser-provider").value,
     cloud_provider: el("cloud-provider").value,
     openrouter_model: el("openrouter-model").value.trim() || "openrouter/auto",
-  });
+  };
+  // Mistral-Schluessel nur senden, wenn neu eingegeben (leeres Feld nicht ueberschreiben).
+  const mk = el("mistral-key").value.trim();
+  if (mk) obj.mistral_api_key = mk;
+  await saveSettings(obj);
+  if (mk) {
+    el("mistral-key").value = "";
+    el("mistral-status").textContent = "🟢 Mistral-Schlüssel hinterlegt.";
+  }
   el("cloud-mode-msg").textContent = "Gespeichert.";
 });
 function closeBrain() {

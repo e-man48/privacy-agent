@@ -88,10 +88,11 @@ Du brauchst **keine Technik-Kenntnisse** – alle Einstellungen sind in der Ober
 | Einstellung | Optionen | Bedeutung |
 |---|---|---|
 | **Notfall-Modus** (`cloud_mode`) | `off` / `api` / `browser` | `off` = nie Cloud (rein lokal). `api` = Cloud-KI per Schlüssel (nach OK). `browser` = öffnet das Web-Chat **deines Abos** und legt die Frage in die Zwischenablage (nur direkt am PC). |
-| **Anbieter-Kette** (`cloud_provider`) | **Automatisch (erst OpenRouter, dann Claude)** / **Nur Claude** | „Automatisch" ist empfohlen: günstig zuerst, Claude als Rückfall. |
+| **Anbieter-Kette** (`cloud_provider`) | **Automatisch** / **Nur Claude** | „Automatisch" (empfohlen): nutzt **jeden hinterlegten Schlüssel** automatisch, Reihenfolge **OpenRouter → Mistral → Claude** mit Rückfall. Hast du z.B. nur einen Mistral-Schlüssel, nimmt er Mistral. |
 | **OpenRouter-Login** | Knopf „Mit OpenRouter anmelden" | Ein Login → viele Modelle. Kein Schlüssel tippen (OAuth). |
 | **OpenRouter-Modell** (`openrouter_model`) | z.B. `openrouter/auto` | `auto` wählt automatisch ein passendes Modell. |
-| **Claude/Anthropic-Schlüssel** (`anthropic_api_key`) | API-Schlüssel | Für die letzte Eskalationsstufe (oder „Nur Claude"). |
+| **Mistral-Schlüssel** (`mistral_api_key`) | API-Schlüssel | Mistral AI als Cloud-Stufe (von console.mistral.ai). Wird in „Automatisch" mitgenutzt. |
+| **Claude/Anthropic-Schlüssel** (`anthropic_api_key`) | API-Schlüssel | Claude als letzte Stufe (oder „Nur Claude"). |
 | **Abo im Browser** (`browser_provider`) | `claude` / `chatgpt` / `gemini` | Welches Web-Chat im `browser`-Modus geöffnet wird. |
 
 > Hinweis: Ein Abo-Login (claude.ai usw.) lässt sich **nicht** als API verwenden

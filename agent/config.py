@@ -53,13 +53,17 @@ CLOUD_MODE = os.environ.get("CLOUD_MODE", "api")
 BROWSER_PROVIDER = os.environ.get("BROWSER_PROVIDER", "claude")
 
 # Im API-Modus: Eskalations-Kette nach der lokalen KI.
-#   "openrouter" (Standard): erst OpenRouter, dann Claude als letzte Stufe.
-#   "anthropic"            : ausschliesslich Claude direkt.
-CLOUD_PROVIDER = os.environ.get("CLOUD_PROVIDER", "openrouter")
+#   "auto" (Standard): nutzt automatisch JEDEN hinterlegten Schluessel, in der
+#                      Reihenfolge OpenRouter -> Mistral -> Claude (mit Fallback).
+#   "anthropic"      : ausschliesslich Claude direkt.
+CLOUD_PROVIDER = os.environ.get("CLOUD_PROVIDER", "auto")
 # OpenRouter: ein Konto/Login -> Zugang zu Claude, GPT, Gemini u.v.m.
 OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY", "")
 # "openrouter/auto" waehlt automatisch ein passendes Modell (sicherer Standard).
 OPENROUTER_MODEL = os.environ.get("OPENROUTER_MODEL", "openrouter/auto")
+# Mistral AI (eigene Cloud-API, OpenAI-kompatibel) -- nur nach Einwilligung.
+MISTRAL_API_KEY = os.environ.get("MISTRAL_API_KEY", "")
+MISTRAL_MODEL = os.environ.get("MISTRAL_MODEL", "mistral-large-latest")
 
 # --- Eskalations-Schwellen ----------------------------------------------
 # Selbstbewertung 0-10; darunter wird eine Cloud-Eskalation vorgeschlagen.
@@ -271,12 +275,16 @@ def apply_user_settings(data: dict) -> None:
         g["CLOUD_MODE"] = data["cloud_mode"]
     if data.get("browser_provider") in ("claude", "chatgpt", "gemini"):
         g["BROWSER_PROVIDER"] = data["browser_provider"]
-    if data.get("cloud_provider") in ("anthropic", "openrouter"):
+    if data.get("cloud_provider") in ("auto", "anthropic", "openrouter", "mistral"):
         g["CLOUD_PROVIDER"] = data["cloud_provider"]
     if data.get("openrouter_api_key") is not None:
         g["OPENROUTER_API_KEY"] = str(data["openrouter_api_key"])
     if data.get("openrouter_model"):
         g["OPENROUTER_MODEL"] = str(data["openrouter_model"])
+    if data.get("mistral_api_key") is not None:
+        g["MISTRAL_API_KEY"] = str(data["mistral_api_key"])
+    if data.get("mistral_model"):
+        g["MISTRAL_MODEL"] = str(data["mistral_model"])
     if data.get("decision_style") in _DECISION_STYLE:
         g["CONFIDENCE_THRESHOLD"] = _DECISION_STYLE[data["decision_style"]]
     if "connector" in data:

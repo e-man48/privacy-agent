@@ -256,8 +256,8 @@
       <div id="api-options" class="hidden">
         <div class="model-row">
           <select id="cloud-provider">
-            <option value="openrouter">Automatisch – erst OpenRouter, dann Claude (empfohlen)</option>
-            <option value="anthropic">Nur Claude (Anthropic direkt, API-Schlüssel)</option>
+            <option value="auto">Automatisch – jeden hinterlegten Schlüssel nutzen (empfohlen)</option>
+            <option value="anthropic">Nur Claude</option>
           </select>
         </div>
         <div id="openrouter-row">
@@ -267,6 +267,8 @@
             <button id="openrouter-login" class="btn-secondary">Mit OpenRouter anmelden</button>
             <span id="openrouter-msg" class="muted"></span>
           </div>
+          <input id="mistral-key" type="password" placeholder="Mistral-API-Schlüssel (optional, von console.mistral.ai)" />
+          <p id="mistral-status" class="muted"></p>
         </div>
       </div>
 
