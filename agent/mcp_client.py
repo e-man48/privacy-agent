@@ -19,6 +19,7 @@ import collections
 import itertools
 import json
 import os
+import re
 import shutil
 import subprocess
 import threading
@@ -30,6 +31,18 @@ from .tools.registry import TOOLS, Tool
 
 STATUS: dict[str, dict] = {}        # servername -> {connected, tools, error}
 _SERVERS: dict[str, "MCPServer"] = {}
+
+# Umgebungsvariablen mit Geheimnissen werden NICHT an fremde Skills weitergegeben
+# (sie sollen die API-Schluessel des Agenten nicht auslesen koennen). Ein Skill
+# bekommt nur die Variablen, die er in seiner Vorlage SELBST deklariert.
+_SECRET_ENV_RE = re.compile(r"(API_KEY|ACCESS_TOKEN|_TOKEN|SECRET|PASSWORD|PASSWD)$", re.IGNORECASE)
+
+
+def _safe_env(skill_env: dict) -> dict:
+    """Environment fuer einen Skill: ambient Geheimnisse entfernt, Skill-eigene rein."""
+    env = {k: v for k, v in os.environ.items() if not _SECRET_ENV_RE.search(k)}
+    env.update({k: str(v) for k, v in (skill_env or {}).items()})
+    return env
 
 
 class MCPError(RuntimeError):
@@ -53,7 +66,9 @@ class MCPServer:
 
     # --- Lebenszyklus ---------------------------------------------------
     def start(self) -> None:
-        full_env = {**os.environ, **{k: str(v) for k, v in self.env.items()}}
+        # Geheimnisse aus dem Environment fernhalten -- der Skill bekommt nur seine
+        # eigenen deklarierten Variablen (verhindert Auslesen der Agenten-Schluessel).
+        full_env = _safe_env(self.env)
         # Befehl ueber System-PATH ODER verwaltete Laufzeiten (Node/uv) aufloesen.
         resolved = runtimes.resolve(self.command) or shutil.which(self.command)
         if not resolved:
