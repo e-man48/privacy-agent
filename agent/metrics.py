@@ -31,6 +31,15 @@ def _read(limit: int) -> list[dict]:
     return [json.loads(line) for line in lines[-limit:] if line.strip()]
 
 
+def tool_usage(limit: int = 500) -> dict:
+    """Zaehlt, wie oft welches Werkzeug/welcher Skill tatsaechlich genutzt wurde."""
+    usage: dict[str, int] = {}
+    for e in _read(limit):
+        if e.get("event") == "tool_used" and e.get("tool"):
+            usage[e["tool"]] = usage.get(e["tool"], 0) + 1
+    return usage
+
+
 def summary(limit: int = 300) -> dict:
     """Aggregierte Kennzahlen ueber die letzten Ereignisse."""
     events = _read(limit)

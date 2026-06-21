@@ -740,6 +740,17 @@ async function loadMCP() {
       };
       box.appendChild(row);
     });
+    // Tatsaechliche Nutzung anzeigen -> sichtbar, ob der Agent Skills aufruft.
+    try {
+      const usage = (await (await fetch(`${API}/skills/usage`)).json()).usage || {};
+      const entries = Object.entries(usage).sort((a, b) => b[1] - a[1]);
+      const line = document.createElement("p");
+      line.className = "muted";
+      line.textContent = entries.length
+        ? "Bisher vom Agenten genutzt: " + entries.map(([t, c]) => `${t} ×${c}`).join(", ")
+        : "Der Agent hat bisher noch kein Werkzeug/Skill aufgerufen.";
+      box.appendChild(line);
+    } catch { /* still */ }
   } catch {
     box.innerHTML = "<p class='muted'>Backend nicht erreichbar.</p>";
   }

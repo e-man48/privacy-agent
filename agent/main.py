@@ -432,6 +432,12 @@ def mcp_list() -> dict:
     }
 
 
+@app.get("/skills/usage")
+def skills_usage() -> dict:
+    """Wie oft der Agent welche Werkzeuge/Skills tatsaechlich genutzt hat."""
+    return {"usage": metrics.tool_usage()}
+
+
 @app.post("/mcp/servers")
 def mcp_add(body: MCPServerIn) -> dict:
     # Auch bei manuell hinzugefuegten Skills die Laufzeit (node/uv) bei Bedarf

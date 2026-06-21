@@ -310,6 +310,8 @@ def handle_task(messages: list[dict], principal=None, max_tool_steps: int = 4) -
             )
 
         # Lokales Werkzeug -> direkt ausfuehren und weiterdenken.
+        metrics.record("tool_used", tool=tool_name,
+                       kind="skill" if tool_name.startswith("mcp__") else "builtin")
         result = run_tool(tool_name, **call.get("args", {}))
         convo.append({"role": "assistant", "content": reply})
         convo.append({"role": "user", "content": f"Werkzeug-Ergebnis ({tool_name}):\n{result}"})
@@ -376,6 +378,8 @@ def _resume_tool(action: PendingAction) -> dict:
     tool_name = call["tool"]
     consent_log.log_event("cloud_call", task=_last_user(action.messages),
                           data_sent=action.data_preview, model=f"tool:{tool_name}")
+    metrics.record("tool_used", tool=tool_name,
+                   kind="skill" if tool_name.startswith("mcp__") else "builtin")
     result = run_tool(tool_name, **call.get("args", {}))
     convo.append({"role": "assistant", "content": json.dumps(call)})
     convo.append({"role": "user", "content": f"Werkzeug-Ergebnis ({tool_name}):\n{result}"})
