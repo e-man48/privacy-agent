@@ -255,9 +255,15 @@ def handle_task(messages: list[dict], principal=None, max_tool_steps: int = 4) -
         try:
             if local_llm.supports_native_tools():
                 # Echtes Function-Calling (Ollama): zuverlaessiger als JSON-im-Text.
-                msg = local_llm.chat_tools(convo, _tool_specs())
-                reply = msg["content"]
-                call = _native_call(msg["tool_calls"]) or _try_parse_tool_call(reply)
+                try:
+                    msg = local_llm.chat_tools(convo, _tool_specs())
+                    reply = msg["content"]
+                    call = _native_call(msg["tool_calls"]) or _try_parse_tool_call(reply)
+                except local_llm.LocalLLMError:
+                    # Werkzeug-API evtl. nicht unterstuetzt (aeltere Ollama) ODER
+                    # einmaliger Fehler -> OHNE Werkzeuge weiter, statt aufzugeben.
+                    reply = local_llm.chat(convo)
+                    call = _try_parse_tool_call(reply)
             else:
                 reply = local_llm.chat(convo)
                 call = _try_parse_tool_call(reply)
