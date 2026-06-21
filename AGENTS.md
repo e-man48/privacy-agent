@@ -91,6 +91,7 @@ Diese Regeln haben Vorrang vor jeder anderen Änderung. Wer Code anfasst, hält 
 | `runtimes.py` | Node/uv auffinden & installieren (`resolve`, `ensure`, `runtime_for_command`). Wird bei der Ersteinrichtung (`first_run`) UND bei `/mcp/install` automatisch aufgerufen, damit Skills ohne manuellen Schritt laufen |
 | `sandbox.py` | `run_python` isoliert (Docker, sonst eingeschränkter Subprozess) |
 | `local_servers.py` | Schnellstart alternativer lokaler Server (llamafile herunterladen+starten; GPT4All/LM Studio/Jan starten o. Download-Seite). Endpunkte `/local/servers`, `/local/launch`, `/local/launch/status` |
+| `ollama_setup.py` | Ollama im Betrieb bereitstellen: `provision()` installiert (falls fehlt) bzw. aktualisiert (falls < 0.3.0 = kein Function-Calling), dann starten. Best effort/Hintergrund; `status()` in `/status`. Aufgerufen im Lifespan + in den Fehlerpfaden des Routers. Schalter `AUTO_INSTALL_OLLAMA`/`AUTO_UPDATE_OLLAMA` |
 | `tailscale_setup.py` | Tailscale installieren/anmelden |
 | `local_matrix.py` | Lokaler Matrix-Server (Conduit) via Docker |
 | `extractor.py` | Inhalts-/Faktenextraktion (z.B. Gedächtnis-Vorschläge) |

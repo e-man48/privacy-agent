@@ -20,7 +20,8 @@ import webbrowser
 from dataclasses import dataclass, field
 from typing import Any, Optional
 
-from . import autopilot, cloud_llm, config, consent_log, local_llm, memory, metrics, principals
+from . import (autopilot, cloud_llm, config, consent_log, local_llm, memory, metrics,
+               ollama_setup, principals)
 
 _PROVIDER_LABEL = {"claude": "Claude", "chatgpt": "ChatGPT", "gemini": "Gemini"}
 
@@ -241,10 +242,13 @@ def handle_task(messages: list[dict], principal=None, max_tool_steps: int = 4) -
     if not local_llm.is_available():
         # Erst selbst versuchen, Ollama zu starten -- statt direkt zu eskalieren.
         if not local_llm.ensure_running():
+            # Fehlt/laeuft nicht -> im Hintergrund installieren bzw. aktualisieren.
+            ollama_setup.provision_async()
             metrics.record("escalation_requested", reason="unavailable")
             return _cloud_or_block(
                 principal,
-                "Die lokale KI ist nicht erreichbar (Ollama nicht gestartet?).",
+                "Die lokale KI ist nicht erreichbar – ich richte sie gerade im "
+                "Hintergrund ein. Bitte gleich erneut versuchen (oder Cloud-Hilfe nutzen).",
                 _last_user(messages),
                 messages,
             )
@@ -261,8 +265,9 @@ def handle_task(messages: list[dict], principal=None, max_tool_steps: int = 4) -
                     reply = msg["content"]
                     call = _native_call(msg["tool_calls"]) or _try_parse_tool_call(reply)
                 except local_llm.LocalLLMError:
-                    # Werkzeug-API evtl. nicht unterstuetzt (aeltere Ollama) ODER
-                    # einmaliger Fehler -> OHNE Werkzeuge weiter, statt aufzugeben.
+                    # Werkzeug-API evtl. nicht unterstuetzt (aeltere Ollama) -> im
+                    # Hintergrund ggf. aktualisieren, und OHNE Werkzeuge weitermachen.
+                    ollama_setup.provision_async(install_if_missing=False)
                     reply = local_llm.chat(convo)
                     call = _try_parse_tool_call(reply)
             else:

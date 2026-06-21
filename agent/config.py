@@ -89,6 +89,11 @@ MODEL_LOCKED = _as_bool(os.environ.get("MODEL_LOCKED", "false"))
 # ein staerkeres Open-Source-Modell herunterladen (im Hintergrund) und nutzen.
 AUTO_DOWNLOAD_MODELS = _as_bool(os.environ.get("AUTO_DOWNLOAD_MODELS", "true"))
 
+# Ollama im laufenden Betrieb automatisch installieren bzw. (im Notfall, z.B. zu
+# alt fuer Function-Calling) aktualisieren. Best effort, laeuft im Hintergrund.
+AUTO_INSTALL_OLLAMA = _as_bool(os.environ.get("AUTO_INSTALL_OLLAMA", "true"))
+AUTO_UPDATE_OLLAMA = _as_bool(os.environ.get("AUTO_UPDATE_OLLAMA", "true"))
+
 # --- Semantisches Gedaechtnis (Embeddings) ------------------------------
 # Kosinus-Aehnlichkeit, ab der zwei Eintraege als Duplikat/Synonym gelten.
 SEMANTIC_DUP_THRESHOLD = float(os.environ.get("SEMANTIC_DUP_THRESHOLD", "0.82"))

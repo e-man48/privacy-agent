@@ -38,6 +38,8 @@ async function refreshStatus() {
   try {
     const r = await fetch(`${API}/status`);
     const s = await r.json();
+    const prov = s.ollama_setup;
+    if (prov && prov.busy) return setStatus("warn", prov.message || "Lokale KI wird eingerichtet …");
     if (!s.ollama_running) return setStatus("warn", "Lokale KI nicht gestartet");
     if (!s.model_ready) return setStatus("warn", "Modell wird benötigt");
     const conn = s.connector && s.connector.connected ? `  ·  💬 ${s.connector.connector}` : "";

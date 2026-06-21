@@ -20,8 +20,8 @@ from pydantic import BaseModel
 from . import (
     cloud_llm, config, connectors, consent_log, downloads, extractor, local_llm,
     local_matrix, local_servers, mcp_catalog, mcp_client, memory, metrics, model_catalog,
-    ms365_auth, openrouter_auth, optimizer, projects, router, runtimes, scheduler,
-    secret_store, settings, tailscale_setup,
+    ms365_auth, ollama_setup, openrouter_auth, optimizer, projects, router, runtimes,
+    scheduler, secret_store, settings, tailscale_setup,
 )
 
 
@@ -36,8 +36,8 @@ async def lifespan(app: FastAPI):
     except Exception:  # noqa: BLE001  -- Migration darf den Start nie verhindern
         pass
     threading.Thread(target=mcp_client.start, daemon=True).start()
-    # Ollama proaktiv pruefen/starten, damit die erste Anfrage nicht scheitert.
-    threading.Thread(target=local_llm.ensure_running, daemon=True).start()
+    # Ollama bereitstellen: installieren falls noetig, sonst starten / ggf. updaten.
+    ollama_setup.provision_async()
     # Messenger-Connector (z.B. Matrix) starten, falls konfiguriert.
     await connectors.maybe_start()
     yield
@@ -162,6 +162,7 @@ def status() -> dict:
         "model_ready": local_llm.has_model(config.LOCAL_MODEL) if available else False,
         "cloud_configured": bool(config.ANTHROPIC_API_KEY),
         "connector": connectors.status(),
+        "ollama_setup": ollama_setup.status(),
     }
 
 
