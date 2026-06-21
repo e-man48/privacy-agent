@@ -70,6 +70,29 @@ def available(command: str) -> bool:
     return resolve(command) is not None
 
 
+def bin_dirs() -> list[str]:
+    """Verwaltete Verzeichnisse mit Node/uv (sofern vorhanden)."""
+    return [str(d) for d in (_node_bin_dirs() + _uv_bin_dirs()) if d.exists()]
+
+
+def with_path(env: dict) -> dict:
+    """Stellt sicher, dass die verwalteten Node-/uv-Ordner auf PATH stehen.
+
+    Wichtig: `npx` ruft intern `node` auf -- liegt Node nur im verwalteten Ordner
+    (nicht im System-PATH), wird `node` sonst nicht gefunden ("node nicht gefunden",
+    Zeitueberschreitung beim Skill-Start).
+    """
+    extra = bin_dirs()
+    if not extra:
+        return env
+    env = dict(env)
+    # Vorhandenen PATH-Schluessel case-insensitiv finden (Windows nutzt 'Path').
+    path_key = next((k for k in env if k.upper() == "PATH"), "PATH")
+    current = env.get(path_key, "")
+    env[path_key] = os.pathsep.join(extra + ([current] if current else []))
+    return env
+
+
 def runtime_for_command(command: str) -> Optional[str]:
     """Welche Laufzeit ein Befehl braucht: 'node' (npx/npm) oder 'uv' (uvx/uv).
 

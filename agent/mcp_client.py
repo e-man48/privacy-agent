@@ -68,7 +68,9 @@ class MCPServer:
     def start(self) -> None:
         # Geheimnisse aus dem Environment fernhalten -- der Skill bekommt nur seine
         # eigenen deklarierten Variablen (verhindert Auslesen der Agenten-Schluessel).
-        full_env = _safe_env(self.env)
+        # Zusaetzlich die verwalteten Node-/uv-Ordner auf PATH setzen, damit z.B.
+        # npx das interne 'node' findet.
+        full_env = runtimes.with_path(_safe_env(self.env))
         # Befehl ueber System-PATH ODER verwaltete Laufzeiten (Node/uv) aufloesen.
         resolved = runtimes.resolve(self.command) or shutil.which(self.command)
         if not resolved:
