@@ -239,14 +239,15 @@ def handle_task(messages: list[dict], principal=None, max_tool_steps: int = 4) -
     principal = principal or principals.gui()
 
     if not local_llm.is_available():
-        # Lokale KI laeuft nicht -> ehrliche Eskalation an den Nutzer.
-        metrics.record("escalation_requested", reason="unavailable")
-        return _cloud_or_block(
-            principal,
-            "Die lokale KI ist nicht erreichbar (Ollama nicht gestartet?).",
-            _last_user(messages),
-            messages,
-        )
+        # Erst selbst versuchen, Ollama zu starten -- statt direkt zu eskalieren.
+        if not local_llm.ensure_running():
+            metrics.record("escalation_requested", reason="unavailable")
+            return _cloud_or_block(
+                principal,
+                "Die lokale KI ist nicht erreichbar (Ollama nicht gestartet?).",
+                _last_user(messages),
+                messages,
+            )
 
     convo = [{"role": "system",
               "content": build_system_prompt(_last_user(messages), principal.scope)}] + messages

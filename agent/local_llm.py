@@ -6,12 +6,18 @@ keine Information das System. Damit ist dieser Pfad von Natur aus DSGVO-konform.
 from __future__ import annotations
 
 import json
+import os
 import re
+import shutil
+import subprocess
+import threading
+import time
 from typing import Optional
 
 import requests
 
 from . import config
+from ._proc import no_window
 
 
 class LocalLLMError(RuntimeError):
@@ -68,6 +74,59 @@ def chat_tools(messages: list[dict], tools: list[dict],
         raise LocalLLMError(f"Lokale KI nicht erreichbar: {exc}") from exc
     except (KeyError, json.JSONDecodeError) as exc:
         raise LocalLLMError(f"Unerwartete Antwort der lokalen KI: {exc}") from exc
+
+
+def _find_ollama() -> Optional[str]:
+    """Findet die ollama-Executable -- auch wenn sie (noch) nicht im PATH steht."""
+    found = shutil.which("ollama")
+    if found:
+        return found
+    if os.name == "nt":
+        for base in (os.environ.get("LOCALAPPDATA", ""), os.environ.get("ProgramFiles", ""),
+                     os.environ.get("ProgramW6432", "")):
+            if not base:
+                continue
+            for rel in (("Programs", "Ollama", "ollama.exe"), ("Ollama", "ollama.exe")):
+                cand = os.path.join(base, *rel)
+                if os.path.isfile(cand):
+                    return cand
+    return None
+
+
+_start_lock = threading.Lock()
+_last_start = 0.0
+
+
+def ensure_running(timeout: int = 20) -> bool:
+    """Stellt sicher, dass die lokale KI erreichbar ist -- startet Ollama notfalls.
+
+    Verhindert die haeufige 'Lokale KI nicht erreichbar'-Meldung auf Geraeten, wo
+    Ollama nicht automatisch (mit-)gestartet ist. Beim OpenAI-Backend gibt es nichts
+    zu starten -- dort wird nur geprueft.
+    """
+    if is_available():
+        return True
+    if _backend() != "ollama":
+        return is_available()
+
+    global _last_start
+    with _start_lock:
+        if time.time() - _last_start > 15:  # nicht oefter als alle 15s neu versuchen
+            exe = _find_ollama()
+            if exe:
+                try:
+                    subprocess.Popen([exe, "serve"], stdout=subprocess.DEVNULL,
+                                     stderr=subprocess.DEVNULL, **no_window())
+                    _last_start = time.time()
+                except OSError:
+                    pass
+
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        if is_available():
+            return True
+        time.sleep(1)
+    return False
 
 
 def is_available() -> bool:

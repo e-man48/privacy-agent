@@ -36,6 +36,8 @@ async def lifespan(app: FastAPI):
     except Exception:  # noqa: BLE001  -- Migration darf den Start nie verhindern
         pass
     threading.Thread(target=mcp_client.start, daemon=True).start()
+    # Ollama proaktiv pruefen/starten, damit die erste Anfrage nicht scheitert.
+    threading.Thread(target=local_llm.ensure_running, daemon=True).start()
     # Messenger-Connector (z.B. Matrix) starten, falls konfiguriert.
     await connectors.maybe_start()
     yield
