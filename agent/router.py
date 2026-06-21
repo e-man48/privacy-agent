@@ -139,13 +139,35 @@ def _try_parse_tool_call(text: str) -> Optional[dict]:
     return None
 
 
+_SAFE_NAME_RE = re.compile(r"[^a-zA-Z0-9_]")
+
+
+def _safe_name(name: str) -> str:
+    """Function-Calling-tauglicher Name (manche Modelle moegen z.B. '-' nicht).
+
+    MCP-Skills heissen z.B. 'mcp__gedaechtnis-graph__create_entities' -> der
+    Bindestrich wird zu '_'. Beim Aufruf ordnet _resolve_name() wieder zu.
+    """
+    return _SAFE_NAME_RE.sub("_", name)
+
+
+def _resolve_name(name: str) -> str:
+    """Macht aus dem (evtl. bereinigten) Modell-Namen wieder den echten TOOLS-Schluessel."""
+    if name in TOOLS:
+        return name
+    for real in TOOLS:
+        if _safe_name(real) == name:
+            return real
+    return name
+
+
 def _tool_specs() -> list[dict]:
     """Werkzeug-Definitionen (JSON-Schema) fuer Ollamas Function-Calling."""
     return [
         {
             "type": "function",
             "function": {
-                "name": t.name,
+                "name": _safe_name(t.name),
                 "description": t.description,
                 "parameters": t.parameters or {"type": "object", "properties": {}},
             },
@@ -268,8 +290,10 @@ def handle_task(messages: list[dict], principal=None, max_tool_steps: int = 4) -
             metrics.record("local_success", confidence=confidence, model=config.LOCAL_MODEL)
             return _answer(reply, source="local", confidence=confidence)
 
-        # Modell will ein Werkzeug nutzen.
-        tool_name = call.get("tool", "")
+        # Modell will ein Werkzeug nutzen. Bereinigten Namen wieder zuordnen
+        # (z.B. mcp__gedaechtnis_graph__x -> mcp__gedaechtnis-graph__x).
+        tool_name = _resolve_name(call.get("tool", ""))
+        call["tool"] = tool_name  # echten Namen festhalten (fuer Consent-Resume)
         tool = TOOLS.get(tool_name)
         if tool is None:
             convo.append({"role": "user", "content": f"Werkzeug '{tool_name}' existiert nicht."})
