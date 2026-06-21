@@ -17,6 +17,7 @@ _ALLOWED = {
     "local_backend", "local_openai_base_url", "local_openai_model",
     "local_openai_api_key",
     "decision_style", "auto_local_upgrade", "auto_download_models",
+    "auto_install_ollama", "auto_update_ollama",
     "model_locked", "cloud_mode", "browser_provider",
     "cloud_provider", "openrouter_api_key", "openrouter_model",
     "mistral_api_key", "mistral_model",

@@ -917,6 +917,8 @@ async function loadEmergency() {
     const st = await (await fetch(`${API}/setup/state`)).json();
     const s = st.settings || {};
     el("lock-toggle").checked = !!s.model_locked;
+    el("auto-install-toggle").checked = s.auto_install_ollama !== false; // Standard an
+    el("auto-update-toggle").checked = s.auto_update_ollama !== false;
     el("cloud-mode").value = s.cloud_mode || "api";
     el("browser-provider").value = s.browser_provider || "claude";
     el("cloud-provider").value = s.cloud_provider || "auto";
@@ -943,6 +945,11 @@ el("lock-toggle").addEventListener("change", async (e) => {
   await saveSettings({ model_locked: e.target.checked });
   el("autopilot-toggle").disabled = e.target.checked;
 });
+
+el("auto-install-toggle").addEventListener("change", (e) =>
+  saveSettings({ auto_install_ollama: e.target.checked }));
+el("auto-update-toggle").addEventListener("change", (e) =>
+  saveSettings({ auto_update_ollama: e.target.checked }));
 
 // --- Lokaler Motor: Ollama oder OpenAI-kompatibler Server ---------------
 let _serverPresets = {};

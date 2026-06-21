@@ -274,6 +274,10 @@ def apply_user_settings(data: dict) -> None:
         g["AUTO_LOCAL_UPGRADE"] = _as_bool(data["auto_local_upgrade"])
     if "auto_download_models" in data:
         g["AUTO_DOWNLOAD_MODELS"] = _as_bool(data["auto_download_models"])
+    if "auto_install_ollama" in data:
+        g["AUTO_INSTALL_OLLAMA"] = _as_bool(data["auto_install_ollama"])
+    if "auto_update_ollama" in data:
+        g["AUTO_UPDATE_OLLAMA"] = _as_bool(data["auto_update_ollama"])
     if "model_locked" in data:
         g["MODEL_LOCKED"] = _as_bool(data["model_locked"])
     if data.get("cloud_mode") in ("off", "api", "browser"):
