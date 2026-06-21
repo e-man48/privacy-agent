@@ -1185,6 +1185,28 @@ el("mem-form").addEventListener("submit", async (e) => {
   loadMemory();
 });
 
+// --- Markdown-Gedächtnis (lesbar/editierbar) ---------------------------------
+el("mem-md-open").addEventListener("click", async () => {
+  try {
+    const d = await (await fetch(`${API}/memory/markdown`)).json();
+    const r = await (await fetch(`${API}/open-path`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ path: d.path }),
+    })).json();
+    el("mem-md-msg").textContent = r.ok ? `Geöffnet: ${d.path}` : (r.message || "Konnte nicht öffnen.");
+  } catch { el("mem-md-msg").textContent = "Backend nicht erreichbar."; }
+});
+
+el("mem-md-reload").addEventListener("click", async () => {
+  el("mem-md-msg").textContent = "Lese memory.md neu …";
+  try {
+    const r = await (await fetch(`${API}/memory/markdown/reload`, { method: "POST" })).json();
+    el("mem-md-msg").textContent =
+      `Übernommen: ${r.added} hinzugefügt, ${r.removed} entfernt (gesamt ${r.total}).`;
+    loadMemory();
+  } catch { el("mem-md-msg").textContent = "Neu laden fehlgeschlagen."; }
+});
+
 // --- Start --------------------------------------------------------------
 async function bootstrap() {
   try {

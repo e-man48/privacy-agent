@@ -73,6 +73,7 @@ def add(text: str, kind: str = "fact", source: str = "user", owner: str = "share
     )
     with open(config.MEMORY_PATH, "a", encoding="utf-8") as fh:
         fh.write(json.dumps(asdict(mem), ensure_ascii=False) + "\n")
+    export_markdown()  # lesbaren Markdown-Spiegel aktuell halten
     return mem
 
 
@@ -95,7 +96,98 @@ def forget(mem_id: str) -> bool:
     if len(kept) == len(items):
         return False
     _write_all(kept)
+    export_markdown()
     return True
+
+
+# --- Markdown-Gedaechtnis (lesbar + von Hand editierbar) -----------------
+# Spiegel des Gedaechtnisses als Markdown-Datei -- transparent (du siehst, was
+# der Agent sich merkt) und editierbar (Datei aendern -> "aus Markdown neu laden").
+_KIND_LABEL = {"guideline": "Regeln", "fact": "Fakten",
+               "preference": "Vorlieben", "outcome": "Notizen"}
+_LABEL_KIND = {v: k for k, v in _KIND_LABEL.items()}
+_KIND_ORDER = ["guideline", "fact", "preference", "outcome"]
+
+
+def _md_path():
+    return config.data_dir() / "memory.md"
+
+
+def export_markdown() -> None:
+    """Schreibt das Gedaechtnis als lesbare Markdown-Datei (Spiegel des JSONL)."""
+    items = _read_all()
+    owners = sorted({m.owner for m in items}, key=lambda o: (o != "shared", o))
+    lines = [
+        "# Gedächtnis (Privacy-Agent)",
+        "",
+        "> Diese Datei ist von Hand editierbar. Aendere/loesche Zeilen und klicke in",
+        "> der App auf **aus Markdown neu laden**. Die Ueberschriften",
+        "> (`## Bereich:` / `### ... (kind)`) bitte stehen lassen.",
+        "",
+    ]
+    for owner in owners:
+        lines.append(f"## Bereich: {owner}")
+        lines.append("")
+        for kind in _KIND_ORDER:
+            entries = [m for m in items if m.owner == owner and m.kind == kind]
+            if not entries:
+                continue
+            lines.append(f"### {_KIND_LABEL[kind]} ({kind})")
+            for m in entries:
+                lines.append(f"- {m.text.replace(chr(10), ' ').strip()}")
+            lines.append("")
+    try:
+        _md_path().write_text("\n".join(lines), encoding="utf-8")
+    except OSError:
+        pass
+
+
+def _parse_markdown() -> list[tuple[str, str, str]]:
+    """Liest memory.md -> Liste (owner, kind, text)."""
+    try:
+        text = _md_path().read_text(encoding="utf-8")
+    except FileNotFoundError:
+        return []
+    owner, kind = "shared", "fact"
+    out: list[tuple[str, str, str]] = []
+    for raw in text.splitlines():
+        line = raw.rstrip()
+        if line.startswith("## Bereich:"):
+            owner = line.split(":", 1)[1].strip() or "shared"
+        elif line.startswith("### "):
+            m = re.search(r"\(([a-z]+)\)\s*$", line)
+            kind = m.group(1) if m and m.group(1) in _VALID_KINDS else "fact"
+        elif line.startswith("- "):
+            body = line[2:].strip()
+            if body:
+                out.append((owner, kind, body))
+    return out
+
+
+def import_markdown() -> dict:
+    """Gleicht das Gedaechtnis an die (evtl. von Hand geaenderte) memory.md an.
+
+    Neue Stichpunkte werden uebernommen, entfernte geloescht. Danach wird die
+    Datei normalisiert neu geschrieben.
+    """
+    parsed = list(dict.fromkeys(_parse_markdown()))  # dedupe, Reihenfolge erhalten
+    existing = {(m.owner, m.kind, m.text) for m in _read_all()}
+    added = 0
+    for owner, kind, body in parsed:
+        if (owner, kind, body) not in existing:
+            add(body, kind=kind, source="user", owner=owner)
+            added += 1
+    desired = set(parsed)
+    kept, removed = [], 0
+    for m in _read_all():
+        if (m.owner, m.kind, m.text) in desired:
+            kept.append(m)
+        else:
+            removed += 1
+    if removed:
+        _write_all(kept)
+    export_markdown()
+    return {"added": added, "removed": removed, "total": len(kept), "path": str(_md_path())}
 
 
 def _tokens(text: str) -> set[str]:

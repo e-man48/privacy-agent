@@ -6,6 +6,9 @@ Im fertigen Produkt startet die Tauri-Huelle diesen Prozess als "Sidecar".
 """
 from __future__ import annotations
 
+import os
+import subprocess
+import sys
 from contextlib import asynccontextmanager
 from typing import Optional
 
@@ -84,6 +87,10 @@ class LocalLaunchIn(BaseModel):
 
 class OpenUrlIn(BaseModel):
     url: str
+
+
+class OpenPathIn(BaseModel):
+    path: str
 
 
 class SettingsIn(BaseModel):
@@ -302,6 +309,24 @@ def memory_delete(mem_id: str) -> dict:
     return {"ok": memory.forget(mem_id)}
 
 
+@app.get("/memory/markdown")
+def memory_markdown() -> dict:
+    """Liefert Pfad und Inhalt der lesbaren Markdown-Gedaechtnisdatei."""
+    memory.export_markdown()  # sicherstellen, dass sie aktuell ist
+    path = memory._md_path()
+    try:
+        content = path.read_text(encoding="utf-8")
+    except OSError:
+        content = ""
+    return {"path": str(path), "content": content}
+
+
+@app.post("/memory/markdown/reload")
+def memory_markdown_reload() -> dict:
+    """Uebernimmt von Hand gemachte Aenderungen aus memory.md ins Gedaechtnis."""
+    return memory.import_markdown()
+
+
 @app.post("/memory/suggest")
 def memory_suggest() -> dict:
     """Automatische Vorschlaege aus dem aktiven Projekt (lokal erzeugt)."""
@@ -365,6 +390,28 @@ def open_url(body: OpenUrlIn) -> dict:
     import webbrowser
     try:
         return {"ok": bool(webbrowser.open(url))}
+    except Exception as exc:  # noqa: BLE001
+        return {"ok": False, "message": str(exc)}
+
+
+@app.post("/open-path")
+def open_path(body: OpenPathIn) -> dict:
+    """Oeffnet eine Datei/einen Ordner im Standardprogramm -- nur im App-Datenordner."""
+    from pathlib import Path
+    p = Path(body.path).resolve()
+    data = config.data_dir().resolve()
+    if p != data and data not in p.parents:
+        return {"ok": False, "message": "Nur Dateien im App-Datenordner erlaubt."}
+    if not p.exists():
+        return {"ok": False, "message": "Pfad existiert nicht."}
+    try:
+        if os.name == "nt":
+            os.startfile(str(p))  # type: ignore[attr-defined]  # noqa
+        elif sys.platform == "darwin":
+            subprocess.Popen(["open", str(p)])
+        else:
+            subprocess.Popen(["xdg-open", str(p)])
+        return {"ok": True}
     except Exception as exc:  # noqa: BLE001
         return {"ok": False, "message": str(exc)}
 

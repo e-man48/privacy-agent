@@ -166,6 +166,12 @@ Darin u.a.: `consent_log.jsonl` (Protokoll jedes Außen-Kontakts), `memories.jso
 (Gedächtnis), `user_settings.json` (deine Einstellungen), `mcp_servers.json`
 (Skills). Du kannst diese Dateien einsehen und löschen.
 
+**📄 Lesbares Gedächtnis (`memory.md`):** Was sich der Agent merkt, liegt zusätzlich
+als **editierbare Markdown-Datei** vor – nach Person und Kategorie (Regeln/Fakten/
+Vorlieben) sortiert. Im 🧠-Panel: **„Als Markdown öffnen"** zum Lesen/Bearbeiten,
+**„aus Markdown neu laden"** übernimmt deine Änderungen. So siehst und steuerst du
+transparent, was der Agent über dich weiß.
+
 ### 🔐 Schlüssel-Sicherheit (DSGVO Art. 32)
 Deine **API-Schlüssel** (Claude, OpenRouter, Mistral …) liegen **nicht im Klartext**
 in `user_settings.json`, sondern **verschlüsselt**:
