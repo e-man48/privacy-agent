@@ -555,6 +555,13 @@
    "description": "The most powerful vision-language model in the Qwen model family to date."
   },
   {
+   "name": "qwen3-vl:30b",
+   "label": "qwen3-vl (30b)",
+   "size": "~20 GB",
+   "tier": "groß",
+   "description": "The most powerful vision-language model in the Qwen model family to date."
+  },
+  {
    "name": "llama3.3:70b",
    "label": "llama3.3 (70b)",
    "size": "~47 GB",
@@ -630,6 +637,20 @@
    "size": "~4.7 GB",
    "tier": "mittel",
    "description": "CodeGemma is a collection of powerful, lightweight models that can perform a variety of coding tasks like fill-in-the-middle code completion, code generation, natural lan"
+  },
+  {
+   "name": "qwen3.6:27b",
+   "label": "qwen3.6 (27b)",
+   "size": "~18 GB",
+   "tier": "groß",
+   "description": "Qwen3.6 delivers substantial upgrades in agentic coding and thinking preservation than previous Qwen models."
+  },
+  {
+   "name": "qwen3.6:35b",
+   "label": "qwen3.6 (35b)",
+   "size": "~23 GB",
+   "tier": "groß",
+   "description": "Qwen3.6 delivers substantial upgrades in agentic coding and thinking preservation than previous Qwen models."
   },
   {
    "name": "granite3.1-moe:1b",
@@ -709,6 +730,34 @@
    "description": "An open-source Mixture-of-Experts code language model that achieves performance comparable to GPT4-Turbo in code-specific tasks."
   },
   {
+   "name": "qwen2.5vl:3b",
+   "label": "qwen2.5vl (3b)",
+   "size": "~2.0 GB",
+   "tier": "klein",
+   "description": "Flagship vision-language model of Qwen and also a significant leap from the previous Qwen2-VL."
+  },
+  {
+   "name": "qwen2.5vl:7b",
+   "label": "qwen2.5vl (7b)",
+   "size": "~4.7 GB",
+   "tier": "mittel",
+   "description": "Flagship vision-language model of Qwen and also a significant leap from the previous Qwen2-VL."
+  },
+  {
+   "name": "qwen2.5vl:32b",
+   "label": "qwen2.5vl (32b)",
+   "size": "~21 GB",
+   "tier": "groß",
+   "description": "Flagship vision-language model of Qwen and also a significant leap from the previous Qwen2-VL."
+  },
+  {
+   "name": "qwen2.5vl:72b",
+   "label": "qwen2.5vl (72b)",
+   "size": "~48 GB",
+   "tier": "groß",
+   "description": "Flagship vision-language model of Qwen and also a significant leap from the previous Qwen2-VL."
+  },
+  {
    "name": "llama2-uncensored:7b",
    "label": "llama2-uncensored (7b)",
    "size": "~4.7 GB",
@@ -749,48 +798,6 @@
    "size": "~6.7 GB",
    "tier": "mittel",
    "description": "A family of efficient AI models under 10B parameters performant in science, math, and coding through innovative training techniques."
-  },
-  {
-   "name": "qwen2.5vl:3b",
-   "label": "qwen2.5vl (3b)",
-   "size": "~2.0 GB",
-   "tier": "klein",
-   "description": "Flagship vision-language model of Qwen and also a significant leap from the previous Qwen2-VL."
-  },
-  {
-   "name": "qwen2.5vl:7b",
-   "label": "qwen2.5vl (7b)",
-   "size": "~4.7 GB",
-   "tier": "mittel",
-   "description": "Flagship vision-language model of Qwen and also a significant leap from the previous Qwen2-VL."
-  },
-  {
-   "name": "qwen2.5vl:32b",
-   "label": "qwen2.5vl (32b)",
-   "size": "~21 GB",
-   "tier": "groß",
-   "description": "Flagship vision-language model of Qwen and also a significant leap from the previous Qwen2-VL."
-  },
-  {
-   "name": "qwen2.5vl:72b",
-   "label": "qwen2.5vl (72b)",
-   "size": "~48 GB",
-   "tier": "groß",
-   "description": "Flagship vision-language model of Qwen and also a significant leap from the previous Qwen2-VL."
-  },
-  {
-   "name": "qwen3.6:27b",
-   "label": "qwen3.6 (27b)",
-   "size": "~18 GB",
-   "tier": "groß",
-   "description": "Qwen3.6 delivers substantial upgrades in agentic coding and thinking preservation than previous Qwen models."
-  },
-  {
-   "name": "qwen3.6:35b",
-   "label": "qwen3.6 (35b)",
-   "size": "~23 GB",
-   "tier": "groß",
-   "description": "Qwen3.6 delivers substantial upgrades in agentic coding and thinking preservation than previous Qwen models."
   },
   {
    "name": "nemotron-3-super:120b",
@@ -882,6 +889,27 @@
    "size": "~1.1 GB",
    "tier": "klein",
    "description": "🪐 A family of small models with 135M, 360M, and 1.7B parameters, trained on a new high-quality dataset."
+  },
+  {
+   "name": "translategemma:4b",
+   "label": "translategemma (4b)",
+   "size": "~2.7 GB",
+   "tier": "mittel",
+   "description": "A new collection of open translation models built on Gemma 3, helping people communicate across 55 languages."
+  },
+  {
+   "name": "translategemma:12b",
+   "label": "translategemma (12b)",
+   "size": "~8.0 GB",
+   "tier": "mittel",
+   "description": "A new collection of open translation models built on Gemma 3, helping people communicate across 55 languages."
+  },
+  {
+   "name": "translategemma:27b",
+   "label": "translategemma (27b)",
+   "size": "~18 GB",
+   "tier": "groß",
+   "description": "A new collection of open translation models built on Gemma 3, helping people communicate across 55 languages."
   }
  ]
 }
