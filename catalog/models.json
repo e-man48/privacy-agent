@@ -254,27 +254,6 @@
    "description": "The latest series of Code-Specific Qwen models, with significant improvements in code generation, code reasoning, and code fixing."
   },
   {
-   "name": "llava:7b",
-   "label": "llava (7b)",
-   "size": "~4.7 GB",
-   "tier": "mittel",
-   "description": "🌋 LLaVA is a novel end-to-end trained large multimodal model that combines a vision encoder and Vicuna for general-purpose visual and language understanding. Updated to v"
-  },
-  {
-   "name": "llava:13b",
-   "label": "llava (13b)",
-   "size": "~8.7 GB",
-   "tier": "mittel",
-   "description": "🌋 LLaVA is a novel end-to-end trained large multimodal model that combines a vision encoder and Vicuna for general-purpose visual and language understanding. Updated to v"
-  },
-  {
-   "name": "llava:34b",
-   "label": "llava (34b)",
-   "size": "~23 GB",
-   "tier": "groß",
-   "description": "🌋 LLaVA is a novel end-to-end trained large multimodal model that combines a vision encoder and Vicuna for general-purpose visual and language understanding. Updated to v"
-  },
-  {
    "name": "qwen3.5:0.8b",
    "label": "qwen3.5 (0.8b)",
    "size": "~0.5 GB",
@@ -294,6 +273,27 @@
    "size": "~2.7 GB",
    "tier": "mittel",
    "description": "Qwen 3.5 is a family of open-source multimodal models that delivers exceptional utility and performance."
+  },
+  {
+   "name": "llava:7b",
+   "label": "llava (7b)",
+   "size": "~4.7 GB",
+   "tier": "mittel",
+   "description": "🌋 LLaVA is a novel end-to-end trained large multimodal model that combines a vision encoder and Vicuna for general-purpose visual and language understanding. Updated to v"
+  },
+  {
+   "name": "llava:13b",
+   "label": "llava (13b)",
+   "size": "~8.7 GB",
+   "tier": "mittel",
+   "description": "🌋 LLaVA is a novel end-to-end trained large multimodal model that combines a vision encoder and Vicuna for general-purpose visual and language understanding. Updated to v"
+  },
+  {
+   "name": "llava:34b",
+   "label": "llava (34b)",
+   "size": "~23 GB",
+   "tier": "groß",
+   "description": "🌋 LLaVA is a novel end-to-end trained large multimodal model that combines a vision encoder and Vicuna for general-purpose visual and language understanding. Updated to v"
   },
   {
    "name": "mxbai-embed-large",
@@ -604,6 +604,20 @@
    "description": "SmolLM2 is a family of compact language models available in three size: 135M, 360M, and 1.7B parameters."
   },
   {
+   "name": "qwen3.6:27b",
+   "label": "qwen3.6 (27b)",
+   "size": "~18 GB",
+   "tier": "groß",
+   "description": "Qwen3.6 delivers substantial upgrades in agentic coding and thinking preservation than previous Qwen models."
+  },
+  {
+   "name": "qwen3.6:35b",
+   "label": "qwen3.6 (35b)",
+   "size": "~23 GB",
+   "tier": "groß",
+   "description": "Qwen3.6 delivers substantial upgrades in agentic coding and thinking preservation than previous Qwen models."
+  },
+  {
    "name": "snowflake-arctic-embed",
    "label": "snowflake-arctic-embed",
    "size": "klein",
@@ -637,20 +651,6 @@
    "size": "~4.7 GB",
    "tier": "mittel",
    "description": "CodeGemma is a collection of powerful, lightweight models that can perform a variety of coding tasks like fill-in-the-middle code completion, code generation, natural lan"
-  },
-  {
-   "name": "qwen3.6:27b",
-   "label": "qwen3.6 (27b)",
-   "size": "~18 GB",
-   "tier": "groß",
-   "description": "Qwen3.6 delivers substantial upgrades in agentic coding and thinking preservation than previous Qwen models."
-  },
-  {
-   "name": "qwen3.6:35b",
-   "label": "qwen3.6 (35b)",
-   "size": "~23 GB",
-   "tier": "groß",
-   "description": "Qwen3.6 delivers substantial upgrades in agentic coding and thinking preservation than previous Qwen models."
   },
   {
    "name": "granite3.1-moe:1b",
@@ -716,20 +716,6 @@
    "description": "StarCoder2 is the next generation of transparently trained open code LLMs that comes in three sizes: 3B, 7B and 15B parameters."
   },
   {
-   "name": "deepseek-coder-v2:16b",
-   "label": "deepseek-coder-v2 (16b)",
-   "size": "~11 GB",
-   "tier": "groß",
-   "description": "An open-source Mixture-of-Experts code language model that achieves performance comparable to GPT4-Turbo in code-specific tasks."
-  },
-  {
-   "name": "deepseek-coder-v2:236b",
-   "label": "deepseek-coder-v2 (236b)",
-   "size": "~158 GB",
-   "tier": "groß",
-   "description": "An open-source Mixture-of-Experts code language model that achieves performance comparable to GPT4-Turbo in code-specific tasks."
-  },
-  {
    "name": "qwen2.5vl:3b",
    "label": "qwen2.5vl (3b)",
    "size": "~2.0 GB",
@@ -756,6 +742,20 @@
    "size": "~48 GB",
    "tier": "groß",
    "description": "Flagship vision-language model of Qwen and also a significant leap from the previous Qwen2-VL."
+  },
+  {
+   "name": "deepseek-coder-v2:16b",
+   "label": "deepseek-coder-v2 (16b)",
+   "size": "~11 GB",
+   "tier": "groß",
+   "description": "An open-source Mixture-of-Experts code language model that achieves performance comparable to GPT4-Turbo in code-specific tasks."
+  },
+  {
+   "name": "deepseek-coder-v2:236b",
+   "label": "deepseek-coder-v2 (236b)",
+   "size": "~158 GB",
+   "tier": "groß",
+   "description": "An open-source Mixture-of-Experts code language model that achieves performance comparable to GPT4-Turbo in code-specific tasks."
   },
   {
    "name": "llama2-uncensored:7b",
@@ -821,18 +821,18 @@
    "description": "An update to Mistral Small that improves on function calling, instruction following, and less repetition errors."
   },
   {
-   "name": "qwq:32b",
-   "label": "qwq (32b)",
-   "size": "~21 GB",
-   "tier": "groß",
-   "description": "QwQ is the reasoning model of the Qwen series."
-  },
-  {
    "name": "qwen3-embedding",
    "label": "qwen3-embedding",
    "size": "klein",
    "tier": "spezial",
    "description": "Building upon the foundational models of the Qwen3 series, Qwen3 Embedding provides a comprehensive range of text embeddings models in various sizes"
+  },
+  {
+   "name": "qwq:32b",
+   "label": "qwq (32b)",
+   "size": "~21 GB",
+   "tier": "groß",
+   "description": "QwQ is the reasoning model of the Qwen series."
   },
   {
    "name": "cogito:3b",
@@ -889,27 +889,6 @@
    "size": "~1.1 GB",
    "tier": "klein",
    "description": "🪐 A family of small models with 135M, 360M, and 1.7B parameters, trained on a new high-quality dataset."
-  },
-  {
-   "name": "translategemma:4b",
-   "label": "translategemma (4b)",
-   "size": "~2.7 GB",
-   "tier": "mittel",
-   "description": "A new collection of open translation models built on Gemma 3, helping people communicate across 55 languages."
-  },
-  {
-   "name": "translategemma:12b",
-   "label": "translategemma (12b)",
-   "size": "~8.0 GB",
-   "tier": "mittel",
-   "description": "A new collection of open translation models built on Gemma 3, helping people communicate across 55 languages."
-  },
-  {
-   "name": "translategemma:27b",
-   "label": "translategemma (27b)",
-   "size": "~18 GB",
-   "tier": "groß",
-   "description": "A new collection of open translation models built on Gemma 3, helping people communicate across 55 languages."
   }
  ]
 }
