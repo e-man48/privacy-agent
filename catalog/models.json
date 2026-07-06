@@ -205,20 +205,6 @@
    "description": "Meta Llama 3: The most capable openly available LLM to date"
   },
   {
-   "name": "phi3:3.8b",
-   "label": "phi3 (3.8b)",
-   "size": "~2.5 GB",
-   "tier": "klein",
-   "description": "Phi-3 is a family of lightweight 3B (Mini) and 14B (Medium) state-of-the-art open models by Microsoft."
-  },
-  {
-   "name": "phi3:14b",
-   "label": "phi3 (14b)",
-   "size": "~9.4 GB",
-   "tier": "groß",
-   "description": "Phi-3 is a family of lightweight 3B (Mini) and 14B (Medium) state-of-the-art open models by Microsoft."
-  },
-  {
    "name": "qwen2.5-coder:0.5b",
    "label": "qwen2.5-coder (0.5b)",
    "size": "~0.3 GB",
@@ -252,6 +238,20 @@
    "size": "~9.4 GB",
    "tier": "groß",
    "description": "The latest series of Code-Specific Qwen models, with significant improvements in code generation, code reasoning, and code fixing."
+  },
+  {
+   "name": "phi3:3.8b",
+   "label": "phi3 (3.8b)",
+   "size": "~2.5 GB",
+   "tier": "klein",
+   "description": "Phi-3 is a family of lightweight 3B (Mini) and 14B (Medium) state-of-the-art open models by Microsoft."
+  },
+  {
+   "name": "phi3:14b",
+   "label": "phi3 (14b)",
+   "size": "~9.4 GB",
+   "tier": "groß",
+   "description": "Phi-3 is a family of lightweight 3B (Mini) and 14B (Medium) state-of-the-art open models by Microsoft."
   },
   {
    "name": "qwen3.5:0.8b",
@@ -485,18 +485,18 @@
    "description": "A series of multimodal LLMs (MLLMs) designed for vision-language understanding."
   },
   {
-   "name": "tinyllama:1.1b",
-   "label": "tinyllama (1.1b)",
-   "size": "~0.7 GB",
-   "tier": "klein",
-   "description": "The TinyLlama project is an open endeavor to train a compact 1.1B Llama model on 3 trillion tokens."
-  },
-  {
    "name": "mistral-nemo:12b",
    "label": "mistral-nemo (12b)",
    "size": "~8.0 GB",
    "tier": "mittel",
    "description": "A state-of-the-art 12B model with 128k context length, built by Mistral AI in collaboration with NVIDIA."
+  },
+  {
+   "name": "tinyllama:1.1b",
+   "label": "tinyllama (1.1b)",
+   "size": "~0.7 GB",
+   "tier": "klein",
+   "description": "The TinyLlama project is an open endeavor to train a compact 1.1B Llama model on 3 trillion tokens."
   },
   {
    "name": "llama3.2-vision:11b",
@@ -511,27 +511,6 @@
    "size": "~60 GB",
    "tier": "groß",
    "description": "Llama 3.2 Vision is a collection of instruction-tuned image reasoning generative models in 11B and 90B sizes."
-  },
-  {
-   "name": "deepseek-coder:1.3b",
-   "label": "deepseek-coder (1.3b)",
-   "size": "~0.9 GB",
-   "tier": "klein",
-   "description": "DeepSeek Coder is a capable coding model trained on two trillion code and natural language tokens."
-  },
-  {
-   "name": "deepseek-coder:6.7b",
-   "label": "deepseek-coder (6.7b)",
-   "size": "~4.5 GB",
-   "tier": "mittel",
-   "description": "DeepSeek Coder is a capable coding model trained on two trillion code and natural language tokens."
-  },
-  {
-   "name": "deepseek-coder:33b",
-   "label": "deepseek-coder (33b)",
-   "size": "~22 GB",
-   "tier": "groß",
-   "description": "DeepSeek Coder is a capable coding model trained on two trillion code and natural language tokens."
   },
   {
    "name": "qwen3-vl:2b",
@@ -560,6 +539,27 @@
    "size": "~20 GB",
    "tier": "groß",
    "description": "The most powerful vision-language model in the Qwen model family to date."
+  },
+  {
+   "name": "deepseek-coder:1.3b",
+   "label": "deepseek-coder (1.3b)",
+   "size": "~0.9 GB",
+   "tier": "klein",
+   "description": "DeepSeek Coder is a capable coding model trained on two trillion code and natural language tokens."
+  },
+  {
+   "name": "deepseek-coder:6.7b",
+   "label": "deepseek-coder (6.7b)",
+   "size": "~4.5 GB",
+   "tier": "mittel",
+   "description": "DeepSeek Coder is a capable coding model trained on two trillion code and natural language tokens."
+  },
+  {
+   "name": "deepseek-coder:33b",
+   "label": "deepseek-coder (33b)",
+   "size": "~22 GB",
+   "tier": "groß",
+   "description": "DeepSeek Coder is a capable coding model trained on two trillion code and natural language tokens."
   },
   {
    "name": "llama3.3:70b",
@@ -597,13 +597,6 @@
    "description": "OLMo 2 is a new family of 7B and 13B models trained on up to 5T tokens. These models are on par with or better than equivalently sized fully open models, and competitive "
   },
   {
-   "name": "smollm2:1.7b",
-   "label": "smollm2 (1.7b)",
-   "size": "~1.1 GB",
-   "tier": "klein",
-   "description": "SmolLM2 is a family of compact language models available in three size: 135M, 360M, and 1.7B parameters."
-  },
-  {
    "name": "qwen3.6:27b",
    "label": "qwen3.6 (27b)",
    "size": "~18 GB",
@@ -616,6 +609,13 @@
    "size": "~23 GB",
    "tier": "groß",
    "description": "Qwen3.6 delivers substantial upgrades in agentic coding and thinking preservation than previous Qwen models."
+  },
+  {
+   "name": "smollm2:1.7b",
+   "label": "smollm2 (1.7b)",
+   "size": "~1.1 GB",
+   "tier": "klein",
+   "description": "SmolLM2 is a family of compact language models available in three size: 135M, 360M, and 1.7B parameters."
   },
   {
    "name": "snowflake-arctic-embed",
@@ -651,6 +651,34 @@
    "size": "~4.7 GB",
    "tier": "mittel",
    "description": "CodeGemma is a collection of powerful, lightweight models that can perform a variety of coding tasks like fill-in-the-middle code completion, code generation, natural lan"
+  },
+  {
+   "name": "qwen2.5vl:3b",
+   "label": "qwen2.5vl (3b)",
+   "size": "~2.0 GB",
+   "tier": "klein",
+   "description": "Flagship vision-language model of Qwen and also a significant leap from the previous Qwen2-VL."
+  },
+  {
+   "name": "qwen2.5vl:7b",
+   "label": "qwen2.5vl (7b)",
+   "size": "~4.7 GB",
+   "tier": "mittel",
+   "description": "Flagship vision-language model of Qwen and also a significant leap from the previous Qwen2-VL."
+  },
+  {
+   "name": "qwen2.5vl:32b",
+   "label": "qwen2.5vl (32b)",
+   "size": "~21 GB",
+   "tier": "groß",
+   "description": "Flagship vision-language model of Qwen and also a significant leap from the previous Qwen2-VL."
+  },
+  {
+   "name": "qwen2.5vl:72b",
+   "label": "qwen2.5vl (72b)",
+   "size": "~48 GB",
+   "tier": "groß",
+   "description": "Flagship vision-language model of Qwen and also a significant leap from the previous Qwen2-VL."
   },
   {
    "name": "granite3.1-moe:1b",
@@ -716,34 +744,6 @@
    "description": "StarCoder2 is the next generation of transparently trained open code LLMs that comes in three sizes: 3B, 7B and 15B parameters."
   },
   {
-   "name": "qwen2.5vl:3b",
-   "label": "qwen2.5vl (3b)",
-   "size": "~2.0 GB",
-   "tier": "klein",
-   "description": "Flagship vision-language model of Qwen and also a significant leap from the previous Qwen2-VL."
-  },
-  {
-   "name": "qwen2.5vl:7b",
-   "label": "qwen2.5vl (7b)",
-   "size": "~4.7 GB",
-   "tier": "mittel",
-   "description": "Flagship vision-language model of Qwen and also a significant leap from the previous Qwen2-VL."
-  },
-  {
-   "name": "qwen2.5vl:32b",
-   "label": "qwen2.5vl (32b)",
-   "size": "~21 GB",
-   "tier": "groß",
-   "description": "Flagship vision-language model of Qwen and also a significant leap from the previous Qwen2-VL."
-  },
-  {
-   "name": "qwen2.5vl:72b",
-   "label": "qwen2.5vl (72b)",
-   "size": "~48 GB",
-   "tier": "groß",
-   "description": "Flagship vision-language model of Qwen and also a significant leap from the previous Qwen2-VL."
-  },
-  {
    "name": "deepseek-coder-v2:16b",
    "label": "deepseek-coder-v2 (16b)",
    "size": "~11 GB",
@@ -756,6 +756,13 @@
    "size": "~158 GB",
    "tier": "groß",
    "description": "An open-source Mixture-of-Experts code language model that achieves performance comparable to GPT4-Turbo in code-specific tasks."
+  },
+  {
+   "name": "nemotron-3-super:120b",
+   "label": "nemotron-3-super (120b)",
+   "size": "~80 GB",
+   "tier": "groß",
+   "description": "NVIDIA Nemotron 3 Super is a 120B open MoE model activating just 12B parameters to deliver maximum compute efficiency and accuracy for complex multi-agent applications."
   },
   {
    "name": "llama2-uncensored:7b",
@@ -800,18 +807,11 @@
    "description": "A family of efficient AI models under 10B parameters performant in science, math, and coding through innovative training techniques."
   },
   {
-   "name": "nemotron-3-super:120b",
-   "label": "nemotron-3-super (120b)",
-   "size": "~80 GB",
-   "tier": "groß",
-   "description": "NVIDIA Nemotron 3 Super is a 120B open MoE model activating just 12B parameters to deliver maximum compute efficiency and accuracy for complex multi-agent applications."
-  },
-  {
-   "name": "llava-llama3:8b",
-   "label": "llava-llama3 (8b)",
-   "size": "~5.4 GB",
-   "tier": "mittel",
-   "description": "A LLaVA model fine-tuned from Llama 3 Instruct with better scores in several benchmarks."
+   "name": "qwen3-embedding",
+   "label": "qwen3-embedding",
+   "size": "klein",
+   "tier": "spezial",
+   "description": "Building upon the foundational models of the Qwen3 series, Qwen3 Embedding provides a comprehensive range of text embeddings models in various sizes"
   },
   {
    "name": "mistral-small3.2:24b",
@@ -821,11 +821,11 @@
    "description": "An update to Mistral Small that improves on function calling, instruction following, and less repetition errors."
   },
   {
-   "name": "qwen3-embedding",
-   "label": "qwen3-embedding",
-   "size": "klein",
-   "tier": "spezial",
-   "description": "Building upon the foundational models of the Qwen3 series, Qwen3 Embedding provides a comprehensive range of text embeddings models in various sizes"
+   "name": "llava-llama3:8b",
+   "label": "llava-llama3 (8b)",
+   "size": "~5.4 GB",
+   "tier": "mittel",
+   "description": "A LLaVA model fine-tuned from Llama 3 Instruct with better scores in several benchmarks."
   },
   {
    "name": "qwq:32b",
