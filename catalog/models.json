@@ -569,6 +569,20 @@
    "description": "The most powerful vision-language model in the Qwen model family to date."
   },
   {
+   "name": "qwen3.6:27b",
+   "label": "qwen3.6 (27b)",
+   "size": "~18 GB",
+   "tier": "groß",
+   "description": "Qwen3.6 delivers substantial upgrades in agentic coding and thinking preservation than previous Qwen models."
+  },
+  {
+   "name": "qwen3.6:35b",
+   "label": "qwen3.6 (35b)",
+   "size": "~23 GB",
+   "tier": "groß",
+   "description": "Qwen3.6 delivers substantial upgrades in agentic coding and thinking preservation than previous Qwen models."
+  },
+  {
    "name": "deepseek-coder:1.3b",
    "label": "deepseek-coder (1.3b)",
    "size": "~0.9 GB",
@@ -590,20 +604,6 @@
    "description": "DeepSeek Coder is a capable coding model trained on two trillion code and natural language tokens."
   },
   {
-   "name": "qwen3.6:27b",
-   "label": "qwen3.6 (27b)",
-   "size": "~18 GB",
-   "tier": "groß",
-   "description": "Qwen3.6 delivers substantial upgrades in agentic coding and thinking preservation than previous Qwen models."
-  },
-  {
-   "name": "qwen3.6:35b",
-   "label": "qwen3.6 (35b)",
-   "size": "~23 GB",
-   "tier": "groß",
-   "description": "Qwen3.6 delivers substantial upgrades in agentic coding and thinking preservation than previous Qwen models."
-  },
-  {
    "name": "llama3.3:70b",
    "label": "llama3.3 (70b)",
    "size": "~47 GB",
@@ -616,6 +616,13 @@
    "size": "~5.4 GB",
    "tier": "mittel",
    "description": "Dolphin 3.0 Llama 3.1 8B 🐬 is the next generation of the Dolphin series of instruct-tuned models designed to be the ultimate general purpose local model, enabling coding,"
+  },
+  {
+   "name": "smollm2:1.7b",
+   "label": "smollm2 (1.7b)",
+   "size": "~1.1 GB",
+   "tier": "klein",
+   "description": "SmolLM2 is a family of compact language models available in three size: 135M, 360M, and 1.7B parameters."
   },
   {
    "name": "deepseek-v3:671b",
@@ -637,13 +644,6 @@
    "size": "~8.7 GB",
    "tier": "mittel",
    "description": "OLMo 2 is a new family of 7B and 13B models trained on up to 5T tokens. These models are on par with or better than equivalently sized fully open models, and competitive "
-  },
-  {
-   "name": "smollm2:1.7b",
-   "label": "smollm2 (1.7b)",
-   "size": "~1.1 GB",
-   "tier": "klein",
-   "description": "SmolLM2 is a family of compact language models available in three size: 135M, 360M, and 1.7B parameters."
   },
   {
    "name": "qwen2.5vl:3b",
@@ -772,6 +772,13 @@
    "description": "StarCoder2 is the next generation of transparently trained open code LLMs that comes in three sizes: 3B, 7B and 15B parameters."
   },
   {
+   "name": "qwen3-embedding",
+   "label": "qwen3-embedding",
+   "size": "klein",
+   "tier": "spezial",
+   "description": "Building upon the foundational models of the Qwen3 series, Qwen3 Embedding provides a comprehensive range of text embeddings models in various sizes"
+  },
+  {
    "name": "deepseek-coder-v2:16b",
    "label": "deepseek-coder-v2 (16b)",
    "size": "~11 GB",
@@ -833,13 +840,6 @@
    "size": "~6.7 GB",
    "tier": "mittel",
    "description": "A family of efficient AI models under 10B parameters performant in science, math, and coding through innovative training techniques."
-  },
-  {
-   "name": "qwen3-embedding",
-   "label": "qwen3-embedding",
-   "size": "klein",
-   "tier": "spezial",
-   "description": "Building upon the foundational models of the Qwen3 series, Qwen3 Embedding provides a comprehensive range of text embeddings models in various sizes"
   },
   {
    "name": "mistral-small3.2:24b",
@@ -947,18 +947,18 @@
    "description": "Phi 4 reasoning and reasoning plus are 14-billion parameter open-weight reasoning models that rival much larger models on complex reasoning tasks."
   },
   {
-   "name": "dolphin-phi:2.7b",
-   "label": "dolphin-phi (2.7b)",
-   "size": "~1.8 GB",
-   "tier": "klein",
-   "description": "2.7B uncensored Dolphin model by Eric Hartford, based on the Phi language model by Microsoft Research."
-  },
-  {
    "name": "dolphin-mistral:7b",
    "label": "dolphin-mistral (7b)",
    "size": "~4.7 GB",
    "tier": "mittel",
    "description": "The uncensored Dolphin model based on Mistral that excels at coding tasks. Updated to version 2.8."
+  },
+  {
+   "name": "dolphin-phi:2.7b",
+   "label": "dolphin-phi (2.7b)",
+   "size": "~1.8 GB",
+   "tier": "klein",
+   "description": "2.7B uncensored Dolphin model by Eric Hartford, based on the Phi language model by Microsoft Research."
   }
  ]
 }
