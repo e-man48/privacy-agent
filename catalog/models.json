@@ -345,13 +345,6 @@
    "description": "OpenAI’s open-weight models designed for powerful reasoning, agentic tasks, and versatile developer use cases."
   },
   {
-   "name": "phi4:14b",
-   "label": "phi4 (14b)",
-   "size": "~9.4 GB",
-   "tier": "groß",
-   "description": "Phi-4 is a 14B parameter, state-of-the-art open model from Microsoft."
-  },
-  {
    "name": "qwen3-coder:30b",
    "label": "qwen3-coder (30b)",
    "size": "~20 GB",
@@ -364,6 +357,13 @@
    "size": "~322 GB",
    "tier": "groß",
    "description": "Alibaba's performant long context models for agentic and coding tasks."
+  },
+  {
+   "name": "phi4:14b",
+   "label": "phi4 (14b)",
+   "size": "~9.4 GB",
+   "tier": "groß",
+   "description": "Phi-4 is a 14B parameter, state-of-the-art open model from Microsoft."
   },
   {
    "name": "qwen:0.5b",
@@ -415,20 +415,6 @@
    "description": "Qwen 1.5 is a series of large language models by Alibaba Cloud spanning from 0.5B to 110B parameters"
   },
   {
-   "name": "gemma:2b",
-   "label": "gemma (2b)",
-   "size": "~1.3 GB",
-   "tier": "klein",
-   "description": "Gemma is a family of lightweight, state-of-the-art open models built by Google DeepMind. Updated to version 1.1"
-  },
-  {
-   "name": "gemma:7b",
-   "label": "gemma (7b)",
-   "size": "~4.7 GB",
-   "tier": "mittel",
-   "description": "Gemma is a family of lightweight, state-of-the-art open models built by Google DeepMind. Updated to version 1.1"
-  },
-  {
    "name": "llama2:7b",
    "label": "llama2 (7b)",
    "size": "~4.7 GB",
@@ -448,6 +434,20 @@
    "size": "~47 GB",
    "tier": "groß",
    "description": "Llama 2 is a collection of foundation language models ranging from 7B to 70B parameters."
+  },
+  {
+   "name": "gemma:2b",
+   "label": "gemma (2b)",
+   "size": "~1.3 GB",
+   "tier": "klein",
+   "description": "Gemma is a family of lightweight, state-of-the-art open models built by Google DeepMind. Updated to version 1.1"
+  },
+  {
+   "name": "gemma:7b",
+   "label": "gemma (7b)",
+   "size": "~4.7 GB",
+   "tier": "mittel",
+   "description": "Gemma is a family of lightweight, state-of-the-art open models built by Google DeepMind. Updated to version 1.1"
   },
   {
    "name": "qwen2:0.5b",
@@ -527,18 +527,18 @@
    "description": "The TinyLlama project is an open endeavor to train a compact 1.1B Llama model on 3 trillion tokens."
   },
   {
-   "name": "llama3.2-vision:11b",
-   "label": "llama3.2-vision (11b)",
-   "size": "~7.4 GB",
-   "tier": "mittel",
-   "description": "Llama 3.2 Vision is a collection of instruction-tuned image reasoning generative models in 11B and 90B sizes."
+   "name": "qwen3.6:27b",
+   "label": "qwen3.6 (27b)",
+   "size": "~18 GB",
+   "tier": "groß",
+   "description": "Qwen3.6 delivers substantial upgrades in agentic coding and thinking preservation than previous Qwen models."
   },
   {
-   "name": "llama3.2-vision:90b",
-   "label": "llama3.2-vision (90b)",
-   "size": "~60 GB",
+   "name": "qwen3.6:35b",
+   "label": "qwen3.6 (35b)",
+   "size": "~23 GB",
    "tier": "groß",
-   "description": "Llama 3.2 Vision is a collection of instruction-tuned image reasoning generative models in 11B and 90B sizes."
+   "description": "Qwen3.6 delivers substantial upgrades in agentic coding and thinking preservation than previous Qwen models."
   },
   {
    "name": "qwen3-vl:2b",
@@ -569,18 +569,18 @@
    "description": "The most powerful vision-language model in the Qwen model family to date."
   },
   {
-   "name": "qwen3.6:27b",
-   "label": "qwen3.6 (27b)",
-   "size": "~18 GB",
-   "tier": "groß",
-   "description": "Qwen3.6 delivers substantial upgrades in agentic coding and thinking preservation than previous Qwen models."
+   "name": "llama3.2-vision:11b",
+   "label": "llama3.2-vision (11b)",
+   "size": "~7.4 GB",
+   "tier": "mittel",
+   "description": "Llama 3.2 Vision is a collection of instruction-tuned image reasoning generative models in 11B and 90B sizes."
   },
   {
-   "name": "qwen3.6:35b",
-   "label": "qwen3.6 (35b)",
-   "size": "~23 GB",
+   "name": "llama3.2-vision:90b",
+   "label": "llama3.2-vision (90b)",
+   "size": "~60 GB",
    "tier": "groß",
-   "description": "Qwen3.6 delivers substantial upgrades in agentic coding and thinking preservation than previous Qwen models."
+   "description": "Llama 3.2 Vision is a collection of instruction-tuned image reasoning generative models in 11B and 90B sizes."
   },
   {
    "name": "deepseek-coder:1.3b",
@@ -672,6 +672,13 @@
    "size": "~48 GB",
    "tier": "groß",
    "description": "Flagship vision-language model of Qwen and also a significant leap from the previous Qwen2-VL."
+  },
+  {
+   "name": "qwen3-embedding",
+   "label": "qwen3-embedding",
+   "size": "klein",
+   "tier": "spezial",
+   "description": "Building upon the foundational models of the Qwen3 series, Qwen3 Embedding provides a comprehensive range of text embeddings models in various sizes"
   },
   {
    "name": "snowflake-arctic-embed",
@@ -770,13 +777,6 @@
    "size": "~10 GB",
    "tier": "groß",
    "description": "StarCoder2 is the next generation of transparently trained open code LLMs that comes in three sizes: 3B, 7B and 15B parameters."
-  },
-  {
-   "name": "qwen3-embedding",
-   "label": "qwen3-embedding",
-   "size": "klein",
-   "tier": "spezial",
-   "description": "Building upon the foundational models of the Qwen3 series, Qwen3 Embedding provides a comprehensive range of text embeddings models in various sizes"
   },
   {
    "name": "deepseek-coder-v2:16b",
@@ -898,6 +898,13 @@
    "description": "Cogito v1 Preview is a family of hybrid reasoning models by Deep Cogito that outperform the best available open models of the same size, including counterparts from LLaMA"
   },
   {
+   "name": "smollm:1.7b",
+   "label": "smollm (1.7b)",
+   "size": "~1.1 GB",
+   "tier": "klein",
+   "description": "🪐 A family of small models with 135M, 360M, and 1.7B parameters, trained on a new high-quality dataset."
+  },
+  {
    "name": "dolphin-llama3:8b",
    "label": "dolphin-llama3 (8b)",
    "size": "~5.4 GB",
@@ -910,13 +917,6 @@
    "size": "~47 GB",
    "tier": "groß",
    "description": "Dolphin 2.9 is a new model with 8B and 70B sizes by Eric Hartford based on Llama 3 that has a variety of instruction, conversational, and coding skills."
-  },
-  {
-   "name": "smollm:1.7b",
-   "label": "smollm (1.7b)",
-   "size": "~1.1 GB",
-   "tier": "klein",
-   "description": "🪐 A family of small models with 135M, 360M, and 1.7B parameters, trained on a new high-quality dataset."
   },
   {
    "name": "translategemma:4b",
@@ -959,6 +959,13 @@
    "size": "~1.8 GB",
    "tier": "klein",
    "description": "2.7B uncensored Dolphin model by Eric Hartford, based on the Phi language model by Microsoft Research."
+  },
+  {
+   "name": "embeddinggemma",
+   "label": "embeddinggemma",
+   "size": "klein",
+   "tier": "spezial",
+   "description": "EmbeddingGemma is a 300M parameter embedding model from Google."
   }
  ]
 }
