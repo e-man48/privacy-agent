@@ -513,20 +513,6 @@
    "description": "A state-of-the-art 12B model with 128k context length, built by Mistral AI in collaboration with NVIDIA."
   },
   {
-   "name": "minicpm-v:8b",
-   "label": "minicpm-v (8b)",
-   "size": "~5.4 GB",
-   "tier": "mittel",
-   "description": "A series of multimodal LLMs (MLLMs) designed for vision-language understanding."
-  },
-  {
-   "name": "tinyllama:1.1b",
-   "label": "tinyllama (1.1b)",
-   "size": "~0.7 GB",
-   "tier": "klein",
-   "description": "The TinyLlama project is an open endeavor to train a compact 1.1B Llama model on 3 trillion tokens."
-  },
-  {
    "name": "qwen3.6:27b",
    "label": "qwen3.6 (27b)",
    "size": "~18 GB",
@@ -539,6 +525,20 @@
    "size": "~23 GB",
    "tier": "groß",
    "description": "Qwen3.6 delivers substantial upgrades in agentic coding and thinking preservation than previous Qwen models."
+  },
+  {
+   "name": "minicpm-v:8b",
+   "label": "minicpm-v (8b)",
+   "size": "~5.4 GB",
+   "tier": "mittel",
+   "description": "A series of multimodal LLMs (MLLMs) designed for vision-language understanding."
+  },
+  {
+   "name": "tinyllama:1.1b",
+   "label": "tinyllama (1.1b)",
+   "size": "~0.7 GB",
+   "tier": "klein",
+   "description": "The TinyLlama project is an open endeavor to train a compact 1.1B Llama model on 3 trillion tokens."
   },
   {
    "name": "qwen3-vl:2b",
@@ -618,34 +618,6 @@
    "description": "Dolphin 3.0 Llama 3.1 8B 🐬 is the next generation of the Dolphin series of instruct-tuned models designed to be the ultimate general purpose local model, enabling coding,"
   },
   {
-   "name": "smollm2:1.7b",
-   "label": "smollm2 (1.7b)",
-   "size": "~1.1 GB",
-   "tier": "klein",
-   "description": "SmolLM2 is a family of compact language models available in three size: 135M, 360M, and 1.7B parameters."
-  },
-  {
-   "name": "deepseek-v3:671b",
-   "label": "deepseek-v3 (671b)",
-   "size": "~450 GB",
-   "tier": "groß",
-   "description": "A strong Mixture-of-Experts (MoE) language model with 671B total parameters with 37B activated for each token."
-  },
-  {
-   "name": "olmo2:7b",
-   "label": "olmo2 (7b)",
-   "size": "~4.7 GB",
-   "tier": "mittel",
-   "description": "OLMo 2 is a new family of 7B and 13B models trained on up to 5T tokens. These models are on par with or better than equivalently sized fully open models, and competitive "
-  },
-  {
-   "name": "olmo2:13b",
-   "label": "olmo2 (13b)",
-   "size": "~8.7 GB",
-   "tier": "mittel",
-   "description": "OLMo 2 is a new family of 7B and 13B models trained on up to 5T tokens. These models are on par with or better than equivalently sized fully open models, and competitive "
-  },
-  {
    "name": "qwen2.5vl:3b",
    "label": "qwen2.5vl (3b)",
    "size": "~2.0 GB",
@@ -674,18 +646,39 @@
    "description": "Flagship vision-language model of Qwen and also a significant leap from the previous Qwen2-VL."
   },
   {
+   "name": "smollm2:1.7b",
+   "label": "smollm2 (1.7b)",
+   "size": "~1.1 GB",
+   "tier": "klein",
+   "description": "SmolLM2 is a family of compact language models available in three size: 135M, 360M, and 1.7B parameters."
+  },
+  {
+   "name": "deepseek-v3:671b",
+   "label": "deepseek-v3 (671b)",
+   "size": "~450 GB",
+   "tier": "groß",
+   "description": "A strong Mixture-of-Experts (MoE) language model with 671B total parameters with 37B activated for each token."
+  },
+  {
+   "name": "olmo2:7b",
+   "label": "olmo2 (7b)",
+   "size": "~4.7 GB",
+   "tier": "mittel",
+   "description": "OLMo 2 is a new family of 7B and 13B models trained on up to 5T tokens. These models are on par with or better than equivalently sized fully open models, and competitive "
+  },
+  {
+   "name": "olmo2:13b",
+   "label": "olmo2 (13b)",
+   "size": "~8.7 GB",
+   "tier": "mittel",
+   "description": "OLMo 2 is a new family of 7B and 13B models trained on up to 5T tokens. These models are on par with or better than equivalently sized fully open models, and competitive "
+  },
+  {
    "name": "qwen3-embedding",
    "label": "qwen3-embedding",
    "size": "klein",
    "tier": "spezial",
    "description": "Building upon the foundational models of the Qwen3 series, Qwen3 Embedding provides a comprehensive range of text embeddings models in various sizes"
-  },
-  {
-   "name": "snowflake-arctic-embed",
-   "label": "snowflake-arctic-embed",
-   "size": "klein",
-   "tier": "spezial",
-   "description": "A suite of text embedding models by Snowflake, optimized for performance."
   },
   {
    "name": "codegemma:2b",
@@ -700,6 +693,13 @@
    "size": "~4.7 GB",
    "tier": "mittel",
    "description": "CodeGemma is a collection of powerful, lightweight models that can perform a variety of coding tasks like fill-in-the-middle code completion, code generation, natural lan"
+  },
+  {
+   "name": "snowflake-arctic-embed",
+   "label": "snowflake-arctic-embed",
+   "size": "klein",
+   "tier": "spezial",
+   "description": "A suite of text embedding models by Snowflake, optimized for performance."
   },
   {
    "name": "mistral-small:22b",
@@ -758,6 +758,20 @@
    "description": "A general-purpose model ranging from 3 billion parameters to 70 billion, suitable for entry-level hardware."
   },
   {
+   "name": "deepseek-coder-v2:16b",
+   "label": "deepseek-coder-v2 (16b)",
+   "size": "~11 GB",
+   "tier": "groß",
+   "description": "An open-source Mixture-of-Experts code language model that achieves performance comparable to GPT4-Turbo in code-specific tasks."
+  },
+  {
+   "name": "deepseek-coder-v2:236b",
+   "label": "deepseek-coder-v2 (236b)",
+   "size": "~158 GB",
+   "tier": "groß",
+   "description": "An open-source Mixture-of-Experts code language model that achieves performance comparable to GPT4-Turbo in code-specific tasks."
+  },
+  {
    "name": "starcoder2:3b",
    "label": "starcoder2 (3b)",
    "size": "~2.0 GB",
@@ -777,20 +791,6 @@
    "size": "~10 GB",
    "tier": "groß",
    "description": "StarCoder2 is the next generation of transparently trained open code LLMs that comes in three sizes: 3B, 7B and 15B parameters."
-  },
-  {
-   "name": "deepseek-coder-v2:16b",
-   "label": "deepseek-coder-v2 (16b)",
-   "size": "~11 GB",
-   "tier": "groß",
-   "description": "An open-source Mixture-of-Experts code language model that achieves performance comparable to GPT4-Turbo in code-specific tasks."
-  },
-  {
-   "name": "deepseek-coder-v2:236b",
-   "label": "deepseek-coder-v2 (236b)",
-   "size": "~158 GB",
-   "tier": "groß",
-   "description": "An open-source Mixture-of-Experts code language model that achieves performance comparable to GPT4-Turbo in code-specific tasks."
   },
   {
    "name": "nemotron-3-super:120b",
@@ -947,6 +947,13 @@
    "description": "Phi 4 reasoning and reasoning plus are 14-billion parameter open-weight reasoning models that rival much larger models on complex reasoning tasks."
   },
   {
+   "name": "embeddinggemma",
+   "label": "embeddinggemma",
+   "size": "klein",
+   "tier": "spezial",
+   "description": "EmbeddingGemma is a 300M parameter embedding model from Google."
+  },
+  {
    "name": "dolphin-mistral:7b",
    "label": "dolphin-mistral (7b)",
    "size": "~4.7 GB",
@@ -961,11 +968,32 @@
    "description": "2.7B uncensored Dolphin model by Eric Hartford, based on the Phi language model by Microsoft Research."
   },
   {
-   "name": "embeddinggemma",
-   "label": "embeddinggemma",
-   "size": "klein",
-   "tier": "spezial",
-   "description": "EmbeddingGemma is a 300M parameter embedding model from Google."
+   "name": "hermes3:3b",
+   "label": "hermes3 (3b)",
+   "size": "~2.0 GB",
+   "tier": "klein",
+   "description": "Hermes 3 is the latest version of the flagship Hermes series of LLMs by Nous Research"
+  },
+  {
+   "name": "hermes3:8b",
+   "label": "hermes3 (8b)",
+   "size": "~5.4 GB",
+   "tier": "mittel",
+   "description": "Hermes 3 is the latest version of the flagship Hermes series of LLMs by Nous Research"
+  },
+  {
+   "name": "hermes3:70b",
+   "label": "hermes3 (70b)",
+   "size": "~47 GB",
+   "tier": "groß",
+   "description": "Hermes 3 is the latest version of the flagship Hermes series of LLMs by Nous Research"
+  },
+  {
+   "name": "hermes3:405b",
+   "label": "hermes3 (405b)",
+   "size": "~271 GB",
+   "tier": "groß",
+   "description": "Hermes 3 is the latest version of the flagship Hermes series of LLMs by Nous Research"
   }
  ]
 }
