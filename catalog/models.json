@@ -506,13 +506,6 @@
    "description": "A large language model that can use text prompts to generate and discuss code."
   },
   {
-   "name": "mistral-nemo:12b",
-   "label": "mistral-nemo (12b)",
-   "size": "~8.0 GB",
-   "tier": "mittel",
-   "description": "A state-of-the-art 12B model with 128k context length, built by Mistral AI in collaboration with NVIDIA."
-  },
-  {
    "name": "qwen3.6:27b",
    "label": "qwen3.6 (27b)",
    "size": "~18 GB",
@@ -525,6 +518,13 @@
    "size": "~23 GB",
    "tier": "groß",
    "description": "Qwen3.6 delivers substantial upgrades in agentic coding and thinking preservation than previous Qwen models."
+  },
+  {
+   "name": "mistral-nemo:12b",
+   "label": "mistral-nemo (12b)",
+   "size": "~8.0 GB",
+   "tier": "mittel",
+   "description": "A state-of-the-art 12B model with 128k context length, built by Mistral AI in collaboration with NVIDIA."
   },
   {
    "name": "minicpm-v:8b",
@@ -604,20 +604,6 @@
    "description": "DeepSeek Coder is a capable coding model trained on two trillion code and natural language tokens."
   },
   {
-   "name": "llama3.3:70b",
-   "label": "llama3.3 (70b)",
-   "size": "~47 GB",
-   "tier": "groß",
-   "description": "New state of the art 70B model. Llama 3.3 70B offers similar performance compared to the Llama 3.1 405B model."
-  },
-  {
-   "name": "dolphin3:8b",
-   "label": "dolphin3 (8b)",
-   "size": "~5.4 GB",
-   "tier": "mittel",
-   "description": "Dolphin 3.0 Llama 3.1 8B 🐬 is the next generation of the Dolphin series of instruct-tuned models designed to be the ultimate general purpose local model, enabling coding,"
-  },
-  {
    "name": "qwen2.5vl:3b",
    "label": "qwen2.5vl (3b)",
    "size": "~2.0 GB",
@@ -644,6 +630,20 @@
    "size": "~48 GB",
    "tier": "groß",
    "description": "Flagship vision-language model of Qwen and also a significant leap from the previous Qwen2-VL."
+  },
+  {
+   "name": "llama3.3:70b",
+   "label": "llama3.3 (70b)",
+   "size": "~47 GB",
+   "tier": "groß",
+   "description": "New state of the art 70B model. Llama 3.3 70B offers similar performance compared to the Llama 3.1 405B model."
+  },
+  {
+   "name": "dolphin3:8b",
+   "label": "dolphin3 (8b)",
+   "size": "~5.4 GB",
+   "tier": "mittel",
+   "description": "Dolphin 3.0 Llama 3.1 8B 🐬 is the next generation of the Dolphin series of instruct-tuned models designed to be the ultimate general purpose local model, enabling coding,"
   },
   {
    "name": "smollm2:1.7b",
@@ -863,6 +863,13 @@
    "description": "QwQ is the reasoning model of the Qwen series."
   },
   {
+   "name": "smollm:1.7b",
+   "label": "smollm (1.7b)",
+   "size": "~1.1 GB",
+   "tier": "klein",
+   "description": "🪐 A family of small models with 135M, 360M, and 1.7B parameters, trained on a new high-quality dataset."
+  },
+  {
    "name": "cogito:3b",
    "label": "cogito (3b)",
    "size": "~2.0 GB",
@@ -896,13 +903,6 @@
    "size": "~47 GB",
    "tier": "groß",
    "description": "Cogito v1 Preview is a family of hybrid reasoning models by Deep Cogito that outperform the best available open models of the same size, including counterparts from LLaMA"
-  },
-  {
-   "name": "smollm:1.7b",
-   "label": "smollm (1.7b)",
-   "size": "~1.1 GB",
-   "tier": "klein",
-   "description": "🪐 A family of small models with 135M, 360M, and 1.7B parameters, trained on a new high-quality dataset."
   },
   {
    "name": "dolphin-llama3:8b",
@@ -940,18 +940,18 @@
    "description": "A new collection of open translation models built on Gemma 3, helping people communicate across 55 languages."
   },
   {
-   "name": "phi4-reasoning:14b",
-   "label": "phi4-reasoning (14b)",
-   "size": "~9.4 GB",
-   "tier": "groß",
-   "description": "Phi 4 reasoning and reasoning plus are 14-billion parameter open-weight reasoning models that rival much larger models on complex reasoning tasks."
-  },
-  {
    "name": "embeddinggemma",
    "label": "embeddinggemma",
    "size": "klein",
    "tier": "spezial",
    "description": "EmbeddingGemma is a 300M parameter embedding model from Google."
+  },
+  {
+   "name": "phi4-reasoning:14b",
+   "label": "phi4-reasoning (14b)",
+   "size": "~9.4 GB",
+   "tier": "groß",
+   "description": "Phi 4 reasoning and reasoning plus are 14-billion parameter open-weight reasoning models that rival much larger models on complex reasoning tasks."
   },
   {
    "name": "dolphin-mistral:7b",
@@ -968,32 +968,11 @@
    "description": "2.7B uncensored Dolphin model by Eric Hartford, based on the Phi language model by Microsoft Research."
   },
   {
-   "name": "hermes3:3b",
-   "label": "hermes3 (3b)",
-   "size": "~2.0 GB",
+   "name": "moondream:1.8b",
+   "label": "moondream (1.8b)",
+   "size": "~1.2 GB",
    "tier": "klein",
-   "description": "Hermes 3 is the latest version of the flagship Hermes series of LLMs by Nous Research"
-  },
-  {
-   "name": "hermes3:8b",
-   "label": "hermes3 (8b)",
-   "size": "~5.4 GB",
-   "tier": "mittel",
-   "description": "Hermes 3 is the latest version of the flagship Hermes series of LLMs by Nous Research"
-  },
-  {
-   "name": "hermes3:70b",
-   "label": "hermes3 (70b)",
-   "size": "~47 GB",
-   "tier": "groß",
-   "description": "Hermes 3 is the latest version of the flagship Hermes series of LLMs by Nous Research"
-  },
-  {
-   "name": "hermes3:405b",
-   "label": "hermes3 (405b)",
-   "size": "~271 GB",
-   "tier": "groß",
-   "description": "Hermes 3 is the latest version of the flagship Hermes series of LLMs by Nous Research"
+   "description": "moondream2 is a small vision language model designed to run efficiently on edge devices."
   }
  ]
 }
