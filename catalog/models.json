@@ -268,20 +268,6 @@
    "description": "The latest series of Code-Specific Qwen models, with significant improvements in code generation, code reasoning, and code fixing."
   },
   {
-   "name": "phi3:3.8b",
-   "label": "phi3 (3.8b)",
-   "size": "~2.5 GB",
-   "tier": "klein",
-   "description": "Phi-3 is a family of lightweight 3B (Mini) and 14B (Medium) state-of-the-art open models by Microsoft."
-  },
-  {
-   "name": "phi3:14b",
-   "label": "phi3 (14b)",
-   "size": "~9.4 GB",
-   "tier": "groß",
-   "description": "Phi-3 is a family of lightweight 3B (Mini) and 14B (Medium) state-of-the-art open models by Microsoft."
-  },
-  {
    "name": "qwen3.5:0.8b",
    "label": "qwen3.5 (0.8b)",
    "size": "~0.5 GB",
@@ -301,6 +287,20 @@
    "size": "~2.7 GB",
    "tier": "mittel",
    "description": "Qwen 3.5 is a family of open-source multimodal models that delivers exceptional utility and performance."
+  },
+  {
+   "name": "phi3:3.8b",
+   "label": "phi3 (3.8b)",
+   "size": "~2.5 GB",
+   "tier": "klein",
+   "description": "Phi-3 is a family of lightweight 3B (Mini) and 14B (Medium) state-of-the-art open models by Microsoft."
+  },
+  {
+   "name": "phi3:14b",
+   "label": "phi3 (14b)",
+   "size": "~9.4 GB",
+   "tier": "groß",
+   "description": "Phi-3 is a family of lightweight 3B (Mini) and 14B (Medium) state-of-the-art open models by Microsoft."
   },
   {
    "name": "llava:7b",
@@ -364,6 +364,20 @@
    "size": "~9.4 GB",
    "tier": "groß",
    "description": "Phi-4 is a 14B parameter, state-of-the-art open model from Microsoft."
+  },
+  {
+   "name": "gemma:2b",
+   "label": "gemma (2b)",
+   "size": "~1.3 GB",
+   "tier": "klein",
+   "description": "Gemma is a family of lightweight, state-of-the-art open models built by Google DeepMind. Updated to version 1.1"
+  },
+  {
+   "name": "gemma:7b",
+   "label": "gemma (7b)",
+   "size": "~4.7 GB",
+   "tier": "mittel",
+   "description": "Gemma is a family of lightweight, state-of-the-art open models built by Google DeepMind. Updated to version 1.1"
   },
   {
    "name": "qwen:0.5b",
@@ -436,20 +450,6 @@
    "description": "Llama 2 is a collection of foundation language models ranging from 7B to 70B parameters."
   },
   {
-   "name": "gemma:2b",
-   "label": "gemma (2b)",
-   "size": "~1.3 GB",
-   "tier": "klein",
-   "description": "Gemma is a family of lightweight, state-of-the-art open models built by Google DeepMind. Updated to version 1.1"
-  },
-  {
-   "name": "gemma:7b",
-   "label": "gemma (7b)",
-   "size": "~4.7 GB",
-   "tier": "mittel",
-   "description": "Gemma is a family of lightweight, state-of-the-art open models built by Google DeepMind. Updated to version 1.1"
-  },
-  {
    "name": "qwen2:0.5b",
    "label": "qwen2 (0.5b)",
    "size": "~0.3 GB",
@@ -478,6 +478,20 @@
    "description": "Qwen2 is a new series of large language models from Alibaba group"
   },
   {
+   "name": "qwen3.6:27b",
+   "label": "qwen3.6 (27b)",
+   "size": "~18 GB",
+   "tier": "groß",
+   "description": "Qwen3.6 delivers substantial upgrades in agentic coding and thinking preservation than previous Qwen models."
+  },
+  {
+   "name": "qwen3.6:35b",
+   "label": "qwen3.6 (35b)",
+   "size": "~23 GB",
+   "tier": "groß",
+   "description": "Qwen3.6 delivers substantial upgrades in agentic coding and thinking preservation than previous Qwen models."
+  },
+  {
    "name": "codellama:7b",
    "label": "codellama (7b)",
    "size": "~4.7 GB",
@@ -504,20 +518,6 @@
    "size": "~47 GB",
    "tier": "groß",
    "description": "A large language model that can use text prompts to generate and discuss code."
-  },
-  {
-   "name": "qwen3.6:27b",
-   "label": "qwen3.6 (27b)",
-   "size": "~18 GB",
-   "tier": "groß",
-   "description": "Qwen3.6 delivers substantial upgrades in agentic coding and thinking preservation than previous Qwen models."
-  },
-  {
-   "name": "qwen3.6:35b",
-   "label": "qwen3.6 (35b)",
-   "size": "~23 GB",
-   "tier": "groß",
-   "description": "Qwen3.6 delivers substantial upgrades in agentic coding and thinking preservation than previous Qwen models."
   },
   {
    "name": "mistral-nemo:12b",
@@ -716,20 +716,6 @@
    "description": "Mistral Small 3 sets a new benchmark in the “small” Large Language Models category below 70B."
   },
   {
-   "name": "granite3.1-moe:1b",
-   "label": "granite3.1-moe (1b)",
-   "size": "~0.7 GB",
-   "tier": "klein",
-   "description": "The IBM Granite 1B and 3B models are long-context mixture of experts (MoE) Granite models from IBM designed for low latency usage."
-  },
-  {
-   "name": "granite3.1-moe:3b",
-   "label": "granite3.1-moe (3b)",
-   "size": "~2.0 GB",
-   "tier": "klein",
-   "description": "The IBM Granite 1B and 3B models are long-context mixture of experts (MoE) Granite models from IBM designed for low latency usage."
-  },
-  {
    "name": "orca-mini:3b",
    "label": "orca-mini (3b)",
    "size": "~2.0 GB",
@@ -770,6 +756,20 @@
    "size": "~158 GB",
    "tier": "groß",
    "description": "An open-source Mixture-of-Experts code language model that achieves performance comparable to GPT4-Turbo in code-specific tasks."
+  },
+  {
+   "name": "granite3.1-moe:1b",
+   "label": "granite3.1-moe (1b)",
+   "size": "~0.7 GB",
+   "tier": "klein",
+   "description": "The IBM Granite 1B and 3B models are long-context mixture of experts (MoE) Granite models from IBM designed for low latency usage."
+  },
+  {
+   "name": "granite3.1-moe:3b",
+   "label": "granite3.1-moe (3b)",
+   "size": "~2.0 GB",
+   "tier": "klein",
+   "description": "The IBM Granite 1B and 3B models are long-context mixture of experts (MoE) Granite models from IBM designed for low latency usage."
   },
   {
    "name": "starcoder2:3b",
@@ -863,11 +863,46 @@
    "description": "QwQ is the reasoning model of the Qwen series."
   },
   {
+   "name": "translategemma:4b",
+   "label": "translategemma (4b)",
+   "size": "~2.7 GB",
+   "tier": "mittel",
+   "description": "A new collection of open translation models built on Gemma 3, helping people communicate across 55 languages."
+  },
+  {
+   "name": "translategemma:12b",
+   "label": "translategemma (12b)",
+   "size": "~8.0 GB",
+   "tier": "mittel",
+   "description": "A new collection of open translation models built on Gemma 3, helping people communicate across 55 languages."
+  },
+  {
+   "name": "translategemma:27b",
+   "label": "translategemma (27b)",
+   "size": "~18 GB",
+   "tier": "groß",
+   "description": "A new collection of open translation models built on Gemma 3, helping people communicate across 55 languages."
+  },
+  {
    "name": "smollm:1.7b",
    "label": "smollm (1.7b)",
    "size": "~1.1 GB",
    "tier": "klein",
    "description": "🪐 A family of small models with 135M, 360M, and 1.7B parameters, trained on a new high-quality dataset."
+  },
+  {
+   "name": "dolphin-llama3:8b",
+   "label": "dolphin-llama3 (8b)",
+   "size": "~5.4 GB",
+   "tier": "mittel",
+   "description": "Dolphin 2.9 is a new model with 8B and 70B sizes by Eric Hartford based on Llama 3 that has a variety of instruction, conversational, and coding skills."
+  },
+  {
+   "name": "dolphin-llama3:70b",
+   "label": "dolphin-llama3 (70b)",
+   "size": "~47 GB",
+   "tier": "groß",
+   "description": "Dolphin 2.9 is a new model with 8B and 70B sizes by Eric Hartford based on Llama 3 that has a variety of instruction, conversational, and coding skills."
   },
   {
    "name": "cogito:3b",
@@ -905,41 +940,6 @@
    "description": "Cogito v1 Preview is a family of hybrid reasoning models by Deep Cogito that outperform the best available open models of the same size, including counterparts from LLaMA"
   },
   {
-   "name": "dolphin-llama3:8b",
-   "label": "dolphin-llama3 (8b)",
-   "size": "~5.4 GB",
-   "tier": "mittel",
-   "description": "Dolphin 2.9 is a new model with 8B and 70B sizes by Eric Hartford based on Llama 3 that has a variety of instruction, conversational, and coding skills."
-  },
-  {
-   "name": "dolphin-llama3:70b",
-   "label": "dolphin-llama3 (70b)",
-   "size": "~47 GB",
-   "tier": "groß",
-   "description": "Dolphin 2.9 is a new model with 8B and 70B sizes by Eric Hartford based on Llama 3 that has a variety of instruction, conversational, and coding skills."
-  },
-  {
-   "name": "translategemma:4b",
-   "label": "translategemma (4b)",
-   "size": "~2.7 GB",
-   "tier": "mittel",
-   "description": "A new collection of open translation models built on Gemma 3, helping people communicate across 55 languages."
-  },
-  {
-   "name": "translategemma:12b",
-   "label": "translategemma (12b)",
-   "size": "~8.0 GB",
-   "tier": "mittel",
-   "description": "A new collection of open translation models built on Gemma 3, helping people communicate across 55 languages."
-  },
-  {
-   "name": "translategemma:27b",
-   "label": "translategemma (27b)",
-   "size": "~18 GB",
-   "tier": "groß",
-   "description": "A new collection of open translation models built on Gemma 3, helping people communicate across 55 languages."
-  },
-  {
    "name": "embeddinggemma",
    "label": "embeddinggemma",
    "size": "klein",
@@ -954,6 +954,13 @@
    "description": "Phi 4 reasoning and reasoning plus are 14-billion parameter open-weight reasoning models that rival much larger models on complex reasoning tasks."
   },
   {
+   "name": "moondream:1.8b",
+   "label": "moondream (1.8b)",
+   "size": "~1.2 GB",
+   "tier": "klein",
+   "description": "moondream2 is a small vision language model designed to run efficiently on edge devices."
+  },
+  {
    "name": "dolphin-mistral:7b",
    "label": "dolphin-mistral (7b)",
    "size": "~4.7 GB",
@@ -961,18 +968,32 @@
    "description": "The uncensored Dolphin model based on Mistral that excels at coding tasks. Updated to version 2.8."
   },
   {
-   "name": "dolphin-phi:2.7b",
-   "label": "dolphin-phi (2.7b)",
-   "size": "~1.8 GB",
+   "name": "hermes3:3b",
+   "label": "hermes3 (3b)",
+   "size": "~2.0 GB",
    "tier": "klein",
-   "description": "2.7B uncensored Dolphin model by Eric Hartford, based on the Phi language model by Microsoft Research."
+   "description": "Hermes 3 is the latest version of the flagship Hermes series of LLMs by Nous Research"
   },
   {
-   "name": "moondream:1.8b",
-   "label": "moondream (1.8b)",
-   "size": "~1.2 GB",
-   "tier": "klein",
-   "description": "moondream2 is a small vision language model designed to run efficiently on edge devices."
+   "name": "hermes3:8b",
+   "label": "hermes3 (8b)",
+   "size": "~5.4 GB",
+   "tier": "mittel",
+   "description": "Hermes 3 is the latest version of the flagship Hermes series of LLMs by Nous Research"
+  },
+  {
+   "name": "hermes3:70b",
+   "label": "hermes3 (70b)",
+   "size": "~47 GB",
+   "tier": "groß",
+   "description": "Hermes 3 is the latest version of the flagship Hermes series of LLMs by Nous Research"
+  },
+  {
+   "name": "hermes3:405b",
+   "label": "hermes3 (405b)",
+   "size": "~271 GB",
+   "tier": "groß",
+   "description": "Hermes 3 is the latest version of the flagship Hermes series of LLMs by Nous Research"
   }
  ]
 }
