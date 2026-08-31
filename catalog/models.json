@@ -359,13 +359,6 @@
    "description": "Alibaba's performant long context models for agentic and coding tasks."
   },
   {
-   "name": "phi4:14b",
-   "label": "phi4 (14b)",
-   "size": "~9.4 GB",
-   "tier": "groß",
-   "description": "Phi-4 is a 14B parameter, state-of-the-art open model from Microsoft."
-  },
-  {
    "name": "gemma:2b",
    "label": "gemma (2b)",
    "size": "~1.3 GB",
@@ -378,6 +371,13 @@
    "size": "~4.7 GB",
    "tier": "mittel",
    "description": "Gemma is a family of lightweight, state-of-the-art open models built by Google DeepMind. Updated to version 1.1"
+  },
+  {
+   "name": "phi4:14b",
+   "label": "phi4 (14b)",
+   "size": "~9.4 GB",
+   "tier": "groß",
+   "description": "Phi-4 is a 14B parameter, state-of-the-art open model from Microsoft."
   },
   {
    "name": "qwen:0.5b",
@@ -450,6 +450,20 @@
    "description": "Llama 2 is a collection of foundation language models ranging from 7B to 70B parameters."
   },
   {
+   "name": "qwen3.6:27b",
+   "label": "qwen3.6 (27b)",
+   "size": "~18 GB",
+   "tier": "groß",
+   "description": "Qwen3.6 delivers substantial upgrades in agentic coding and thinking preservation than previous Qwen models."
+  },
+  {
+   "name": "qwen3.6:35b",
+   "label": "qwen3.6 (35b)",
+   "size": "~23 GB",
+   "tier": "groß",
+   "description": "Qwen3.6 delivers substantial upgrades in agentic coding and thinking preservation than previous Qwen models."
+  },
+  {
    "name": "qwen2:0.5b",
    "label": "qwen2 (0.5b)",
    "size": "~0.3 GB",
@@ -476,20 +490,6 @@
    "size": "~48 GB",
    "tier": "groß",
    "description": "Qwen2 is a new series of large language models from Alibaba group"
-  },
-  {
-   "name": "qwen3.6:27b",
-   "label": "qwen3.6 (27b)",
-   "size": "~18 GB",
-   "tier": "groß",
-   "description": "Qwen3.6 delivers substantial upgrades in agentic coding and thinking preservation than previous Qwen models."
-  },
-  {
-   "name": "qwen3.6:35b",
-   "label": "qwen3.6 (35b)",
-   "size": "~23 GB",
-   "tier": "groß",
-   "description": "Qwen3.6 delivers substantial upgrades in agentic coding and thinking preservation than previous Qwen models."
   },
   {
    "name": "codellama:7b",
@@ -527,20 +527,6 @@
    "description": "A state-of-the-art 12B model with 128k context length, built by Mistral AI in collaboration with NVIDIA."
   },
   {
-   "name": "minicpm-v:8b",
-   "label": "minicpm-v (8b)",
-   "size": "~5.4 GB",
-   "tier": "mittel",
-   "description": "A series of multimodal LLMs (MLLMs) designed for vision-language understanding."
-  },
-  {
-   "name": "tinyllama:1.1b",
-   "label": "tinyllama (1.1b)",
-   "size": "~0.7 GB",
-   "tier": "klein",
-   "description": "The TinyLlama project is an open endeavor to train a compact 1.1B Llama model on 3 trillion tokens."
-  },
-  {
    "name": "qwen3-vl:2b",
    "label": "qwen3-vl (2b)",
    "size": "~1.3 GB",
@@ -569,6 +555,20 @@
    "description": "The most powerful vision-language model in the Qwen model family to date."
   },
   {
+   "name": "tinyllama:1.1b",
+   "label": "tinyllama (1.1b)",
+   "size": "~0.7 GB",
+   "tier": "klein",
+   "description": "The TinyLlama project is an open endeavor to train a compact 1.1B Llama model on 3 trillion tokens."
+  },
+  {
+   "name": "minicpm-v:8b",
+   "label": "minicpm-v (8b)",
+   "size": "~5.4 GB",
+   "tier": "mittel",
+   "description": "A series of multimodal LLMs (MLLMs) designed for vision-language understanding."
+  },
+  {
    "name": "llama3.2-vision:11b",
    "label": "llama3.2-vision (11b)",
    "size": "~7.4 GB",
@@ -581,27 +581,6 @@
    "size": "~60 GB",
    "tier": "groß",
    "description": "Llama 3.2 Vision is a collection of instruction-tuned image reasoning generative models in 11B and 90B sizes."
-  },
-  {
-   "name": "deepseek-coder:1.3b",
-   "label": "deepseek-coder (1.3b)",
-   "size": "~0.9 GB",
-   "tier": "klein",
-   "description": "DeepSeek Coder is a capable coding model trained on two trillion code and natural language tokens."
-  },
-  {
-   "name": "deepseek-coder:6.7b",
-   "label": "deepseek-coder (6.7b)",
-   "size": "~4.5 GB",
-   "tier": "mittel",
-   "description": "DeepSeek Coder is a capable coding model trained on two trillion code and natural language tokens."
-  },
-  {
-   "name": "deepseek-coder:33b",
-   "label": "deepseek-coder (33b)",
-   "size": "~22 GB",
-   "tier": "groß",
-   "description": "DeepSeek Coder is a capable coding model trained on two trillion code and natural language tokens."
   },
   {
    "name": "qwen2.5vl:3b",
@@ -632,6 +611,27 @@
    "description": "Flagship vision-language model of Qwen and also a significant leap from the previous Qwen2-VL."
   },
   {
+   "name": "deepseek-coder:1.3b",
+   "label": "deepseek-coder (1.3b)",
+   "size": "~0.9 GB",
+   "tier": "klein",
+   "description": "DeepSeek Coder is a capable coding model trained on two trillion code and natural language tokens."
+  },
+  {
+   "name": "deepseek-coder:6.7b",
+   "label": "deepseek-coder (6.7b)",
+   "size": "~4.5 GB",
+   "tier": "mittel",
+   "description": "DeepSeek Coder is a capable coding model trained on two trillion code and natural language tokens."
+  },
+  {
+   "name": "deepseek-coder:33b",
+   "label": "deepseek-coder (33b)",
+   "size": "~22 GB",
+   "tier": "groß",
+   "description": "DeepSeek Coder is a capable coding model trained on two trillion code and natural language tokens."
+  },
+  {
    "name": "llama3.3:70b",
    "label": "llama3.3 (70b)",
    "size": "~47 GB",
@@ -660,6 +660,13 @@
    "description": "A strong Mixture-of-Experts (MoE) language model with 671B total parameters with 37B activated for each token."
   },
   {
+   "name": "qwen3-embedding",
+   "label": "qwen3-embedding",
+   "size": "klein",
+   "tier": "spezial",
+   "description": "Building upon the foundational models of the Qwen3 series, Qwen3 Embedding provides a comprehensive range of text embeddings models in various sizes"
+  },
+  {
    "name": "olmo2:7b",
    "label": "olmo2 (7b)",
    "size": "~4.7 GB",
@@ -672,13 +679,6 @@
    "size": "~8.7 GB",
    "tier": "mittel",
    "description": "OLMo 2 is a new family of 7B and 13B models trained on up to 5T tokens. These models are on par with or better than equivalently sized fully open models, and competitive "
-  },
-  {
-   "name": "qwen3-embedding",
-   "label": "qwen3-embedding",
-   "size": "klein",
-   "tier": "spezial",
-   "description": "Building upon the foundational models of the Qwen3 series, Qwen3 Embedding provides a comprehensive range of text embeddings models in various sizes"
   },
   {
    "name": "codegemma:2b",
@@ -716,6 +716,20 @@
    "description": "Mistral Small 3 sets a new benchmark in the “small” Large Language Models category below 70B."
   },
   {
+   "name": "deepseek-coder-v2:16b",
+   "label": "deepseek-coder-v2 (16b)",
+   "size": "~11 GB",
+   "tier": "groß",
+   "description": "An open-source Mixture-of-Experts code language model that achieves performance comparable to GPT4-Turbo in code-specific tasks."
+  },
+  {
+   "name": "deepseek-coder-v2:236b",
+   "label": "deepseek-coder-v2 (236b)",
+   "size": "~158 GB",
+   "tier": "groß",
+   "description": "An open-source Mixture-of-Experts code language model that achieves performance comparable to GPT4-Turbo in code-specific tasks."
+  },
+  {
    "name": "orca-mini:3b",
    "label": "orca-mini (3b)",
    "size": "~2.0 GB",
@@ -742,20 +756,6 @@
    "size": "~47 GB",
    "tier": "groß",
    "description": "A general-purpose model ranging from 3 billion parameters to 70 billion, suitable for entry-level hardware."
-  },
-  {
-   "name": "deepseek-coder-v2:16b",
-   "label": "deepseek-coder-v2 (16b)",
-   "size": "~11 GB",
-   "tier": "groß",
-   "description": "An open-source Mixture-of-Experts code language model that achieves performance comparable to GPT4-Turbo in code-specific tasks."
-  },
-  {
-   "name": "deepseek-coder-v2:236b",
-   "label": "deepseek-coder-v2 (236b)",
-   "size": "~158 GB",
-   "tier": "groß",
-   "description": "An open-source Mixture-of-Experts code language model that achieves performance comparable to GPT4-Turbo in code-specific tasks."
   },
   {
    "name": "granite3.1-moe:1b",
@@ -947,18 +947,18 @@
    "description": "EmbeddingGemma is a 300M parameter embedding model from Google."
   },
   {
-   "name": "phi4-reasoning:14b",
-   "label": "phi4-reasoning (14b)",
-   "size": "~9.4 GB",
-   "tier": "groß",
-   "description": "Phi 4 reasoning and reasoning plus are 14-billion parameter open-weight reasoning models that rival much larger models on complex reasoning tasks."
-  },
-  {
    "name": "moondream:1.8b",
    "label": "moondream (1.8b)",
    "size": "~1.2 GB",
    "tier": "klein",
    "description": "moondream2 is a small vision language model designed to run efficiently on edge devices."
+  },
+  {
+   "name": "phi4-reasoning:14b",
+   "label": "phi4-reasoning (14b)",
+   "size": "~9.4 GB",
+   "tier": "groß",
+   "description": "Phi 4 reasoning and reasoning plus are 14-billion parameter open-weight reasoning models that rival much larger models on complex reasoning tasks."
   },
   {
    "name": "dolphin-mistral:7b",
