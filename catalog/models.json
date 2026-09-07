@@ -373,13 +373,6 @@
    "description": "Gemma is a family of lightweight, state-of-the-art open models built by Google DeepMind. Updated to version 1.1"
   },
   {
-   "name": "phi4:14b",
-   "label": "phi4 (14b)",
-   "size": "~9.4 GB",
-   "tier": "groß",
-   "description": "Phi-4 is a 14B parameter, state-of-the-art open model from Microsoft."
-  },
-  {
    "name": "qwen:0.5b",
    "label": "qwen (0.5b)",
    "size": "~0.3 GB",
@@ -427,6 +420,13 @@
    "size": "~48 GB",
    "tier": "groß",
    "description": "Qwen 1.5 is a series of large language models by Alibaba Cloud spanning from 0.5B to 110B parameters"
+  },
+  {
+   "name": "phi4:14b",
+   "label": "phi4 (14b)",
+   "size": "~9.4 GB",
+   "tier": "groß",
+   "description": "Phi-4 is a 14B parameter, state-of-the-art open model from Microsoft."
   },
   {
    "name": "llama2:7b",
@@ -520,13 +520,6 @@
    "description": "A large language model that can use text prompts to generate and discuss code."
   },
   {
-   "name": "mistral-nemo:12b",
-   "label": "mistral-nemo (12b)",
-   "size": "~8.0 GB",
-   "tier": "mittel",
-   "description": "A state-of-the-art 12B model with 128k context length, built by Mistral AI in collaboration with NVIDIA."
-  },
-  {
    "name": "qwen3-vl:2b",
    "label": "qwen3-vl (2b)",
    "size": "~1.3 GB",
@@ -553,6 +546,13 @@
    "size": "~20 GB",
    "tier": "groß",
    "description": "The most powerful vision-language model in the Qwen model family to date."
+  },
+  {
+   "name": "mistral-nemo:12b",
+   "label": "mistral-nemo (12b)",
+   "size": "~8.0 GB",
+   "tier": "mittel",
+   "description": "A state-of-the-art 12B model with 128k context length, built by Mistral AI in collaboration with NVIDIA."
   },
   {
    "name": "tinyllama:1.1b",
@@ -653,18 +653,18 @@
    "description": "SmolLM2 is a family of compact language models available in three size: 135M, 360M, and 1.7B parameters."
   },
   {
-   "name": "deepseek-v3:671b",
-   "label": "deepseek-v3 (671b)",
-   "size": "~450 GB",
-   "tier": "groß",
-   "description": "A strong Mixture-of-Experts (MoE) language model with 671B total parameters with 37B activated for each token."
-  },
-  {
    "name": "qwen3-embedding",
    "label": "qwen3-embedding",
    "size": "klein",
    "tier": "spezial",
    "description": "Building upon the foundational models of the Qwen3 series, Qwen3 Embedding provides a comprehensive range of text embeddings models in various sizes"
+  },
+  {
+   "name": "deepseek-v3:671b",
+   "label": "deepseek-v3 (671b)",
+   "size": "~450 GB",
+   "tier": "groß",
+   "description": "A strong Mixture-of-Experts (MoE) language model with 671B total parameters with 37B activated for each token."
   },
   {
    "name": "olmo2:7b",
@@ -968,32 +968,18 @@
    "description": "The uncensored Dolphin model based on Mistral that excels at coding tasks. Updated to version 2.8."
   },
   {
-   "name": "hermes3:3b",
-   "label": "hermes3 (3b)",
-   "size": "~2.0 GB",
-   "tier": "klein",
-   "description": "Hermes 3 is the latest version of the flagship Hermes series of LLMs by Nous Research"
-  },
-  {
-   "name": "hermes3:8b",
-   "label": "hermes3 (8b)",
-   "size": "~5.4 GB",
+   "name": "sqlcoder:7b",
+   "label": "sqlcoder (7b)",
+   "size": "~4.7 GB",
    "tier": "mittel",
-   "description": "Hermes 3 is the latest version of the flagship Hermes series of LLMs by Nous Research"
+   "description": "SQLCoder is a code completion model fined-tuned on StarCoder for SQL generation tasks"
   },
   {
-   "name": "hermes3:70b",
-   "label": "hermes3 (70b)",
-   "size": "~47 GB",
+   "name": "sqlcoder:15b",
+   "label": "sqlcoder (15b)",
+   "size": "~10 GB",
    "tier": "groß",
-   "description": "Hermes 3 is the latest version of the flagship Hermes series of LLMs by Nous Research"
-  },
-  {
-   "name": "hermes3:405b",
-   "label": "hermes3 (405b)",
-   "size": "~271 GB",
-   "tier": "groß",
-   "description": "Hermes 3 is the latest version of the flagship Hermes series of LLMs by Nous Research"
+   "description": "SQLCoder is a code completion model fined-tuned on StarCoder for SQL generation tasks"
   }
  ]
 }
