@@ -849,20 +849,6 @@
    "description": "An update to Mistral Small that improves on function calling, instruction following, and less repetition errors."
   },
   {
-   "name": "llava-llama3:8b",
-   "label": "llava-llama3 (8b)",
-   "size": "~5.4 GB",
-   "tier": "mittel",
-   "description": "A LLaVA model fine-tuned from Llama 3 Instruct with better scores in several benchmarks."
-  },
-  {
-   "name": "qwq:32b",
-   "label": "qwq (32b)",
-   "size": "~21 GB",
-   "tier": "groß",
-   "description": "QwQ is the reasoning model of the Qwen series."
-  },
-  {
    "name": "translategemma:4b",
    "label": "translategemma (4b)",
    "size": "~2.7 GB",
@@ -882,6 +868,20 @@
    "size": "~18 GB",
    "tier": "groß",
    "description": "A new collection of open translation models built on Gemma 3, helping people communicate across 55 languages."
+  },
+  {
+   "name": "llava-llama3:8b",
+   "label": "llava-llama3 (8b)",
+   "size": "~5.4 GB",
+   "tier": "mittel",
+   "description": "A LLaVA model fine-tuned from Llama 3 Instruct with better scores in several benchmarks."
+  },
+  {
+   "name": "qwq:32b",
+   "label": "qwq (32b)",
+   "size": "~21 GB",
+   "tier": "groß",
+   "description": "QwQ is the reasoning model of the Qwen series."
   },
   {
    "name": "smollm:1.7b",
@@ -947,25 +947,18 @@
    "description": "EmbeddingGemma is a 300M parameter embedding model from Google."
   },
   {
+   "name": "qwen3.8:27b",
+   "label": "qwen3.8 (27b)",
+   "size": "~18 GB",
+   "tier": "groß",
+   "description": "Qwen3.8 delivers substantial gains across coding, professional work, research, and long-horizon agentic tasks."
+  },
+  {
    "name": "moondream:1.8b",
    "label": "moondream (1.8b)",
    "size": "~1.2 GB",
    "tier": "klein",
    "description": "moondream2 is a small vision language model designed to run efficiently on edge devices."
-  },
-  {
-   "name": "phi4-reasoning:14b",
-   "label": "phi4-reasoning (14b)",
-   "size": "~9.4 GB",
-   "tier": "groß",
-   "description": "Phi 4 reasoning and reasoning plus are 14-billion parameter open-weight reasoning models that rival much larger models on complex reasoning tasks."
-  },
-  {
-   "name": "dolphin-mistral:7b",
-   "label": "dolphin-mistral (7b)",
-   "size": "~4.7 GB",
-   "tier": "mittel",
-   "description": "The uncensored Dolphin model based on Mistral that excels at coding tasks. Updated to version 2.8."
   },
   {
    "name": "sqlcoder:7b",
