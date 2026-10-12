@@ -639,18 +639,18 @@
    "description": "DeepSeek Coder is a capable coding model trained on two trillion code and natural language tokens."
   },
   {
-   "name": "llama3.3:70b",
-   "label": "llama3.3 (70b)",
-   "size": "~47 GB",
-   "tier": "groß",
-   "description": "New state of the art 70B model. Llama 3.3 70B offers similar performance compared to the Llama 3.1 405B model."
-  },
-  {
    "name": "qwen3-embedding",
    "label": "qwen3-embedding",
    "size": "klein",
    "tier": "spezial",
    "description": "Building upon the foundational models of the Qwen3 series, Qwen3 Embedding provides a comprehensive range of text embeddings models in various sizes"
+  },
+  {
+   "name": "llama3.3:70b",
+   "label": "llama3.3 (70b)",
+   "size": "~47 GB",
+   "tier": "groß",
+   "description": "New state of the art 70B model. Llama 3.3 70B offers similar performance compared to the Llama 3.1 405B model."
   },
   {
    "name": "dolphin3:8b",
@@ -688,6 +688,13 @@
    "description": "OLMo 2 is a new family of 7B and 13B models trained on up to 5T tokens. These models are on par with or better than equivalently sized fully open models, and competitive "
   },
   {
+   "name": "qwen3.8:27b",
+   "label": "qwen3.8 (27b)",
+   "size": "~18 GB",
+   "tier": "groß",
+   "description": "Qwen3.8 delivers substantial gains across coding, professional work, research, and long-horizon agentic tasks."
+  },
+  {
    "name": "codegemma:2b",
    "label": "codegemma (2b)",
    "size": "~1.3 GB",
@@ -700,13 +707,6 @@
    "size": "~4.7 GB",
    "tier": "mittel",
    "description": "CodeGemma is a collection of powerful, lightweight models that can perform a variety of coding tasks like fill-in-the-middle code completion, code generation, natural lan"
-  },
-  {
-   "name": "qwen3.8:27b",
-   "label": "qwen3.8 (27b)",
-   "size": "~18 GB",
-   "tier": "groß",
-   "description": "Qwen3.8 delivers substantial gains across coding, professional work, research, and long-horizon agentic tasks."
   },
   {
    "name": "deepseek-coder-v2:16b",
