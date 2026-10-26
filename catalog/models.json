@@ -121,34 +121,6 @@
    "description": "Qwen2.5 models are pretrained on Alibaba's latest large-scale dataset, encompassing up to 18 trillion tokens. The model supports up to 128K tokens and has multilingual su"
   },
   {
-   "name": "gemma3:1b",
-   "label": "gemma3 (1b)",
-   "size": "~0.7 GB",
-   "tier": "klein",
-   "description": "The current, most capable model that runs on a single GPU."
-  },
-  {
-   "name": "gemma3:4b",
-   "label": "gemma3 (4b)",
-   "size": "~2.7 GB",
-   "tier": "mittel",
-   "description": "The current, most capable model that runs on a single GPU."
-  },
-  {
-   "name": "gemma3:12b",
-   "label": "gemma3 (12b)",
-   "size": "~8.0 GB",
-   "tier": "mittel",
-   "description": "The current, most capable model that runs on a single GPU."
-  },
-  {
-   "name": "gemma3:27b",
-   "label": "gemma3 (27b)",
-   "size": "~18 GB",
-   "tier": "groß",
-   "description": "The current, most capable model that runs on a single GPU."
-  },
-  {
    "name": "qwen3:0.6b",
    "label": "qwen3 (0.6b)",
    "size": "~0.4 GB",
@@ -182,6 +154,34 @@
    "size": "~9.4 GB",
    "tier": "groß",
    "description": "Qwen3 is the latest generation of large language models in Qwen series, offering a comprehensive suite of dense and mixture-of-experts (MoE) models."
+  },
+  {
+   "name": "gemma3:1b",
+   "label": "gemma3 (1b)",
+   "size": "~0.7 GB",
+   "tier": "klein",
+   "description": "The current, most capable model that runs on a single GPU."
+  },
+  {
+   "name": "gemma3:4b",
+   "label": "gemma3 (4b)",
+   "size": "~2.7 GB",
+   "tier": "mittel",
+   "description": "The current, most capable model that runs on a single GPU."
+  },
+  {
+   "name": "gemma3:12b",
+   "label": "gemma3 (12b)",
+   "size": "~8.0 GB",
+   "tier": "mittel",
+   "description": "The current, most capable model that runs on a single GPU."
+  },
+  {
+   "name": "gemma3:27b",
+   "label": "gemma3 (27b)",
+   "size": "~18 GB",
+   "tier": "groß",
+   "description": "The current, most capable model that runs on a single GPU."
   },
   {
    "name": "gemma2:2b",
@@ -527,6 +527,13 @@
    "description": "The most powerful vision-language model in the Qwen model family to date."
   },
   {
+   "name": "tinyllama:1.1b",
+   "label": "tinyllama (1.1b)",
+   "size": "~0.7 GB",
+   "tier": "klein",
+   "description": "The TinyLlama project is an open endeavor to train a compact 1.1B Llama model on 3 trillion tokens."
+  },
+  {
    "name": "qwen2:0.5b",
    "label": "qwen2 (0.5b)",
    "size": "~0.3 GB",
@@ -555,39 +562,11 @@
    "description": "Qwen2 is a new series of large language models from Alibaba group"
   },
   {
-   "name": "tinyllama:1.1b",
-   "label": "tinyllama (1.1b)",
-   "size": "~0.7 GB",
-   "tier": "klein",
-   "description": "The TinyLlama project is an open endeavor to train a compact 1.1B Llama model on 3 trillion tokens."
-  },
-  {
    "name": "mistral-nemo:12b",
    "label": "mistral-nemo (12b)",
    "size": "~8.0 GB",
    "tier": "mittel",
    "description": "A state-of-the-art 12B model with 128k context length, built by Mistral AI in collaboration with NVIDIA."
-  },
-  {
-   "name": "minicpm-v:8b",
-   "label": "minicpm-v (8b)",
-   "size": "~5.4 GB",
-   "tier": "mittel",
-   "description": "A series of multimodal LLMs (MLLMs) designed for vision-language understanding."
-  },
-  {
-   "name": "llama3.2-vision:11b",
-   "label": "llama3.2-vision (11b)",
-   "size": "~7.4 GB",
-   "tier": "mittel",
-   "description": "Llama 3.2 Vision is a collection of instruction-tuned image reasoning generative models in 11B and 90B sizes."
-  },
-  {
-   "name": "llama3.2-vision:90b",
-   "label": "llama3.2-vision (90b)",
-   "size": "~60 GB",
-   "tier": "groß",
-   "description": "Llama 3.2 Vision is a collection of instruction-tuned image reasoning generative models in 11B and 90B sizes."
   },
   {
    "name": "qwen2.5vl:3b",
@@ -618,6 +597,34 @@
    "description": "Flagship vision-language model of Qwen and also a significant leap from the previous Qwen2-VL."
   },
   {
+   "name": "minicpm-v:8b",
+   "label": "minicpm-v (8b)",
+   "size": "~5.4 GB",
+   "tier": "mittel",
+   "description": "A series of multimodal LLMs (MLLMs) designed for vision-language understanding."
+  },
+  {
+   "name": "llama3.2-vision:11b",
+   "label": "llama3.2-vision (11b)",
+   "size": "~7.4 GB",
+   "tier": "mittel",
+   "description": "Llama 3.2 Vision is a collection of instruction-tuned image reasoning generative models in 11B and 90B sizes."
+  },
+  {
+   "name": "llama3.2-vision:90b",
+   "label": "llama3.2-vision (90b)",
+   "size": "~60 GB",
+   "tier": "groß",
+   "description": "Llama 3.2 Vision is a collection of instruction-tuned image reasoning generative models in 11B and 90B sizes."
+  },
+  {
+   "name": "qwen3.8:27b",
+   "label": "qwen3.8 (27b)",
+   "size": "~18 GB",
+   "tier": "groß",
+   "description": "Qwen3.8 delivers substantial gains across coding, professional work, research, and long-horizon agentic tasks."
+  },
+  {
    "name": "deepseek-coder:1.3b",
    "label": "deepseek-coder (1.3b)",
    "size": "~0.9 GB",
@@ -644,13 +651,6 @@
    "size": "klein",
    "tier": "spezial",
    "description": "Building upon the foundational models of the Qwen3 series, Qwen3 Embedding provides a comprehensive range of text embeddings models in various sizes"
-  },
-  {
-   "name": "qwen3.8:27b",
-   "label": "qwen3.8 (27b)",
-   "size": "~18 GB",
-   "tier": "groß",
-   "description": "Qwen3.8 delivers substantial gains across coding, professional work, research, and long-horizon agentic tasks."
   },
   {
    "name": "llama3.3:70b",
@@ -695,20 +695,6 @@
    "description": "OLMo 2 is a new family of 7B and 13B models trained on up to 5T tokens. These models are on par with or better than equivalently sized fully open models, and competitive "
   },
   {
-   "name": "codegemma:2b",
-   "label": "codegemma (2b)",
-   "size": "~1.3 GB",
-   "tier": "klein",
-   "description": "CodeGemma is a collection of powerful, lightweight models that can perform a variety of coding tasks like fill-in-the-middle code completion, code generation, natural lan"
-  },
-  {
-   "name": "codegemma:7b",
-   "label": "codegemma (7b)",
-   "size": "~4.7 GB",
-   "tier": "mittel",
-   "description": "CodeGemma is a collection of powerful, lightweight models that can perform a variety of coding tasks like fill-in-the-middle code completion, code generation, natural lan"
-  },
-  {
    "name": "deepseek-coder-v2:16b",
    "label": "deepseek-coder-v2 (16b)",
    "size": "~11 GB",
@@ -723,6 +709,27 @@
    "description": "An open-source Mixture-of-Experts code language model that achieves performance comparable to GPT4-Turbo in code-specific tasks."
   },
   {
+   "name": "codegemma:2b",
+   "label": "codegemma (2b)",
+   "size": "~1.3 GB",
+   "tier": "klein",
+   "description": "CodeGemma is a collection of powerful, lightweight models that can perform a variety of coding tasks like fill-in-the-middle code completion, code generation, natural lan"
+  },
+  {
+   "name": "codegemma:7b",
+   "label": "codegemma (7b)",
+   "size": "~4.7 GB",
+   "tier": "mittel",
+   "description": "CodeGemma is a collection of powerful, lightweight models that can perform a variety of coding tasks like fill-in-the-middle code completion, code generation, natural lan"
+  },
+  {
+   "name": "snowflake-arctic-embed",
+   "label": "snowflake-arctic-embed",
+   "size": "klein",
+   "tier": "spezial",
+   "description": "A suite of text embedding models by Snowflake, optimized for performance."
+  },
+  {
    "name": "mistral-small:22b",
    "label": "mistral-small (22b)",
    "size": "~15 GB",
@@ -735,13 +742,6 @@
    "size": "~16 GB",
    "tier": "groß",
    "description": "Mistral Small 3 sets a new benchmark in the “small” Large Language Models category below 70B."
-  },
-  {
-   "name": "snowflake-arctic-embed",
-   "label": "snowflake-arctic-embed",
-   "size": "klein",
-   "tier": "spezial",
-   "description": "A suite of text embedding models by Snowflake, optimized for performance."
   },
   {
    "name": "orca-mini:3b",
@@ -814,20 +814,6 @@
    "description": "NVIDIA Nemotron 3 Super is a 120B open MoE model activating just 12B parameters to deliver maximum compute efficiency and accuracy for complex multi-agent applications."
   },
   {
-   "name": "llama2-uncensored:7b",
-   "label": "llama2-uncensored (7b)",
-   "size": "~4.7 GB",
-   "tier": "mittel",
-   "description": "Uncensored Llama 2 model by George Sung and Jarrad Hope."
-  },
-  {
-   "name": "llama2-uncensored:70b",
-   "label": "llama2-uncensored (70b)",
-   "size": "~47 GB",
-   "tier": "groß",
-   "description": "Uncensored Llama 2 model by George Sung and Jarrad Hope."
-  },
-  {
    "name": "translategemma:4b",
    "label": "translategemma (4b)",
    "size": "~2.7 GB",
@@ -847,6 +833,20 @@
    "size": "~18 GB",
    "tier": "groß",
    "description": "A new collection of open translation models built on Gemma 3, helping people communicate across 55 languages."
+  },
+  {
+   "name": "llama2-uncensored:7b",
+   "label": "llama2-uncensored (7b)",
+   "size": "~4.7 GB",
+   "tier": "mittel",
+   "description": "Uncensored Llama 2 model by George Sung and Jarrad Hope."
+  },
+  {
+   "name": "llama2-uncensored:70b",
+   "label": "llama2-uncensored (70b)",
+   "size": "~47 GB",
+   "tier": "groß",
+   "description": "Uncensored Llama 2 model by George Sung and Jarrad Hope."
   },
   {
    "name": "falcon3:1b",
@@ -910,6 +910,13 @@
    "size": "~1.1 GB",
    "tier": "klein",
    "description": "🪐 A family of small models with 135M, 360M, and 1.7B parameters, trained on a new high-quality dataset."
+  },
+  {
+   "name": "devstral-small-2:24b",
+   "label": "devstral-small-2 (24b)",
+   "size": "~16 GB",
+   "tier": "groß",
+   "description": "24B model that excels at using tools to explore codebases, editing multiple files and power software engineering agents."
   },
   {
    "name": "dolphin-llama3:8b",
@@ -980,13 +987,6 @@
    "size": "~1.2 GB",
    "tier": "klein",
    "description": "moondream2 is a small vision language model designed to run efficiently on edge devices."
-  },
-  {
-   "name": "devstral-small-2:24b",
-   "label": "devstral-small-2 (24b)",
-   "size": "~16 GB",
-   "tier": "groß",
-   "description": "24B model that excels at using tools to explore codebases, editing multiple files and power software engineering agents."
   }
  ]
 }
