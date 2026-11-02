@@ -23,6 +23,13 @@
    "description": "Llama 3.1 is a new state-of-the-art model from Meta available in 8B, 70B and 405B parameter sizes."
   },
   {
+   "name": "nomic-embed-text",
+   "label": "nomic-embed-text",
+   "size": "klein",
+   "tier": "spezial",
+   "description": "A high-performing open embedding model with a large token context window."
+  },
+  {
    "name": "deepseek-r1:1.5b",
    "label": "deepseek-r1 (1.5b)",
    "size": "~1.0 GB",
@@ -56,13 +63,6 @@
    "size": "~21 GB",
    "tier": "groß",
    "description": "DeepSeek-R1 is a family of open reasoning models with performance approaching that of leading models, such as O3 and Gemini 2.5 Pro."
-  },
-  {
-   "name": "nomic-embed-text",
-   "label": "nomic-embed-text",
-   "size": "klein",
-   "tier": "spezial",
-   "description": "A high-performing open embedding model with a large token context window."
   },
   {
    "name": "llama3.2:1b",
@@ -436,27 +436,6 @@
    "description": "Phi-4 is a 14B parameter, state-of-the-art open model from Microsoft."
   },
   {
-   "name": "llama2:7b",
-   "label": "llama2 (7b)",
-   "size": "~4.7 GB",
-   "tier": "mittel",
-   "description": "Llama 2 is a collection of foundation language models ranging from 7B to 70B parameters."
-  },
-  {
-   "name": "llama2:13b",
-   "label": "llama2 (13b)",
-   "size": "~8.7 GB",
-   "tier": "mittel",
-   "description": "Llama 2 is a collection of foundation language models ranging from 7B to 70B parameters."
-  },
-  {
-   "name": "llama2:70b",
-   "label": "llama2 (70b)",
-   "size": "~47 GB",
-   "tier": "groß",
-   "description": "Llama 2 is a collection of foundation language models ranging from 7B to 70B parameters."
-  },
-  {
    "name": "codellama:7b",
    "label": "codellama (7b)",
    "size": "~4.7 GB",
@@ -483,6 +462,27 @@
    "size": "~47 GB",
    "tier": "groß",
    "description": "A large language model that can use text prompts to generate and discuss code."
+  },
+  {
+   "name": "llama2:7b",
+   "label": "llama2 (7b)",
+   "size": "~4.7 GB",
+   "tier": "mittel",
+   "description": "Llama 2 is a collection of foundation language models ranging from 7B to 70B parameters."
+  },
+  {
+   "name": "llama2:13b",
+   "label": "llama2 (13b)",
+   "size": "~8.7 GB",
+   "tier": "mittel",
+   "description": "Llama 2 is a collection of foundation language models ranging from 7B to 70B parameters."
+  },
+  {
+   "name": "llama2:70b",
+   "label": "llama2 (70b)",
+   "size": "~47 GB",
+   "tier": "groß",
+   "description": "Llama 2 is a collection of foundation language models ranging from 7B to 70B parameters."
   },
   {
    "name": "qwen3.6:27b",
@@ -604,6 +604,13 @@
    "description": "A series of multimodal LLMs (MLLMs) designed for vision-language understanding."
   },
   {
+   "name": "qwen3.8:27b",
+   "label": "qwen3.8 (27b)",
+   "size": "~18 GB",
+   "tier": "groß",
+   "description": "Qwen3.8 delivers substantial gains across coding, professional work, research, and long-horizon agentic tasks."
+  },
+  {
    "name": "llama3.2-vision:11b",
    "label": "llama3.2-vision (11b)",
    "size": "~7.4 GB",
@@ -616,13 +623,6 @@
    "size": "~60 GB",
    "tier": "groß",
    "description": "Llama 3.2 Vision is a collection of instruction-tuned image reasoning generative models in 11B and 90B sizes."
-  },
-  {
-   "name": "qwen3.8:27b",
-   "label": "qwen3.8 (27b)",
-   "size": "~18 GB",
-   "tier": "groß",
-   "description": "Qwen3.8 delivers substantial gains across coding, professional work, research, and long-horizon agentic tasks."
   },
   {
    "name": "deepseek-coder:1.3b",
@@ -849,6 +849,13 @@
    "description": "Uncensored Llama 2 model by George Sung and Jarrad Hope."
   },
   {
+   "name": "embeddinggemma",
+   "label": "embeddinggemma",
+   "size": "klein",
+   "tier": "spezial",
+   "description": "EmbeddingGemma is a 300M parameter embedding model from Google."
+  },
+  {
    "name": "falcon3:1b",
    "label": "falcon3 (1b)",
    "size": "~0.7 GB",
@@ -877,39 +884,11 @@
    "description": "A family of efficient AI models under 10B parameters performant in science, math, and coding through innovative training techniques."
   },
   {
-   "name": "embeddinggemma",
-   "label": "embeddinggemma",
-   "size": "klein",
-   "tier": "spezial",
-   "description": "EmbeddingGemma is a 300M parameter embedding model from Google."
-  },
-  {
    "name": "mistral-small3.2:24b",
    "label": "mistral-small3.2 (24b)",
    "size": "~16 GB",
    "tier": "groß",
    "description": "An update to Mistral Small that improves on function calling, instruction following, and less repetition errors."
-  },
-  {
-   "name": "llava-llama3:8b",
-   "label": "llava-llama3 (8b)",
-   "size": "~5.4 GB",
-   "tier": "mittel",
-   "description": "A LLaVA model fine-tuned from Llama 3 Instruct with better scores in several benchmarks."
-  },
-  {
-   "name": "qwq:32b",
-   "label": "qwq (32b)",
-   "size": "~21 GB",
-   "tier": "groß",
-   "description": "QwQ is the reasoning model of the Qwen series."
-  },
-  {
-   "name": "smollm:1.7b",
-   "label": "smollm (1.7b)",
-   "size": "~1.1 GB",
-   "tier": "klein",
-   "description": "🪐 A family of small models with 135M, 360M, and 1.7B parameters, trained on a new high-quality dataset."
   },
   {
    "name": "devstral-small-2:24b",
@@ -919,18 +898,25 @@
    "description": "24B model that excels at using tools to explore codebases, editing multiple files and power software engineering agents."
   },
   {
-   "name": "dolphin-llama3:8b",
-   "label": "dolphin-llama3 (8b)",
+   "name": "llava-llama3:8b",
+   "label": "llava-llama3 (8b)",
    "size": "~5.4 GB",
    "tier": "mittel",
-   "description": "Dolphin 2.9 is a new model with 8B and 70B sizes by Eric Hartford based on Llama 3 that has a variety of instruction, conversational, and coding skills."
+   "description": "A LLaVA model fine-tuned from Llama 3 Instruct with better scores in several benchmarks."
   },
   {
-   "name": "dolphin-llama3:70b",
-   "label": "dolphin-llama3 (70b)",
-   "size": "~47 GB",
+   "name": "smollm:1.7b",
+   "label": "smollm (1.7b)",
+   "size": "~1.1 GB",
+   "tier": "klein",
+   "description": "🪐 A family of small models with 135M, 360M, and 1.7B parameters, trained on a new high-quality dataset."
+  },
+  {
+   "name": "qwq:32b",
+   "label": "qwq (32b)",
+   "size": "~21 GB",
    "tier": "groß",
-   "description": "Dolphin 2.9 is a new model with 8B and 70B sizes by Eric Hartford based on Llama 3 that has a variety of instruction, conversational, and coding skills."
+   "description": "QwQ is the reasoning model of the Qwen series."
   },
   {
    "name": "sqlcoder:7b",
@@ -945,6 +931,20 @@
    "size": "~10 GB",
    "tier": "groß",
    "description": "SQLCoder is a code completion model fined-tuned on StarCoder for SQL generation tasks"
+  },
+  {
+   "name": "dolphin-llama3:8b",
+   "label": "dolphin-llama3 (8b)",
+   "size": "~5.4 GB",
+   "tier": "mittel",
+   "description": "Dolphin 2.9 is a new model with 8B and 70B sizes by Eric Hartford based on Llama 3 that has a variety of instruction, conversational, and coding skills."
+  },
+  {
+   "name": "dolphin-llama3:70b",
+   "label": "dolphin-llama3 (70b)",
+   "size": "~47 GB",
+   "tier": "groß",
+   "description": "Dolphin 2.9 is a new model with 8B and 70B sizes by Eric Hartford based on Llama 3 that has a variety of instruction, conversational, and coding skills."
   },
   {
    "name": "cogito:3b",
