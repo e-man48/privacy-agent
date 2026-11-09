@@ -429,13 +429,6 @@
    "description": "Qwen 1.5 is a series of large language models by Alibaba Cloud spanning from 0.5B to 110B parameters"
   },
   {
-   "name": "phi4:14b",
-   "label": "phi4 (14b)",
-   "size": "~9.4 GB",
-   "tier": "groß",
-   "description": "Phi-4 is a 14B parameter, state-of-the-art open model from Microsoft."
-  },
-  {
    "name": "codellama:7b",
    "label": "codellama (7b)",
    "size": "~4.7 GB",
@@ -462,6 +455,13 @@
    "size": "~47 GB",
    "tier": "groß",
    "description": "A large language model that can use text prompts to generate and discuss code."
+  },
+  {
+   "name": "phi4:14b",
+   "label": "phi4 (14b)",
+   "size": "~9.4 GB",
+   "tier": "groß",
+   "description": "Phi-4 is a 14B parameter, state-of-the-art open model from Microsoft."
   },
   {
    "name": "llama2:7b",
@@ -562,11 +562,11 @@
    "description": "Qwen2 is a new series of large language models from Alibaba group"
   },
   {
-   "name": "mistral-nemo:12b",
-   "label": "mistral-nemo (12b)",
-   "size": "~8.0 GB",
-   "tier": "mittel",
-   "description": "A state-of-the-art 12B model with 128k context length, built by Mistral AI in collaboration with NVIDIA."
+   "name": "qwen3.8:27b",
+   "label": "qwen3.8 (27b)",
+   "size": "~18 GB",
+   "tier": "groß",
+   "description": "Qwen3.8 delivers substantial gains across coding, professional work, research, and long-horizon agentic tasks."
   },
   {
    "name": "qwen2.5vl:3b",
@@ -597,18 +597,18 @@
    "description": "Flagship vision-language model of Qwen and also a significant leap from the previous Qwen2-VL."
   },
   {
+   "name": "mistral-nemo:12b",
+   "label": "mistral-nemo (12b)",
+   "size": "~8.0 GB",
+   "tier": "mittel",
+   "description": "A state-of-the-art 12B model with 128k context length, built by Mistral AI in collaboration with NVIDIA."
+  },
+  {
    "name": "minicpm-v:8b",
    "label": "minicpm-v (8b)",
    "size": "~5.4 GB",
    "tier": "mittel",
    "description": "A series of multimodal LLMs (MLLMs) designed for vision-language understanding."
-  },
-  {
-   "name": "qwen3.8:27b",
-   "label": "qwen3.8 (27b)",
-   "size": "~18 GB",
-   "tier": "groß",
-   "description": "Qwen3.8 delivers substantial gains across coding, professional work, research, and long-horizon agentic tasks."
   },
   {
    "name": "llama3.2-vision:11b",
@@ -884,13 +884,6 @@
    "description": "A family of efficient AI models under 10B parameters performant in science, math, and coding through innovative training techniques."
   },
   {
-   "name": "mistral-small3.2:24b",
-   "label": "mistral-small3.2 (24b)",
-   "size": "~16 GB",
-   "tier": "groß",
-   "description": "An update to Mistral Small that improves on function calling, instruction following, and less repetition errors."
-  },
-  {
    "name": "devstral-small-2:24b",
    "label": "devstral-small-2 (24b)",
    "size": "~16 GB",
@@ -898,11 +891,11 @@
    "description": "24B model that excels at using tools to explore codebases, editing multiple files and power software engineering agents."
   },
   {
-   "name": "llava-llama3:8b",
-   "label": "llava-llama3 (8b)",
-   "size": "~5.4 GB",
-   "tier": "mittel",
-   "description": "A LLaVA model fine-tuned from Llama 3 Instruct with better scores in several benchmarks."
+   "name": "mistral-small3.2:24b",
+   "label": "mistral-small3.2 (24b)",
+   "size": "~16 GB",
+   "tier": "groß",
+   "description": "An update to Mistral Small that improves on function calling, instruction following, and less repetition errors."
   },
   {
    "name": "smollm:1.7b",
@@ -910,6 +903,13 @@
    "size": "~1.1 GB",
    "tier": "klein",
    "description": "🪐 A family of small models with 135M, 360M, and 1.7B parameters, trained on a new high-quality dataset."
+  },
+  {
+   "name": "llava-llama3:8b",
+   "label": "llava-llama3 (8b)",
+   "size": "~5.4 GB",
+   "tier": "mittel",
+   "description": "A LLaVA model fine-tuned from Llama 3 Instruct with better scores in several benchmarks."
   },
   {
    "name": "qwq:32b",
@@ -947,6 +947,13 @@
    "description": "Dolphin 2.9 is a new model with 8B and 70B sizes by Eric Hartford based on Llama 3 that has a variety of instruction, conversational, and coding skills."
   },
   {
+   "name": "moondream:1.8b",
+   "label": "moondream (1.8b)",
+   "size": "~1.2 GB",
+   "tier": "klein",
+   "description": "moondream2 is a small vision language model designed to run efficiently on edge devices."
+  },
+  {
    "name": "cogito:3b",
    "label": "cogito (3b)",
    "size": "~2.0 GB",
@@ -982,11 +989,32 @@
    "description": "Cogito v1 Preview is a family of hybrid reasoning models by Deep Cogito that outperform the best available open models of the same size, including counterparts from LLaMA"
   },
   {
-   "name": "moondream:1.8b",
-   "label": "moondream (1.8b)",
-   "size": "~1.2 GB",
+   "name": "starcoder:1b",
+   "label": "starcoder (1b)",
+   "size": "~0.7 GB",
    "tier": "klein",
-   "description": "moondream2 is a small vision language model designed to run efficiently on edge devices."
+   "description": "StarCoder is a code generation model trained on 80+ programming languages."
+  },
+  {
+   "name": "starcoder:3b",
+   "label": "starcoder (3b)",
+   "size": "~2.0 GB",
+   "tier": "klein",
+   "description": "StarCoder is a code generation model trained on 80+ programming languages."
+  },
+  {
+   "name": "starcoder:7b",
+   "label": "starcoder (7b)",
+   "size": "~4.7 GB",
+   "tier": "mittel",
+   "description": "StarCoder is a code generation model trained on 80+ programming languages."
+  },
+  {
+   "name": "starcoder:15b",
+   "label": "starcoder (15b)",
+   "size": "~10 GB",
+   "tier": "groß",
+   "description": "StarCoder is a code generation model trained on 80+ programming languages."
   }
  ]
 }
