@@ -212,20 +212,6 @@
    "description": "The 7B model released by Mistral AI, updated to version 0.3."
   },
   {
-   "name": "llama3:8b",
-   "label": "llama3 (8b)",
-   "size": "~5.4 GB",
-   "tier": "mittel",
-   "description": "Meta Llama 3: The most capable openly available LLM to date"
-  },
-  {
-   "name": "llama3:70b",
-   "label": "llama3 (70b)",
-   "size": "~47 GB",
-   "tier": "groß",
-   "description": "Meta Llama 3: The most capable openly available LLM to date"
-  },
-  {
    "name": "qwen3.5:0.8b",
    "label": "qwen3.5 (0.8b)",
    "size": "~0.5 GB",
@@ -252,6 +238,20 @@
    "size": "~6.0 GB",
    "tier": "mittel",
    "description": "Qwen 3.5 is a family of open-source multimodal models that delivers exceptional utility and performance."
+  },
+  {
+   "name": "llama3:8b",
+   "label": "llama3 (8b)",
+   "size": "~5.4 GB",
+   "tier": "mittel",
+   "description": "Meta Llama 3: The most capable openly available LLM to date"
+  },
+  {
+   "name": "llama3:70b",
+   "label": "llama3 (70b)",
+   "size": "~47 GB",
+   "tier": "groß",
+   "description": "Meta Llama 3: The most capable openly available LLM to date"
   },
   {
    "name": "qwen2.5-coder:0.5b",
@@ -317,6 +317,20 @@
    "description": "State-of-the-art large embedding model from mixedbread.ai"
   },
   {
+   "name": "gpt-oss:20b",
+   "label": "gpt-oss (20b)",
+   "size": "~13 GB",
+   "tier": "groß",
+   "description": "OpenAI’s open-weight models designed for powerful reasoning, agentic tasks, and versatile developer use cases."
+  },
+  {
+   "name": "gpt-oss:120b",
+   "label": "gpt-oss (120b)",
+   "size": "~80 GB",
+   "tier": "groß",
+   "description": "OpenAI’s open-weight models designed for powerful reasoning, agentic tasks, and versatile developer use cases."
+  },
+  {
    "name": "llava:7b",
    "label": "llava (7b)",
    "size": "~4.7 GB",
@@ -336,20 +350,6 @@
    "size": "~23 GB",
    "tier": "groß",
    "description": "🌋 LLaVA is a novel end-to-end trained large multimodal model that combines a vision encoder and Vicuna for general-purpose visual and language understanding. Updated to v"
-  },
-  {
-   "name": "gpt-oss:20b",
-   "label": "gpt-oss (20b)",
-   "size": "~13 GB",
-   "tier": "groß",
-   "description": "OpenAI’s open-weight models designed for powerful reasoning, agentic tasks, and versatile developer use cases."
-  },
-  {
-   "name": "gpt-oss:120b",
-   "label": "gpt-oss (120b)",
-   "size": "~80 GB",
-   "tier": "groß",
-   "description": "OpenAI’s open-weight models designed for powerful reasoning, agentic tasks, and versatile developer use cases."
   },
   {
    "name": "qwen3-coder:30b",
@@ -378,6 +378,34 @@
    "size": "~4.7 GB",
    "tier": "mittel",
    "description": "Gemma is a family of lightweight, state-of-the-art open models built by Google DeepMind. Updated to version 1.1"
+  },
+  {
+   "name": "codellama:7b",
+   "label": "codellama (7b)",
+   "size": "~4.7 GB",
+   "tier": "mittel",
+   "description": "A large language model that can use text prompts to generate and discuss code."
+  },
+  {
+   "name": "codellama:13b",
+   "label": "codellama (13b)",
+   "size": "~8.7 GB",
+   "tier": "mittel",
+   "description": "A large language model that can use text prompts to generate and discuss code."
+  },
+  {
+   "name": "codellama:34b",
+   "label": "codellama (34b)",
+   "size": "~23 GB",
+   "tier": "groß",
+   "description": "A large language model that can use text prompts to generate and discuss code."
+  },
+  {
+   "name": "codellama:70b",
+   "label": "codellama (70b)",
+   "size": "~47 GB",
+   "tier": "groß",
+   "description": "A large language model that can use text prompts to generate and discuss code."
   },
   {
    "name": "qwen:0.5b",
@@ -429,39 +457,25 @@
    "description": "Qwen 1.5 is a series of large language models by Alibaba Cloud spanning from 0.5B to 110B parameters"
   },
   {
-   "name": "codellama:7b",
-   "label": "codellama (7b)",
-   "size": "~4.7 GB",
-   "tier": "mittel",
-   "description": "A large language model that can use text prompts to generate and discuss code."
-  },
-  {
-   "name": "codellama:13b",
-   "label": "codellama (13b)",
-   "size": "~8.7 GB",
-   "tier": "mittel",
-   "description": "A large language model that can use text prompts to generate and discuss code."
-  },
-  {
-   "name": "codellama:34b",
-   "label": "codellama (34b)",
-   "size": "~23 GB",
-   "tier": "groß",
-   "description": "A large language model that can use text prompts to generate and discuss code."
-  },
-  {
-   "name": "codellama:70b",
-   "label": "codellama (70b)",
-   "size": "~47 GB",
-   "tier": "groß",
-   "description": "A large language model that can use text prompts to generate and discuss code."
-  },
-  {
    "name": "phi4:14b",
    "label": "phi4 (14b)",
    "size": "~9.4 GB",
    "tier": "groß",
    "description": "Phi-4 is a 14B parameter, state-of-the-art open model from Microsoft."
+  },
+  {
+   "name": "qwen3.6:27b",
+   "label": "qwen3.6 (27b)",
+   "size": "~18 GB",
+   "tier": "groß",
+   "description": "Qwen3.6 delivers substantial upgrades in agentic coding and thinking preservation than previous Qwen models."
+  },
+  {
+   "name": "qwen3.6:35b",
+   "label": "qwen3.6 (35b)",
+   "size": "~23 GB",
+   "tier": "groß",
+   "description": "Qwen3.6 delivers substantial upgrades in agentic coding and thinking preservation than previous Qwen models."
   },
   {
    "name": "llama2:7b",
@@ -483,20 +497,6 @@
    "size": "~47 GB",
    "tier": "groß",
    "description": "Llama 2 is a collection of foundation language models ranging from 7B to 70B parameters."
-  },
-  {
-   "name": "qwen3.6:27b",
-   "label": "qwen3.6 (27b)",
-   "size": "~18 GB",
-   "tier": "groß",
-   "description": "Qwen3.6 delivers substantial upgrades in agentic coding and thinking preservation than previous Qwen models."
-  },
-  {
-   "name": "qwen3.6:35b",
-   "label": "qwen3.6 (35b)",
-   "size": "~23 GB",
-   "tier": "groß",
-   "description": "Qwen3.6 delivers substantial upgrades in agentic coding and thinking preservation than previous Qwen models."
   },
   {
    "name": "qwen3-vl:2b",
@@ -534,6 +534,13 @@
    "description": "The TinyLlama project is an open endeavor to train a compact 1.1B Llama model on 3 trillion tokens."
   },
   {
+   "name": "qwen3.8:27b",
+   "label": "qwen3.8 (27b)",
+   "size": "~18 GB",
+   "tier": "groß",
+   "description": "Qwen3.8 delivers substantial gains across coding, professional work, research, and long-horizon agentic tasks."
+  },
+  {
    "name": "qwen2:0.5b",
    "label": "qwen2 (0.5b)",
    "size": "~0.3 GB",
@@ -560,13 +567,6 @@
    "size": "~48 GB",
    "tier": "groß",
    "description": "Qwen2 is a new series of large language models from Alibaba group"
-  },
-  {
-   "name": "qwen3.8:27b",
-   "label": "qwen3.8 (27b)",
-   "size": "~18 GB",
-   "tier": "groß",
-   "description": "Qwen3.8 delivers substantial gains across coding, professional work, research, and long-horizon agentic tasks."
   },
   {
    "name": "qwen2.5vl:3b",
@@ -835,6 +835,20 @@
    "description": "A new collection of open translation models built on Gemma 3, helping people communicate across 55 languages."
   },
   {
+   "name": "embeddinggemma",
+   "label": "embeddinggemma",
+   "size": "klein",
+   "tier": "spezial",
+   "description": "EmbeddingGemma is a 300M parameter embedding model from Google."
+  },
+  {
+   "name": "devstral-small-2:24b",
+   "label": "devstral-small-2 (24b)",
+   "size": "~16 GB",
+   "tier": "groß",
+   "description": "24B model that excels at using tools to explore codebases, editing multiple files and power software engineering agents."
+  },
+  {
    "name": "llama2-uncensored:7b",
    "label": "llama2-uncensored (7b)",
    "size": "~4.7 GB",
@@ -847,13 +861,6 @@
    "size": "~47 GB",
    "tier": "groß",
    "description": "Uncensored Llama 2 model by George Sung and Jarrad Hope."
-  },
-  {
-   "name": "embeddinggemma",
-   "label": "embeddinggemma",
-   "size": "klein",
-   "tier": "spezial",
-   "description": "EmbeddingGemma is a 300M parameter embedding model from Google."
   },
   {
    "name": "falcon3:1b",
@@ -884,13 +891,6 @@
    "description": "A family of efficient AI models under 10B parameters performant in science, math, and coding through innovative training techniques."
   },
   {
-   "name": "devstral-small-2:24b",
-   "label": "devstral-small-2 (24b)",
-   "size": "~16 GB",
-   "tier": "groß",
-   "description": "24B model that excels at using tools to explore codebases, editing multiple files and power software engineering agents."
-  },
-  {
    "name": "mistral-small3.2:24b",
    "label": "mistral-small3.2 (24b)",
    "size": "~16 GB",
@@ -905,20 +905,6 @@
    "description": "🪐 A family of small models with 135M, 360M, and 1.7B parameters, trained on a new high-quality dataset."
   },
   {
-   "name": "llava-llama3:8b",
-   "label": "llava-llama3 (8b)",
-   "size": "~5.4 GB",
-   "tier": "mittel",
-   "description": "A LLaVA model fine-tuned from Llama 3 Instruct with better scores in several benchmarks."
-  },
-  {
-   "name": "qwq:32b",
-   "label": "qwq (32b)",
-   "size": "~21 GB",
-   "tier": "groß",
-   "description": "QwQ is the reasoning model of the Qwen series."
-  },
-  {
    "name": "sqlcoder:7b",
    "label": "sqlcoder (7b)",
    "size": "~4.7 GB",
@@ -931,6 +917,20 @@
    "size": "~10 GB",
    "tier": "groß",
    "description": "SQLCoder is a code completion model fined-tuned on StarCoder for SQL generation tasks"
+  },
+  {
+   "name": "llava-llama3:8b",
+   "label": "llava-llama3 (8b)",
+   "size": "~5.4 GB",
+   "tier": "mittel",
+   "description": "A LLaVA model fine-tuned from Llama 3 Instruct with better scores in several benchmarks."
+  },
+  {
+   "name": "qwq:32b",
+   "label": "qwq (32b)",
+   "size": "~21 GB",
+   "tier": "groß",
+   "description": "QwQ is the reasoning model of the Qwen series."
   },
   {
    "name": "dolphin-llama3:8b",
@@ -1015,6 +1015,13 @@
    "size": "~10 GB",
    "tier": "groß",
    "description": "StarCoder is a code generation model trained on 80+ programming languages."
+  },
+  {
+   "name": "wizardcoder:33b",
+   "label": "wizardcoder (33b)",
+   "size": "~22 GB",
+   "tier": "groß",
+   "description": "State-of-the-art code generation model"
   }
  ]
 }
